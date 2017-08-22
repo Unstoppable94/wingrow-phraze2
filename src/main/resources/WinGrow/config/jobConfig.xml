@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.10">
+  <actions/>
+  <description>#description</description>
+  <keepDependencies>false</keepDependencies>
+  <displayName>#displayName</displayName> 
+  <properties>
+    <org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty/>
+    <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.4.5">
+      <gitLabConnection></gitLabConnection>
+    </com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
+    <EnvInjectJobProperty plugin="envinject@1.93.1">
+      <info>
+        <propertiesContent>##Parameters from baseprojectinfo
+SCMUser=$SCMUser
+SCMUrl=$SCMUrl
+SCMPassword=$SCMPassword
+SCMBranch=$SCMBranch
+SCMTYPE=$SCMTYPE
+SCMcredential=$SCMcredential
+createTime=$createTime
+lastModifyTime=$lastModifyTime
+maxExcutiontime=$maxExcutiontime
+mailOnSuccess=$mailOnSuccess
+mailOnfail=$mailOnfail
+mailOnReovery=$mailOnReovery
+$exraProperties
+
+##Parameters from Maven project 
+mavenId=$mavenId
+jdk=$jdk
+#cloud=$cloud
+#imageName=$imageName
+
+#stage parameter
+Compile_goal=$compile_compileGoal
+
+Artifact_continueOnfail=$artifact_continueOnfail
+Artifact_skip=$artifact_skip
+
+CreateImage_skip=$createImage_skip
+CreateImage_tag=$createImage_tag
+CreateImage_registry=$createImage_registry
+
+DeployToRancher_skip=$deployToRancher_skip
+DeployToRancher_service=$deployToRancher_service
+DeployToRancher_arg=$deployToRancher_arg
+DeployToRancher_cmd=$deployToRancher_cmd
+
+
+Findbugs_skip=$findbugs_skip
+Findbugs_continueOnfail=$findbugs_continueOnfail
+Findbugs_inFilterUrl=$findbugs_inFilterUrl
+Findbugs_inFilterContent=&quot;$findbugs_skip&quot;
+Findbugs_excludeFilterUrl=$findbugs_excludeFilterUrl
+Findbugs_excludeFilterContent=&quot;$findbugs_excludeFilterContent&quot;
+
+
+MavenTest_skip=$mavenTest_skip
+MavenTest_continueOnfail=$mavenTest_continueOnfail
+MavenTest_goal=$mavenTest_compileGoal
+
+OSWAPDepend_skip=$OSWAPDepend_skip
+
+PushImage_skip=$pushImage_skip
+
+
+Sonar_continueOnfail=$sonar_continueOnfail
+Sonar_skip=$sonar_skip
+
+#
+SonarUrl=$sonar_url
+SonarCredential=$SonarCredential
+
+
+</propertiesContent>
+        <loadFilesFromMaster>false</loadFilesFromMaster>
+      </info>
+      <on>true</on>
+      <keepJenkinsSystemVariables>true</keepJenkinsSystemVariables>
+      <keepBuildVariables>true</keepBuildVariables>
+      <overrideBuildParameters>false</overrideBuildParameters>
+    </EnvInjectJobProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers/>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.29">
+ <script>
+def extcode 
+
+ node{
+    sh &quot;pwd&quot;
+    extcode = load &apos;/var/lib/jenkins/stat/JenkinsFunc.groovy&apos;
+
+    extcode.extMain()
+ }
+  </script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+</flow-definition>

@@ -1,0 +1,52 @@
+{  
+  "JenkinsDir":"/Users/xiehuiqiang/git/jenkins-plugins/work",
+    "dataDir":"/Users/xiehq/git/wingrow-test/Data",
+  "gitlab":{  
+    "url":"10.0.2.50:180",
+    "user":"xiehq",
+    "password":"acd12345"
+  },
+  "jenkins":{  
+    "url":"http://192.168.101.6:8080",
+    "user":"jenkins",
+    "password":"jenkins",
+    "jdk":null,
+    "maven":null
+  },
+  "jdk":[  
+    {  
+      "id":"jdk1.8",
+      "version":"Jdk1.8",
+      "path":"/jdk1.8"
+    },
+    {  
+      "id":"jdk1.7",
+      "version":"Jdk1.7",
+      "path":"/jdk1.7"
+    }
+  ],
+  "maven":[  
+    {  
+      "id":"maven-3.3.9",
+      "version":"3.3.9",
+      "path":"/maven3.3"
+    },
+    {  
+      "id":"maven-3.2.1",
+      "version":"3.2.1",
+      "path":"/maven3.2"
+    }
+  ],
+  "successTemplate":{  
+    "title":"$PROJECTNAME 第$NUMBER 构建成功 ",
+    "content":"$PROJECTNAME 第$NUMBER 构建成功"
+  },
+  "failedTemplate":{  
+    "title":"$PROJECTNAME 第$NUMBER 构建失败 ",
+    "content":"$PROJECTNAME 第$NUMBER 构建失败,请尽快处理"
+  },
+  "recoveryTemplate":{  
+    "title":"$PROJECTNAME 第$NUMBER 构建恢复成功 ",
+    "content":"$PROJECTNAME 第$NUMBER 构建成功"
+  }
+}

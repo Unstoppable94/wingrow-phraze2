@@ -1,0 +1,30 @@
+{  
+   "rancher":{  
+      "serverUrl":"http://10.211.10.1",
+      "accessKey":"accesskey",
+      "secureKey":"securekey"
+   },
+   "sonar":{  
+      "sonarUrl":"http://sonar.com",
+      "user":"sonaruser",
+      "password":"password"
+   },
+   "mirror":{  
+      "url":"https://mirror",
+      "scure":false
+   },
+   "jdk":[  
+      {  
+         "id":"jdk1.8",
+         "version":"Jdk1.8",
+         "path":"/jdk1.8"
+      }
+   ],
+   "maven":[  
+      {  
+         "id":"maven1",
+         "version":"3.3.9",
+         "path":"/maven"
+      }
+   ]
+}
