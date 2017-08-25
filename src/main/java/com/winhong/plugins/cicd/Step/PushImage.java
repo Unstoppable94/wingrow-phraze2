@@ -1,11 +1,11 @@
-package com.winhong.plugins.cicd.mavenStep;
+package com.winhong.plugins.cicd.Step;
 
  
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
  import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
- import com.winhong.plugins.cicd.mavenProperty.Skip;
+import com.winhong.plugins.cicd.property.Skip;
  
  
 public class PushImage extends Stage {

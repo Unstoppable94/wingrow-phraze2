@@ -43,6 +43,12 @@ public class JenkinsConfig {
 
 
 	public String getUrl() {
+		//http://admin:admin@192.168.101.6:8080
+		if (url.indexOf("@") <0) {
+				int i=url.indexOf("//");
+				String u=url.substring(0,i+2)+user+":"+password+"@"+url.substring(i+2);
+				url=u;
+		}
 		return url;
 	}
 

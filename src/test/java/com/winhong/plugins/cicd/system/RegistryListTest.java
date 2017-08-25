@@ -44,7 +44,7 @@ public class RegistryListTest {
 		t.setRegistries(registryList);
 		try {
 			Config.saveConfig(t);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 			fail();
 		}

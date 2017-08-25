@@ -106,7 +106,6 @@ public class RancherConfig {
 		temp=temp.replace("#envid", this.envID);
 		return temp;
 		
-		
 	}
 
 }

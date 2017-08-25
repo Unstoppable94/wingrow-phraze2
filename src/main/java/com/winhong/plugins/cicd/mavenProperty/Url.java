@@ -1,7 +1,7 @@
 package com.winhong.plugins.cicd.mavenProperty;
 
-import com.winhong.plugins.cicd.data.base.Property;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
+import com.winhong.plugins.cicd.property.Property;
 
 public class Url extends Property{
 
@@ -87,6 +87,9 @@ public class Url extends Property{
 		String goal=this.getValue();
 		if (goal.length()< this.getMinLength() || goal.length() >this.getMaxLength()){
 			throw new ConfigCheckException(this.getName()+".URL 长度不对！");
+		}
+		if (goal.toLowerCase().startsWith("http")==false){
+			throw new ConfigCheckException(this.getName()+".URL 没有以http开头！");
 		}
 		return true;
 	}

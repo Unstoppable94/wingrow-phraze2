@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import com.winhong.plugins.cicd.Maven.MavenProject;
 import com.winhong.plugins.cicd.Maven.MavenProjectBaseInfo;
 import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
-import com.winhong.plugins.cicd.data.base.Property;
 import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.data.base.Trigger;
+import com.winhong.plugins.cicd.property.Property;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.system.SonarConfig;
@@ -174,8 +174,8 @@ public class ProjectAction {
 		//Files.createLink(newLink, existingFile);
 		//修改credential
 		 MavenProjectBaseInfo baseinfo = project.getBaseInfo();
-		 
- 		 client.createCredential(baseinfo.getId(),baseinfo.getSCMUser(),baseinfo.getSCMPassword(), "scm");
+		//@TODO create credential fail 
+ 		client.createCredential(baseinfo.getId(),baseinfo.getSCMUser(),baseinfo.getSCMPassword(), "scm");
 				 
 		return true;
 
@@ -368,7 +368,7 @@ public class ProjectAction {
 
 	 
 	
-	public static boolean      triggerBuild(String projectName) throws MalformedURLException, IOException {
+	public static boolean      triggerBuild(String projectName) throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		JenkinsClient client = JenkinsClient.defaultClient();
 		return (client.triggerBuild(projectName));
 		 

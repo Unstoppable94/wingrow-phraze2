@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.winhong.plugins.cicd.data.base.Property;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
+import com.winhong.plugins.cicd.property.Property;
 
 public class FindbugsTest {
 

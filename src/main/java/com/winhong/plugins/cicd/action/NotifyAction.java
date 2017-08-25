@@ -2,13 +2,10 @@ package com.winhong.plugins.cicd.action;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
-import java.security.GeneralSecurityException;
+ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -31,8 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.sun.mail.util.MailSSLSocketFactory;
 import com.winhong.plugins.cicd.Maven.MavenProject;
-import com.winhong.plugins.cicd.Maven.MavenProjectBaseInfo;
-import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
+ import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.EmailTemplate;
 import com.winhong.plugins.cicd.system.InnerConfig;
@@ -206,7 +202,7 @@ public class NotifyAction {
 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = config.getJenkins().getUrl() + getBuildUrl;
+		String url = Config.getJenkinsConfig().getUrl() + getBuildUrl;
 		String logFileName = datadir + notifyLogDir + notifyLogFile;
 		File sendLogFile = new File(logFileName);
 

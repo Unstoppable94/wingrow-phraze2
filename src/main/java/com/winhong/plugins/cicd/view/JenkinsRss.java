@@ -12,6 +12,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.view.innerData.RssBuild;
 
@@ -42,7 +43,8 @@ public class JenkinsRss {
 	public  static List<SyndEntry> getRss(String url) throws IllegalArgumentException, MalformedURLException, FeedException, IOException{
 		
 		SyndFeedInput input = new SyndFeedInput();
-		SyndFeed feed = input.build(new XmlReader(new URL(url)));
+		//TODO  add user and password
+ 		SyndFeed feed = input.build(new XmlReader(new URL(url)));
 		
 		
 		return feed.getEntries();
@@ -63,11 +65,10 @@ public class JenkinsRss {
 	}
 	
 	
-	public static ArrayList<RssBuild>getInfo(String url) throws IllegalArgumentException, MalformedURLException, FeedException, IOException{
+	public static ArrayList<RssBuild>getInfo(String url) throws IllegalArgumentException, MalformedURLException, FeedException, IOException, InstantiationException, IllegalAccessException{
 		
-		InnerConfig config=InnerConfig.defaultConfig();
-		
-		String rssurl=config.getJenkins().getUrl()+url;
+ 		
+		String rssurl=Config.getJenkinsConfig().getUrl()+url;
 				
 		 List<SyndEntry> list=getRss(rssurl);
 		 ArrayList<RssBuild> builds=new ArrayList<RssBuild>();

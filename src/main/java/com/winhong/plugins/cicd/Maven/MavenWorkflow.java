@@ -6,16 +6,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.winhong.plugins.cicd.Step.CreateImage;
+import com.winhong.plugins.cicd.Step.DeployToRancher;
+import com.winhong.plugins.cicd.Step.PushImage;
 import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.data.base.Workflow;
 import com.winhong.plugins.cicd.mavenStep.Artifact;
 import com.winhong.plugins.cicd.mavenStep.Compile;
-import com.winhong.plugins.cicd.mavenStep.CreateImage;
-import com.winhong.plugins.cicd.mavenStep.DeployToRancher;
 import com.winhong.plugins.cicd.mavenStep.Findbugs;
 import com.winhong.plugins.cicd.mavenStep.MavenTest;
 import com.winhong.plugins.cicd.mavenStep.OSWAPDepend;
-import com.winhong.plugins.cicd.mavenStep.PushImage;
 import com.winhong.plugins.cicd.mavenStep.Sonar;
 
 public class MavenWorkflow extends Workflow {

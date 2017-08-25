@@ -1,8 +1,9 @@
-package com.winhong.plugins.cicd.data.base;
+package com.winhong.plugins.cicd.property;
 
 import java.util.ArrayList;
 
 import com.google.gson.annotations.Expose;
+import com.winhong.plugins.cicd.data.base.EnumList;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
 
 public  class Property {

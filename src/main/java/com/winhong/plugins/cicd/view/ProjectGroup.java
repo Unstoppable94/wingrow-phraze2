@@ -22,6 +22,7 @@ import com.winhong.plugins.cicd.action.GroupAction;
 import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.action.UserAction;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
+import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
@@ -176,11 +177,10 @@ public class ProjectGroup {
 	public static String getProjectGroupStatInfo(String viewName)
 			throws Exception {
 
-		InnerConfig config = InnerConfig.defaultConfig();
-
+ 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = config.getJenkins().getUrl()
+		String url = Config.getJenkinsConfig().getUrl()
 				+ projectStatusurl.replace("#jobname", viewName);
 
 		@SuppressWarnings("unchecked")

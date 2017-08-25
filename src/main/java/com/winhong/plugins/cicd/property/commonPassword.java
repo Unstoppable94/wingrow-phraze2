@@ -1,9 +1,8 @@
-package com.winhong.plugins.cicd.mavenProperty;
+package com.winhong.plugins.cicd.property;
 
 import java.util.ArrayList;
 
 import com.winhong.plugins.cicd.data.base.EnumList;
-import com.winhong.plugins.cicd.data.base.Property;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
 
 public class commonPassword extends Property{

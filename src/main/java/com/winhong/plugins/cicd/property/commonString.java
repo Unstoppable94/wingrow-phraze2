@@ -1,6 +1,5 @@
-package com.winhong.plugins.cicd.mavenProperty;
+package com.winhong.plugins.cicd.property;
 
-import com.winhong.plugins.cicd.data.base.Property;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
 
 public class commonString extends Property{

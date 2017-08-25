@@ -19,12 +19,15 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import com.winhong.plugins.cicd.tool.RancherClient;
 import com.winhong.plugins.cicd.tool.Tools;
 
 public class MavenProjectTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+	//	RancherClient.init("http://192.168.101.81:8080","E16BBCEB675189233FCF","dubRG8jwaWEgcVUkZowaJ1qmy34MzxMhESKFggvo");
+
 	}
 
 	@AfterClass

@@ -19,6 +19,7 @@ import com.google.gson.annotations.Expose;
 import com.rometools.rome.io.FeedException;
 import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.data.base.BaseProject;
+import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.innerData.Job;
@@ -49,9 +50,11 @@ public class Dashboard {
 	 *             URL格式异常
 	 * @throws IOException
 	 *             IO异常
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public static String getAllProjectStatus() throws MalformedURLException,
-			IOException {
+			IOException, InstantiationException, IllegalAccessException {
 		return getProjectStatus("");
 		
 	}
@@ -64,19 +67,21 @@ public class Dashboard {
 	 * @return json 
 	 * @throws MalformedURLException
 	 * @throws IOException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public static String getViewProjectStatus(String viewName) throws MalformedURLException,
-	IOException {
+	IOException, InstantiationException, IllegalAccessException {
 		return getProjectStatus("/view/"+viewName);
 
 	}
 	
 	
 	public static String getProjectStatus(String viewPath) throws MalformedURLException,
-	IOException {
+	IOException, InstantiationException, IllegalAccessException {
 
-		InnerConfig config = InnerConfig.defaultConfig();
-		String url = config.getJenkins().getUrl() + viewPath+getAllJobsUrl;
+		//InnerConfig config = InnerConfig.defaultConfig();
+		String url = Config.getJenkinsConfig().getUrl() + viewPath+getAllJobsUrl;
 		ProjectStatus status = (ProjectStatus) Tools.objectFromJsonUrl(url,
 				ProjectStatus.class);
 		ArrayList<Job> jobs = status.getJobs();
@@ -108,17 +113,17 @@ public class Dashboard {
 	
 	
 	public static ProjectStatusStat getViewProjectStatusAndReturn(String viewName) throws MalformedURLException,
-	IOException {
+	IOException, InstantiationException, IllegalAccessException {
 		return getProjectStatusAndReturn("/view/"+viewName);
 
 	}
 	
 	
 	public static ProjectStatusStat getProjectStatusAndReturn(String viewPath) throws MalformedURLException,
-	IOException {
+	IOException, InstantiationException, IllegalAccessException {
 
-		InnerConfig config = InnerConfig.defaultConfig();
-		String url = config.getJenkins().getUrl() + viewPath+getAllJobsUrl;
+		 
+		String url = Config.getJenkinsConfig().getUrl() + viewPath+getAllJobsUrl;
 		ProjectStatus status = (ProjectStatus) Tools.objectFromJsonUrl(url,
 				ProjectStatus.class);
 		ArrayList<Job> jobs = status.getJobs();
@@ -196,8 +201,7 @@ public class Dashboard {
 			throws Exception {
 		if (maxNumber<=0)
 			maxNumber=MaxNumberOfList;
-		InnerConfig config = InnerConfig.defaultConfig();
-
+ 
 		ArrayList<RssBuild> failbuilds = JenkinsRss.getInfo(rss);
 		ArrayList<PipelineRun> list = new ArrayList<PipelineRun>();
 		for (int i = 0; i < failbuilds.size(); i++) {
@@ -205,7 +209,7 @@ public class Dashboard {
 				break;
 			}
 			RssBuild build = failbuilds.get(i);
-			String url = config.getJenkins().getUrl()
+			String url = Config.getJenkinsConfig().getUrl()
 					+ runUrl.replace("jobname", build.getProject()).replace(
 							"number", "" + build.getNumber());
 			PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(url,

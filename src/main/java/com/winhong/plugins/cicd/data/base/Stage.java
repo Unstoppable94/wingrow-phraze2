@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
+import com.winhong.plugins.cicd.property.Property;
 
 public    class  Stage {
 

@@ -34,9 +34,9 @@ public class DownService {
 			@Context HttpServletResponse response) throws FileNotFoundException {
 
 		log.debug("filename:"+path);
-		JenkinsClient client = JenkinsClient.defaultClient();
 		try {
-			
+			JenkinsClient client = JenkinsClient.defaultClient();
+
 			InputStream fis = client.getFile(path);
 			String filename = path.substring(path.lastIndexOf("/") + 1);
 			//byte[] b = new byte[fis.available()];
@@ -50,7 +50,7 @@ public class DownService {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}

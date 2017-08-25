@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,12 @@ public class Config {
 		super();
 	}
 	
-
+	private static HashMap<String,Object> configs=new HashMap<String,Object>();
 
 	private static Object getConfig(Class cla) throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		if (configs.containsKey(getClassName(cla))) {
+			return configs.get(getClassName(cla));
+		}
 		String dataDir = InnerConfig.defaultConfig().getDataDir();
 
 		File dir = new File(dataDir + configDir);
@@ -71,8 +75,13 @@ public class Config {
 	 * @param config
 	 * @return
 	 * @throws IOException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public static <E> boolean saveConfig(E config) throws IOException {
+	public static <E> boolean saveConfig(E config) throws IOException, InstantiationException, IllegalAccessException {
+		
+		configs.remove(getClassName(config.getClass()));
+		
 		if (saveConfig(getClassName(config.getClass()), Tools.getJson(config)) == false)
 			return false;
 		// //sonar-credential
@@ -104,8 +113,8 @@ public class Config {
 				file.renameTo(new File(clijson + "@"
 						+ System.currentTimeMillis()));
 			}
-			Tools.saveStringToFile(c.genCLiJson(), clijson);
-
+			 Tools.saveStringToFile(c.genCLiJson(), clijson);
+			 return true;	
 		}
 
 		if (config.getClass().equals(RegistryList.class)) {
@@ -125,10 +134,10 @@ public class Config {
 				file.renameTo(new File(dockerjson + "@"
 						+ System.currentTimeMillis()));
 			}
-			Tools.saveStringToFile(c.getConfigJson(), dockerjson);
-
+			 Tools.saveStringToFile(c.getConfigJson(), dockerjson);
+			 return true	;
 		}
-
+		
 		return false;
 	}
 
@@ -337,4 +346,13 @@ public class Config {
 		return sb.toString();
 
 	}
+
+ 
+	
+	public static JenkinsConfig getJenkinsConfig() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		return (JenkinsConfig) getConfig(JenkinsConfig.class);
+	}
+	
+	
+	
 }

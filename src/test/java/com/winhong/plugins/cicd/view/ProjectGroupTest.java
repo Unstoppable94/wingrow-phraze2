@@ -78,7 +78,7 @@ static ProjectGroupJsonConfig group=new ProjectGroupJsonConfig();
 		}finally{
 			try {
 				GroupAction.deleteGroup(group.getId());
-			} catch (IOException e) {
+			} catch (IOException | InstantiationException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

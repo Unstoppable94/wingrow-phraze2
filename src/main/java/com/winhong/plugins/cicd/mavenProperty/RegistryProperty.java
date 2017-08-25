@@ -1,7 +1,7 @@
 package com.winhong.plugins.cicd.mavenProperty;
 
-import com.winhong.plugins.cicd.data.base.Property;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
+import com.winhong.plugins.cicd.property.Property;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.RegistryList;
 import com.winhong.plugins.cicd.tool.Tools;

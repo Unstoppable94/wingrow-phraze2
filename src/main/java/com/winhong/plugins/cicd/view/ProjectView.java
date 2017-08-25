@@ -20,6 +20,7 @@ import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.data.base.BaseProject;
 import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
+import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.displayData.DisplayBuild;
@@ -120,9 +121,10 @@ public class ProjectView {
 		// + projectDateDir);
 
 		// File[] listOfFiles = folder.listFiles();
-		String url = config.getJenkins().getUrl() + simpleJobsUrl;
+		String url = Config.getJenkinsConfig().getUrl() + simpleJobsUrl;
 
 		ArrayList<BaseProject> groups = new ArrayList<BaseProject>();
+		
 		jobList v = (jobList) Tools.objectFromJsonUrl(url, jobList.class);
 		log.debug("url:" + url);
 
@@ -193,7 +195,7 @@ public class ProjectView {
 
 	public static String getBuildsInfo(String projectid, int start,
 			int maxLine, String buildStatus, String latestStage)
-			throws MalformedURLException, IOException {
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		if (maxLine == 0)
 			maxLine = defaultMaxLine;
 
@@ -201,7 +203,7 @@ public class ProjectView {
 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = config.getJenkins().getUrl() + "/job/" + projectid
+		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
 				+ buildsUrl;
 		Job job = (Job) Tools.objectFromJsonUrl(url, Job.class);
 		// project.getBaseInfo().
@@ -262,7 +264,7 @@ public class ProjectView {
 			// TODO get imageurl
 			//b.imageUrl = "";
 			// get last stageinfo
-			String singleRunUrl = config.getJenkins().getUrl() + "/job/"
+			String singleRunUrl = Config.getJenkinsConfig().getUrl() + "/job/"
 					+ projectid + "/" + build.getNumber() + "/wfapi/describe";
 
 			PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(
@@ -306,13 +308,13 @@ public class ProjectView {
 
 	
 	public static String getLatestBuild(String projectid)
-			throws MalformedURLException, IOException {
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		 
-		InnerConfig config = InnerConfig.defaultConfig();
+		 
 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = config.getJenkins().getUrl() + "/job/" + projectid
+		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
 				+ buildsUrl + "{0,1}";
 		log.debug(url);
 		Job job = (Job) Tools.objectFromJsonUrl(url, Job.class);
@@ -330,9 +332,11 @@ public class ProjectView {
 	 * @return
 	 * @throws MalformedURLException
 	 * @throws IOException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public static String getBuildsInfo(String projectid, int start, int maxLine)
-			throws MalformedURLException, IOException {
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		if (maxLine <= 0) {
 			maxLine = defaultMaxLine;
 		}
@@ -344,7 +348,7 @@ public class ProjectView {
 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = config.getJenkins().getUrl() + "/job/" + projectid
+		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
 				+ buildsUrl + "{" + start + "," + (start + maxLine) + "}";
 		log.debug(url);
 		Job job = (Job) Tools.objectFromJsonUrl(url, Job.class);
@@ -397,7 +401,7 @@ public class ProjectView {
 			}
 			
 			// get last stageinfo
-			String singleRunUrl = config.getJenkins().getUrl() + "/job/"
+			String singleRunUrl = Config.getJenkinsConfig().getUrl() + "/job/"
 					+ projectid + "/" + build.getNumber() + "/wfapi/describe";
 
 			PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(
@@ -418,7 +422,7 @@ public class ProjectView {
 
 		// get totle builds number
 
-		String totolUrl = config.getJenkins().getUrl() + "/job/" + projectid
+		String totolUrl = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
 				+ "/api/json?depth=0";
 		log.debug("totolUrl:" + totolUrl);
 
@@ -438,14 +442,15 @@ public class ProjectView {
 	 * @return
 	 * @throws MalformedURLException
 	 * @throws IOException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public static String getSingleBuildsInfo(String projectid, int buildNumber)
-			throws MalformedURLException, IOException {
-		InnerConfig config = InnerConfig.defaultConfig();
-
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
+ 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = config.getJenkins().getUrl() + "/job/" + projectid + "/"
+		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid + "/"
 				+ buildNumber + "/api/json";
 
 		Build build = (Build) Tools.objectFromJsonUrl(url, Build.class);
@@ -486,7 +491,7 @@ public class ProjectView {
 
 		}
 		// get last stageinfo
-		String singleRunUrl = config.getJenkins().getUrl() + "/job/"
+		String singleRunUrl = Config.getJenkinsConfig().getUrl() + "/job/"
 				+ projectid + "/" + build.getNumber() + "/wfapi/describe";
 
 		PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(singleRunUrl,
@@ -520,11 +525,12 @@ public class ProjectView {
 	 * @return json
 	 * @throws MalformedURLException
 	 * @throws IOException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public static String getSingleRun(String projectId, int buildNumber)
-			throws MalformedURLException, IOException {
-		InnerConfig config = InnerConfig.defaultConfig();
-		String url = config.getJenkins().getUrl()
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
+ 		String url = Config.getJenkinsConfig().getUrl()
 				+ runUrl.replace("jobname", projectId).replace("number",
 						"" + buildNumber);
 		PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(url,
@@ -544,8 +550,10 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public String getRecentFailRuns() throws MalformedURLException, IOException {
+	public String getRecentFailRuns() throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		return getRecentRuns("FAILED,ABORTED");
 	}
 
@@ -557,9 +565,11 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public String getRecentSucessRuns() throws MalformedURLException,
-			IOException {
+			IOException, InstantiationException, IllegalAccessException {
 		return getRecentRuns("SUCCESS");
 	}
 
@@ -571,8 +581,10 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public String getRecentAllRuns() throws MalformedURLException, IOException {
+	public String getRecentAllRuns() throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		return getRecentRuns(null);
 	}
 
@@ -584,14 +596,15 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public String getRecentRuns(String Status) throws MalformedURLException,
-			IOException {
-		InnerConfig config = InnerConfig.defaultConfig();
-
+			IOException, InstantiationException, IllegalAccessException {
+ 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = config.getJenkins().getUrl() + "/job/" + projectid
+		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
 				+ wfrunUrl;
 
 		ArrayList<PipelineRun> runs = (ArrayList<PipelineRun>) Tools

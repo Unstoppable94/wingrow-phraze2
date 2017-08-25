@@ -45,7 +45,7 @@ public class GroupActionTest extends GroupAction {
 			group.setName("ss");
 			GroupAction.modifyGroup(group);
 			//GroupAction.deleteGroup(group.getId());
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail();

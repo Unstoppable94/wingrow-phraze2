@@ -21,7 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.winhong.plugins.cicd.data.base.Trigger;
+import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.system.JenkinsConfig;
 
 public class JenkinsClient {
 
@@ -42,17 +44,20 @@ public class JenkinsClient {
 
 	public JenkinsClient(String url, String name, String password) {
 		super();
+		
+		
 		this.url = url;
+		
 		this.name = name;
 		this.password = password;
 
 	}
 
-	public static JenkinsClient defaultClient() throws FileNotFoundException {
-		InnerConfig config = InnerConfig.defaultConfig();
-		if (client == null)
-			client = new JenkinsClient(config.getJenkins().getUrl(), config
-					.getJenkins().getUser(), config.getJenkins().getPassword());
+	public static JenkinsClient defaultClient() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+ 		if (client == null) {
+ 			JenkinsConfig con = Config.getJenkinsConfig();
+			client = new JenkinsClient(con.getUrl(), con.getUser(), con.getPassword());
+ 		}
 		return client;
 
 	}
@@ -89,10 +94,10 @@ public class JenkinsClient {
 		// 'http://xiehq:acd12345@10.211.55.6:8080/credentials/store/system/domain/_/credential/test22-test/doDelete'
 		try {
 			String deleteUrl = url+"/credentials/store/system/domain/_/credential/"
-					+ projectName + "-" + usage + "/doDelete";
+					+ projectName + "-" + usage	+ "/doDelete";
 			httpJobModify(new URL(deleteUrl), "", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			
 			
 		}
@@ -125,7 +130,7 @@ public class JenkinsClient {
 		String serverUrl = url
 				+ "/credentials/store/system/domain/_/createCredentials?json="
 				+ S;
-
+		log.debug("serverUrl:"+serverUrl);
 		return httpJobModify(new URL(serverUrl), "", "application/json");
 
 	}
@@ -227,7 +232,7 @@ public class JenkinsClient {
 	// http://xiehq:acd12345@10.211.55.6:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)
 
 	public boolean getCrumb() throws IOException {
-
+		//String authStr = name + ":" + password;
 		URL serverUrl = new URL(
 				url
 						+ "/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"); // Jenkins
@@ -276,9 +281,10 @@ public class JenkinsClient {
 				return false;
 
 		// log.debug(crumbField + ":" + crumb);
-		// log.debug("serverUrl:" + serverUrl.toString());
-		// log.debug("content:" + content);
-
+		log.debug("serverUrl:" + serverUrl.toString());
+		log.debug("content:" + content);
+		log.debug("contentType:" + contentType);
+		
 		HttpURLConnection connection = getConnection(serverUrl, "POST");
 		connection.setRequestProperty(crumbField, crumb);
 		if (contentType == null)
@@ -641,6 +647,50 @@ public class JenkinsClient {
 		}
 	}
 
+	
+	public String httpSimpleGet(String a_url) throws IOException {
+		URL serverUrl = new URL(url  + a_url);
+		return httpSimpleGet(serverUrl);
+	}
+	
+	public String httpSimpleGet(URL serverUrl) throws IOException {
+
+		if (crumbField == null)
+			if (!getCrumb())
+				throw new IOException("get crumb fail");
+
+		log.debug(crumbField + ":" + crumb);
+
+		// URL serverUrl = new URL(url+"/createView?name=" + name);
+
+		// URL serverUrl=new URL(this.url+/createItem?name=);
+
+		HttpURLConnection connection = getConnection(serverUrl, "GET");
+
+		connection.setRequestProperty(crumbField, crumb);
+ 
+		int code = connection.getResponseCode();
+
+		log.debug(serverUrl.toString() + " return code:" + code);
+
+		InputStream serverOut = connection.getInputStream();
+		BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
+		String line = "";
+		String out = "";
+		while ((line = in.readLine()) != null) {
+			out += line;
+		}
+
+		if (code >= 200 && code < 300) {
+			return out;
+		} else {
+
+			log.debug(connection.getResponseMessage());
+			throw new IOException("Server out:" + out);
+		}
+	}
+
+	
 	public String httpSimpleModifyWithResult(URL serverUrl) throws IOException {
 
 		if (crumbField == null)

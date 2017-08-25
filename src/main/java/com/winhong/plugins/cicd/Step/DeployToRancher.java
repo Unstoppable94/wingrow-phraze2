@@ -1,38 +1,45 @@
-package com.winhong.plugins.cicd.mavenStep;
+package com.winhong.plugins.cicd.Step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
-import com.winhong.plugins.cicd.mavenProperty.Skip;
-import com.winhong.plugins.cicd.mavenProperty.commonString;
+import com.winhong.plugins.cicd.property.RancherEnvIdProperty;
+import com.winhong.plugins.cicd.property.Skip;
+import com.winhong.plugins.cicd.property.commonString;
 
 public class DeployToRancher extends Stage {
 
 	private final static String id = "deployToRancher";
-	private final static String name = "部署到Rancher";
-	private final static String description = "部署到Rancher";
+	private final static String name = "部署应用";
+	private final static String description = "部署应用到指定环境";
 
 	private Skip skip = new Skip();
 
+	final private String environmentId = "environment";
+
+	private RancherEnvIdProperty environment = new RancherEnvIdProperty(environmentId, "",
+			"部署环境", "部署的 Service  NAME,采用remove 后run 模式部署️ ");
+	
 	final private String serviceId = "service";
 
 	private commonString service = new commonString(serviceId, "", 10, 50,
-			"Rancher service", "部署的Rancher Service  NAME,采用remove 后run 模式部署️ ");
+			"部署服务service", "部署的 Service  NAME,采用remove 后run 模式部署️，格式为stack/service ");
 
 	final private String argId = "arg";
 	private commonString arg = new commonString(argId, "", 0, 250,
-			"Rancher 启动参数", "Rancher run的启动参数 ️");
+			"启动参数", "服务启动参数如 -p8080:8080 ️");
 
 	final private String cmdId = "cmd";
 	private commonString cmd = new commonString(cmdId, "", 0, 250, "容器启动命令",
-			"容器启动命令,可以不输入️");
+			"Docker容器启动命令,可以不输入️");
 
 	/**
 	 * 生产一个新的对象
 	 */
 	public DeployToRancher() {
 		super(id, name, description);
+		this.setProperty(environment);
 		this.setProperty(skip);
 		this.setProperty(service);
 		this.setProperty(arg);
@@ -50,8 +57,10 @@ public class DeployToRancher extends Stage {
 
 		skip = new Skip(this.getProperty(skip.getId()));
 		service = new commonString(this.getProperty(serviceId));
-		return skip.check() && service.check();
-
+		environment =new RancherEnvIdProperty(this.getProperty(environmentId));
+		if (skip.getValue().equals("false"))
+			return   service.check() && environment.check();
+		return skip.check();
 	}
 
  

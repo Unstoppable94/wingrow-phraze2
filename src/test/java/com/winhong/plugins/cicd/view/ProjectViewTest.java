@@ -34,7 +34,7 @@ public class ProjectViewTest {
 		try {
 			String s=v.getSingleBuildsInfo("maskio",214);
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -49,7 +49,7 @@ public class ProjectViewTest {
  		try {
 			String s=ProjectView.getBuildsInfo("maskio",0, 0);
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -64,7 +64,7 @@ public class ProjectViewTest {
 		try {
 			String s=v.getBuildsInfo("maskio",0, 0,"FAILURE","");
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -79,7 +79,7 @@ public class ProjectViewTest {
 		try {
 			String s=v.getBuildsInfo("maskio",0, 0,"FAILURE","Sonar");
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -94,7 +94,7 @@ public class ProjectViewTest {
 		try {
 			String s=v.getBuildsInfo("maskio",0, 0,"","sonar");
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -109,7 +109,7 @@ public class ProjectViewTest {
 		try {
 			String s=v.getRecentFailRuns();
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail();
@@ -124,7 +124,7 @@ public class ProjectViewTest {
 		try {
 			String s=v.getRecentAllRuns();
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail();
@@ -139,7 +139,7 @@ public class ProjectViewTest {
 		try {
 			String s=v.getRecentSucessRuns();
 			System.out.println(s);
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail();

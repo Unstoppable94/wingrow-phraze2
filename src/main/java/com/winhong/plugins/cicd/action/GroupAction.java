@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.stream.JsonReader;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
+import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
@@ -53,9 +54,11 @@ public class GroupAction {
 	 *            描述
 	 * @return 是否成功
 	 * @throws IOException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public static boolean createGroup(ProjectGroupJsonConfig group)
-			throws IOException {
+			throws IOException, InstantiationException, IllegalAccessException {
 		JenkinsClient c = JenkinsClient.defaultClient();
 		if (c.addOrModifyView(group.getId(),
 				group.getName() + "-" + group.getDescription()))
@@ -66,7 +69,7 @@ public class GroupAction {
 	}
 
 	public static boolean modifyGroup(ProjectGroupJsonConfig group)
-			throws IOException {
+			throws IOException, InstantiationException, IllegalAccessException {
 		JenkinsClient c = JenkinsClient.defaultClient();
 		if (c.addOrModifyView(group.getId(),
 				group.getName() + "-" + group.getDescription()))
@@ -78,7 +81,7 @@ public class GroupAction {
 
 	private final static String projectStatusurl = "/view/#jobname/api/json?tree=jobs[name]";
 
-	public static boolean deleteGroup(String id) throws IOException {
+	public static boolean deleteGroup(String id) throws IOException, InstantiationException, IllegalAccessException {
 
 		if (id.equals(defaultGroup)) {
 			throw new IOException("Default group can't be delete!");
@@ -87,8 +90,8 @@ public class GroupAction {
 		// ProjectGroupJsonConfig group
 
 		// 移动所有项目到默认group
-		InnerConfig config = InnerConfig.defaultConfig();
-		String url = config.getJenkins().getUrl()
+		//InnerConfig config = Config.defaultConfig();
+		String url = Config.getJenkinsConfig().getUrl()
 				+ projectStatusurl.replace("#jobname", id);
 
 		@SuppressWarnings("unchecked")
@@ -160,9 +163,11 @@ public class GroupAction {
 	 *            new group id
 	 * @return
 	 * @throws IOException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	public static boolean changeGroupOfProject(String projectId,
-			String oldGroup, String newGroup) throws IOException {
+			String oldGroup, String newGroup) throws IOException, InstantiationException, IllegalAccessException {
 		JenkinsClient c = JenkinsClient.defaultClient();
 		boolean ret = c.addJobToView(newGroup, projectId);
 		if (oldGroup != null && oldGroup != "")

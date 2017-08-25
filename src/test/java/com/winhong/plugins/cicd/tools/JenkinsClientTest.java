@@ -33,11 +33,12 @@ public class JenkinsClientTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
- 		MavenProjectBaseInfo b=new MavenProjectBaseInfo();
+
+		MavenProjectBaseInfo b=new MavenProjectBaseInfo();
 		b.setCreateTime(System.currentTimeMillis());
 		b.setDescription("中文project111");
 		b.setExraProperties("");
-		b.setGroupId("test");
+		b.setGroupId("default");
 		b.setId("TestPROJ"+System.currentTimeMillis());
 		b.setName(b.getId());
 		b.setJdk("1.7");
@@ -47,7 +48,7 @@ public class JenkinsClientTest {
 		b.setMailOnReovery(null);
 		b.setMailOnSuccess(null);
 		b.setMaxExcutiontime(60);
- 		b.setSCMBranch("master");
+		b.setSCMBranch("master");
 		b.setSCMPassword("sCMPassword");
 		b.setSCMTYPE("git");
 		b.setSCMUrl("sCMUrl");
@@ -56,7 +57,6 @@ public class JenkinsClientTest {
 		b.setTriggerProperty("* * * * *");
 	
 		p.setBaseInfo(b);
-		
 		client =JenkinsClient.defaultClient();
 				//new JenkinsClient("http://10.211.55.6:28080","xiehq","acd12345");
 	}
@@ -189,7 +189,7 @@ public class JenkinsClientTest {
 	@Test
 	public void testJobExist() {
 		try {
-			if (client.jobExist("test")){
+			if (client.jobExist("test2")){
 				fail("testJobExist 1");
 				
 			}
@@ -294,5 +294,13 @@ public class JenkinsClientTest {
 	}
 
 	 
-	
+	@Test 
+	public void testhttpSimpleGet() { 
+		try {
+			System.out.println(client.httpSimpleGet("/api/json?tree=jobs[name]"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
 }

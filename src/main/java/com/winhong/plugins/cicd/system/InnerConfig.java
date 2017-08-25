@@ -19,7 +19,7 @@ import com.winhong.plugins.cicd.tool.Tools;
 public class InnerConfig {
 
 	private final static String filename="WinGrow/config/WinhongInner.json";
-	
+	private static InnerConfig config;
 	
 	@Expose
 	private String JenkinsDir;
@@ -27,8 +27,8 @@ public class InnerConfig {
 	@Expose
 	private GitLabConfig gitlab=new GitLabConfig();
 	
-	@Expose
-	private JenkinsConfig jenkins=new JenkinsConfig();
+	//@Expose
+	//private JenkinsConfig jenkins=new JenkinsConfig();
 	
 	
 	@Expose
@@ -74,10 +74,17 @@ public class InnerConfig {
 		super();
 	}
 	
+	public static void init() throws FileNotFoundException {
+		 config=(InnerConfig) Tools.objectFromJsonResource(filename,InnerConfig.class);
+		 //replace with system environments
+		 
+	}
 	public static InnerConfig defaultConfig() throws FileNotFoundException{
-
-		InnerConfig def=(InnerConfig) Tools.objectFromJsonResource(filename,InnerConfig.class);
-		return def;
+		if (config==null) {
+			 init();
+			  
+		}
+		return config;
 	}
 	
     
@@ -102,13 +109,13 @@ public class InnerConfig {
 		this.gitlab = gitlab;
 	}
 
-	public JenkinsConfig getJenkins() {
-		return jenkins;
-	}
-
-	public void setJenkins(JenkinsConfig jenkins) {
-		this.jenkins = jenkins;
-	}
+//	public JenkinsConfig getJenkins() {
+//		return jenkins;
+//	}
+//
+//	public void setJenkins(JenkinsConfig jenkins) {
+//		this.jenkins = jenkins;
+//	}
 
 	public   String getJenkinsDir() {
 		return JenkinsDir;

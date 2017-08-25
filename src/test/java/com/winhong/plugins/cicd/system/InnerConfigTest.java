@@ -71,7 +71,7 @@ public class InnerConfigTest {
 		f.setUser("xiehq");
 		f.setPassword("acd12345");
 		t.setGitlab(f);
-		t.setJenkins(j);
+		//t.setJenkins(j);
 		
 		t.setJenkinsDir("/Users/xiehuiqiang/git/jenkins-plugins/work");
 		
