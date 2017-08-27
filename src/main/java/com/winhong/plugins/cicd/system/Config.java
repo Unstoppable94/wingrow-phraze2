@@ -184,7 +184,7 @@ public class Config {
 			file.renameTo(new File(temp));
 		}
 
-		// log.debug(arg0);
+		 log.debug(filename);
 		Tools.saveStringToFile(content, filename);
 
 		// File latest = new File(dir + "/" + name + ".json");

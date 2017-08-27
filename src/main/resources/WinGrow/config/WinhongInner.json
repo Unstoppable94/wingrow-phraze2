@@ -1,6 +1,6 @@
 {  
   "JenkinsDir":"/Users/xiehuiqiang/git/jenkins-plugins/work",
-    "dataDir":"/Users/xiehq/git/wingrow-test/Data",
+    "dataDir":"/Users/xiehuiqiang/git/wingrow-test/Data",
   "gitlab":{  
     "url":"10.0.2.50:180",
     "user":"xiehq",

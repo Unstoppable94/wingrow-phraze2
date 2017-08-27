@@ -128,10 +128,15 @@ public class JenkinsClient {
 		// URLEncodedUtils.parse(content, "UTF-8");
 		String S = URLEncoder.encode(content, "UTF-8");
 		String serverUrl = url
-				+ "/credentials/store/system/domain/_/createCredentials?json="
+				+ "credentials/store/system/domain/_/createCredentials?json="
 				+ S;
 		log.debug("serverUrl:"+serverUrl);
-		return httpJobModify(new URL(serverUrl), "", "application/json");
+		//return httpSimpleModifyWithoutContentType(new URL(serverUrl));
+		
+		int code=httpJobModifyReturnCode(new URL(serverUrl), "", "application/json");
+		if (code ==403 ||(code >= 200 && code < 300))
+			return true;
+		return false;
 
 	}
 
@@ -294,7 +299,7 @@ public class JenkinsClient {
 			connection.setRequestProperty("Content-Type", contentType);
 
 		}
-		// connection.setRequestProperty("charset", "UTF-8");
+		connection.setRequestProperty("charset", "UTF-8");
 
 		// InputStream inputStream = connection.getInputStream();
 
@@ -728,4 +733,57 @@ public class JenkinsClient {
 			throw new IOException("Server out:" + out);
 		}
 	}
+	
+	
+	
+	private int httpJobModifyReturnCode(URL serverUrl, String content,
+			String contentType) throws IOException {
+
+		if (crumbField == null)
+			if (!getCrumb())
+				return -1;
+
+		// log.debug(crumbField + ":" + crumb);
+		log.debug("serverUrl:" + serverUrl.toString());
+		log.debug("content:" + content);
+		log.debug("contentType:" + contentType);
+		
+		HttpURLConnection connection = getConnection(serverUrl, "POST");
+		connection.setRequestProperty(crumbField, crumb);
+		if (contentType == null)
+			connection.setRequestProperty("Content-Type", "text/xml");
+		else {
+
+			connection.setRequestProperty("Content-Type", contentType);
+
+		}
+		connection.setRequestProperty("charset", "UTF-8");
+
+		// InputStream inputStream = connection.getInputStream();
+
+		// @SuppressWarnings("resource")
+		// FileInputStream inputStream = new FileInputStream(file);
+
+		// content = new String(content.getBytes("GBK"), "UTF-8");
+		if (content != null && content != ""){
+			try (DataOutputStream wr = new DataOutputStream(
+					connection.getOutputStream())) {
+
+				// byte b[] = (content).getBytes();
+				byte b[] = Tools.ToUTF8(content).getBytes();
+
+				wr.write(b, 0, b.length);
+
+			}
+			log.debug("SEND content:" + content);
+
+		}
+		 
+		int code = connection.getResponseCode();
+		 
+		
+		 return code;
+	}
+
+	 
 }
