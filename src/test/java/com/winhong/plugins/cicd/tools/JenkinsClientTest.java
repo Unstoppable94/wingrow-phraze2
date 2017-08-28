@@ -13,11 +13,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.winhong.plugins.cicd.Maven.MavenProject;
-import com.winhong.plugins.cicd.Maven.MavenProjectBaseInfo;
 import com.winhong.plugins.cicd.action.ProjectAction;
+import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
 import com.winhong.plugins.cicd.data.base.Trigger;
-import com.winhong.plugins.cicd.tool.JenkinsClient;
+import com.winhong.plugins.cicd.maven.MavenProject;
+ import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
 
 public class JenkinsClientTest {
@@ -34,15 +34,13 @@ public class JenkinsClientTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
-		MavenProjectBaseInfo b=new MavenProjectBaseInfo();
+		ProjectBaseInfo b=new ProjectBaseInfo();
 		b.setCreateTime(System.currentTimeMillis());
 		b.setDescription("中文project111");
 		b.setExraProperties("");
 		b.setGroupId("default");
 		b.setId("TestPROJ"+System.currentTimeMillis());
-		b.setName(b.getId());
-		b.setJdk("1.7");
-		b.setMavenId("3.3.9");
+		b.setName(b.getId()); 
 		b.setLastModifyTime(b.getCreateTime());
 		b.setMailOnfail("mailoffail@w.com");
 		b.setMailOnReovery(null);
@@ -273,7 +271,7 @@ public class JenkinsClientTest {
 		
 		 try {
 		
-			 if (!ProjectAction.AddMavenProject(p)){
+			 if (!ProjectAction.AddProject(p)){
 				 fail("addOrModifyJob fail");
 			 }
 			 

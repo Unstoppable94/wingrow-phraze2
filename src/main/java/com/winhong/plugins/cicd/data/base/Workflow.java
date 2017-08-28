@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public   class Workflow {
+public abstract  class Workflow {
 	
+	private  String pipeScript ;
 	
 	@Expose
 	@SerializedName(value = "formProperties")
@@ -27,8 +28,7 @@ public   class Workflow {
 
 	public Workflow() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
+ 	}
 
 
 	public Workflow(ArrayList<Stage> stages) {
@@ -37,7 +37,14 @@ public   class Workflow {
 	}
 	
 	
-	
+	public String getPipeScript() {
+		return pipeScript;
+	}
+
+
+	public void setPipeScript(String pipeScript) {
+		this.pipeScript = pipeScript;
+	}
 	
 	
 }

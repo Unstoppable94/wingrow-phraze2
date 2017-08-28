@@ -15,7 +15,7 @@ public class logTest {
 			.getLogger(GroupAction.class);
 	@Test
 	public void testPrintJson() {
-		Compile c=new Compile("testGoal");
+		Compile c=new Compile();
 		
 		
 		log.debug("onlytest");

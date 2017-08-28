@@ -1,9 +1,14 @@
 package com.winhong.plugins.cicd.mavenStep;
 
-import com.winhong.plugins.cicd.data.base.Stage;
+import java.util.ArrayList;
+
+import com.google.gson.annotations.Expose;
+ import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
 import com.winhong.plugins.cicd.mavenProperty.CompileGoal;
- 
+import com.winhong.plugins.cicd.mavenProperty.JdkProperty;
+import com.winhong.plugins.cicd.mavenProperty.MavenProperty;
+  
 public class Compile extends Stage {
 
 	private final static String id="compile";
@@ -11,26 +16,28 @@ public class Compile extends Stage {
 	private final static String description="调用Maven进行编译";
 	
 	
-	/**
-	 * 编译目标
-	 * @param goal
-	 */
-	public Compile(String goal) {
-		super(id, name, description);
-		CompileGoal g = new CompileGoal(goal);
-		this.setGoal(g);
-		
- 	}
 	
 	
-
+	CompileGoal goal = new CompileGoal();
+	
+	//InnerConfig.defaultConfig().getJdk()
+	
+	private JdkProperty jdk = new JdkProperty("jdk", "",
+			"JDK版本", "编译时候使用的JDK版本️ ");
+	private MavenProperty maven = new MavenProperty("maven", "",
+			"Maven版本", "编译时候使用的Maven版本️ ");
 	/**
 	 * 生产一个新的默认goal的complie对象
 	 */
 	public Compile() {
 		super(id, name, description);
-		CompileGoal g = new CompileGoal();
-		this.setGoal(g);
+		//CompileGoal g = new CompileGoal();
+		//this.setGoal(g);
+		
+		this.setProperty(maven);
+		this.setProperty(jdk);
+		this.setProperty(goal);
+	
 		
  	}
 	
@@ -39,6 +46,9 @@ public class Compile extends Stage {
 	 * 设置complie 目标，默认为 -DskipTests=true clean  package
 	 */
 	//private CompileGoal goal;
+	
+	
+ 
 	
 	
 	public CompileGoal getGoal() {

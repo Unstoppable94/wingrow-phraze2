@@ -13,8 +13,9 @@ import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.winhong.plugins.cicd.Maven.MavenProject;
 import com.winhong.plugins.cicd.action.ProjectAction;
+import com.winhong.plugins.cicd.data.base.BaseProject;
+import com.winhong.plugins.cicd.system.ProjectType;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.ProjectView;
 
@@ -35,14 +36,14 @@ public class ProjectRest {
 			@QueryParam("maxResult") int maxResult,
 			@QueryParam("action") String action) {
 		try {
-
 			if (action != null && action.equalsIgnoreCase("new")) {
-
-				MavenProject project = new MavenProject();
+				//create new project ,return default project to frontend
+					
+				BaseProject project =   (BaseProject) ProjectType.getClass(ProjectType.getDefaultType()).newInstance();
 				String s = Tools.getJson(project);
-				log.debug(s);
+				//log.debug(s);
 				// log.debug(tools.ToGBK(s));
-				log.debug(Tools.ToUTF8(s));
+				//log.debug(Tools.ToUTF8(s));
 
 				return Tools.ToUTF8(Tools.getJson(project));
 			}
@@ -84,7 +85,7 @@ public class ProjectRest {
 	public String listSingleProject(@PathParam("projectName") String projectName) {
 		try {
 			log.debug("projectName:" + projectName);
-			String s = ProjectAction.getMavenProjectAsString(projectName);
+			String s = ProjectAction.getProjectAsString(projectName);
 			String returnStr = new String(s.getBytes(), "UTF-8");
 			return returnStr;
 		} catch (Exception e) {
@@ -99,14 +100,14 @@ public class ProjectRest {
 	@Consumes("application/json")
 	public String addProject(String json) {
 		try {
-			MavenProject project = (MavenProject) Tools.objectFromJsonString(
-					json, MavenProject.class);
+			BaseProject project = (BaseProject) Tools.objectFromJsonString(
+					json, BaseProject.class);
 
 			log.debug(Tools.getJson(project));
 
-			if (ProjectAction.AddMavenProject(project))
+			if (ProjectAction.AddProject(project))
 				return Tools
-						.ToUTF8(ProjectAction.getMavenProjectAsString(project
+						.ToUTF8(ProjectAction.getProjectAsString(project
 								.getBaseInfo().getId()));
 			return WebTools.Error("创建失败，unknown error");
 		} catch (Exception e) {
@@ -123,12 +124,12 @@ public class ProjectRest {
 	public String modifyProject(@PathParam("projectName") String projectId,
 			String json) {
 		try {
-			MavenProject project = (MavenProject) Tools.objectFromJsonString(
-					json, MavenProject.class);
+			BaseProject project = (BaseProject) Tools.objectFromJsonString(
+					json, BaseProject.class);
 
-			if (ProjectAction.ModifyMavenProject(project))
+			if (ProjectAction.ModifyProject(project))
 				return Tools.ToUTF8(ProjectAction
-						.getMavenProjectAsString(projectId));
+						.getProjectAsString(projectId));
 			return WebTools.Error("修改失败，unknown error");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,7 +146,7 @@ public class ProjectRest {
 			String json) {
 		try {
 			log.debug("delete project"+projectName);
-			if (ProjectAction.DeleteMavenProject(projectName))
+			if (ProjectAction.DeleteProject(projectName))
 				return "{}";
 			return WebTools.Error("删除失败，unknown error");
 		} catch (Exception e) {

@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
-import com.winhong.plugins.cicd.Maven.MavenProject;
 import com.winhong.plugins.cicd.action.GroupAction;
 import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.data.base.BaseProject;
 import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
+import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.Tools;

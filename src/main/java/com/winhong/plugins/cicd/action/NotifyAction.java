@@ -27,8 +27,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.sun.mail.util.MailSSLSocketFactory;
-import com.winhong.plugins.cicd.Maven.MavenProject;
- import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
+import com.winhong.plugins.cicd.data.base.BaseProject;
+import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
+import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.EmailTemplate;
 import com.winhong.plugins.cicd.system.InnerConfig;
@@ -235,7 +236,7 @@ public class NotifyAction {
 
 			if (build == null)
 				continue;
-			MavenProject project = ProjectAction.getMavenProject(job.getName());
+			BaseProject project = ProjectAction.getProject(job.getName());
 			String status = Tools.colorToStatus(job.getColor());
 
 			sendlogItem item = sendlog.get(job.getName());

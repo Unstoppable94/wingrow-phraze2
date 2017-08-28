@@ -15,7 +15,7 @@ public class gsonTest {
 
 	@Test
 	public void testPrintJson() {
-		Compile c=new Compile("testGoal");
+		Compile c=new Compile();
 		
 		
 		Gson gson = new GsonBuilder().serializeNulls().create();

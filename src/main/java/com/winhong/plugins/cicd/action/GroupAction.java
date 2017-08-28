@@ -90,8 +90,7 @@ public class GroupAction {
 		// ProjectGroupJsonConfig group
 
 		// 移动所有项目到默认group
-		//InnerConfig config = Config.defaultConfig();
-		String url = Config.getJenkinsConfig().getUrl()
+ 		String url = Config.getJenkinsConfig().getUrl()
 				+ projectStatusurl.replace("#jobname", id);
 
 		@SuppressWarnings("unchecked")

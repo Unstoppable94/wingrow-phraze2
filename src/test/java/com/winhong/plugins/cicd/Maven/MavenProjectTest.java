@@ -19,6 +19,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.tool.RancherClient;
 import com.winhong.plugins.cicd.tool.Tools;
 

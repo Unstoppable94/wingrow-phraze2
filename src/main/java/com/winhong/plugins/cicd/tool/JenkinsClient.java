@@ -128,7 +128,7 @@ public class JenkinsClient {
 		// URLEncodedUtils.parse(content, "UTF-8");
 		String S = URLEncoder.encode(content, "UTF-8");
 		String serverUrl = url
-				+ "credentials/store/system/domain/_/createCredentials?json="
+				+ "/credentials/store/system/domain/_/createCredentials?json="
 				+ S;
 		log.debug("serverUrl:"+serverUrl);
 		//return httpSimpleModifyWithoutContentType(new URL(serverUrl));

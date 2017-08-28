@@ -1,39 +1,40 @@
-package com.winhong.plugins.cicd.Maven;
+package com.winhong.plugins.cicd.maven;
 
 import com.google.gson.annotations.Expose;
 import com.winhong.plugins.cicd.data.base.BaseProject;
+import com.winhong.plugins.cicd.system.ProjectType;
+import com.winhong.plugins.cicd.tool.Tools;
 
 public class MavenProject extends BaseProject{
 
- 
-	@Expose
-	private MavenProjectBaseInfo baseInfo =new MavenProjectBaseInfo();
 	
-	@Expose
-	private MavenWorkflow workflow=new MavenWorkflow();
+ 
+	
+ 
+//	@Expose
+//private MavenProjectBaseInfo baseInfo =new MavenProjectBaseInfo();
+	
+	//@Expose
+	//private MavenWorkflow workflow=new MavenWorkflow();
 
-	public MavenProjectBaseInfo getBaseInfo() {
-		return baseInfo;
-	}
+	 
 
-	public void setBaseInfo(MavenProjectBaseInfo baseInfo) {
-		this.baseInfo = baseInfo;
-	}
-
-	public MavenWorkflow getWorkflow() {
-		return workflow;
-	}
-
-	public void setWorkflow(MavenWorkflow workflow) {
-		this.workflow = workflow;
-	}
+	 
 
 	public MavenProject() {
+		
 		super();
+		this.getBaseInfo().setProjectType(ProjectType.MavenProject);
+		this.getBaseInfo().setExraProperties("MAVEN_OPTS=-Xms256m -Xmx1512m");   
+		
+		this.setWorkflow(new MavenWorkflow());
+		
  	}
-	
-	
-	
+
+	@Override
+	public String genJson() {
+			return Tools.getJson(this);
+	}
 	
 
 }

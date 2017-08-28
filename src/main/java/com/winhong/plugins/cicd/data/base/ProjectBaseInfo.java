@@ -43,7 +43,7 @@ public class ProjectBaseInfo {
 	
 	
 	@Expose
-	private String exraProperties="MAVEN_OPTS=-Xms256m -Xmx1512m";
+	private String exraProperties;
 	
  
 	@Expose
@@ -83,6 +83,13 @@ public class ProjectBaseInfo {
 	 */
 	@Expose
 	private String groupId="default";
+	
+	
+	/**
+	 * 项目类型
+	 */
+	@Expose
+	private String projectType;
 	
 	/**
 	 * 默认最大执行时间，默认30分钟
@@ -258,6 +265,14 @@ public class ProjectBaseInfo {
 
 	public void setTriggerProperty(String triggerProperty) {
 		this.triggerProperty = triggerProperty;
+	}
+
+	public String getProjectType() {
+		return projectType;
+	}
+
+	public void setProjectType(String projectType) {
+		this.projectType = projectType;
 	}
 
 	 

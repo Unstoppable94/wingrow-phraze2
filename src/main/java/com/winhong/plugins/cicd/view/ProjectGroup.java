@@ -17,11 +17,12 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.io.FeedException;
-import com.winhong.plugins.cicd.Maven.MavenProject;
 import com.winhong.plugins.cicd.action.GroupAction;
 import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.action.UserAction;
+import com.winhong.plugins.cicd.data.base.BaseProject;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
+import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.Tools;
@@ -211,7 +212,7 @@ public class ProjectGroup {
 				j.setStatus(Tools.colorToStatus(job.getColor()));
 				
 				j.setDuration(build.getDuration());
-				MavenProject pro = ProjectAction.getMavenProject(job.getName());
+				BaseProject pro = ProjectAction.getProject(job.getName());
 				// String imageName=pro.getWorkflow().getStages().get
 				// TODO 识别docker iamge 及maven artifacts
 				// if (build.getArtifacts().size() == 2) {

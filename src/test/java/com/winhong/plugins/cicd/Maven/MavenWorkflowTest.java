@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.winhong.plugins.cicd.Maven.MavenWorkflow;
+import com.winhong.plugins.cicd.maven.MavenWorkflow;
 
 public class MavenWorkflowTest extends MavenWorkflow {
 

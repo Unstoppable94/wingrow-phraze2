@@ -1,4 +1,4 @@
-package com.winhong.plugins.cicd.Step;
+package com.winhong.plugins.cicd.step;
 
 import java.util.ArrayList;
 

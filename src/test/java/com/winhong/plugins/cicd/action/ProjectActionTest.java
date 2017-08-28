@@ -12,25 +12,26 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.winhong.plugins.cicd.Maven.MavenProject;
-import com.winhong.plugins.cicd.Maven.MavenProjectBaseInfo;
+import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
+import com.winhong.plugins.cicd.docker.TranditionalDockerProject;
+import com.winhong.plugins.cicd.maven.MavenProject;
+import com.winhong.plugins.cicd.system.ProjectType;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.displayData.DisplayBuild;
 
 public class ProjectActionTest {
 	static MavenProject p=new MavenProject();
+	static	ProjectBaseInfo b=new ProjectBaseInfo();
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
- 		MavenProjectBaseInfo b=new MavenProjectBaseInfo();
 		b.setCreateTime(System.currentTimeMillis());
 		b.setDescription("project111");
 		b.setExraProperties("");
 		b.setGroupId("default");
 		b.setId("");
 		b.setName("project222");
-		b.setJdk("Jdk1.7");
-		b.setMavenId("Maven-3.3.9");
+		b.setProjectType(ProjectType.MavenProject);
 		b.setLastModifyTime(b.getCreateTime());
 		b.setMailOnfail("mailoffail@w.com");
 		b.setMailOnReovery(null);
@@ -59,10 +60,10 @@ public class ProjectActionTest {
 	}
 
 	@Test
-	public void testAddOrModifyMavenProject() {
+	public void testAddOrModifyProject() {
 		
 		try {
-			ProjectAction.AddMavenProject(p);
+			ProjectAction.AddProject(p);
 			p.getBaseInfo().setGroupId("default");
 		//	ProjectAction.ModifyMavenProject(p);
 		} catch (Exception e) {
@@ -72,13 +73,33 @@ public class ProjectActionTest {
 		
  	}
 
+	
+	@Test
+	public void testAddOrModifyDockerProject() {
+		
+		try {
+			TranditionalDockerProject   p=new TranditionalDockerProject();
+			b.setProjectType(ProjectType.TraditionalDocker);
+			p.setBaseInfo(b);
+			ProjectAction.AddProject(p);
+			
+			
+		//	ProjectAction.ModifyMavenProject(p);
+		} catch (Exception e) {
+ 			e.printStackTrace();
+			fail();
+		}
+		
+ 	}
+	
+	
 	@Test
 	public void testDeleteMavenProject() {
 		try {
 			p.getBaseInfo().setName("delete中文Poject2");
-			ProjectAction.AddMavenProject(p);
+			ProjectAction.AddProject(p);
 			 
-			ProjectAction.DeleteMavenProject(p.getBaseInfo().getId());
+			ProjectAction.DeleteProject(p.getBaseInfo().getId());
 		} catch (Exception e) {
  			e.printStackTrace();
 			fail();
@@ -105,9 +126,9 @@ public class ProjectActionTest {
 	public void testTriiger() {
 		try {
 			p.getBaseInfo().setName("delete中文Poject2");
-			ProjectAction.AddMavenProject(p);
+			ProjectAction.AddProject(p);
 		  ProjectAction.triggerBuild(p.getBaseInfo().getId()); 
- 			ProjectAction.DeleteMavenProject(p.getBaseInfo().getId());
+ 			ProjectAction.DeleteProject(p.getBaseInfo().getId());
 		} catch (Exception e) {
  			e.printStackTrace();
 			fail();

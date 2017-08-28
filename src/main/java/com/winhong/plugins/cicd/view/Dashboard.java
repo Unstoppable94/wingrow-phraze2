@@ -215,7 +215,7 @@ public class Dashboard {
 			PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(url,
 					PipelineRun.class);
 			// 为了显示需求，修改name为项目名称，默认为#112 112为build number
-			BaseProject pro=ProjectAction.getMavenProject(build.getProject());
+			BaseProject pro=ProjectAction.getProject(build.getProject());
 			
 			run.setName(pro.getBaseInfo().getName());
 			list.add(run);

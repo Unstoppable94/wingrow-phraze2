@@ -6,10 +6,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.winhong.plugins.cicd.Maven.MavenProject;
-import com.winhong.plugins.cicd.Maven.MavenProjectBaseInfo;
+import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
-
+import com.winhong.plugins.cicd.maven.MavenProject;
+ 
 public class genTestData {
 	static MavenProject p=new MavenProject();
 
@@ -21,15 +21,14 @@ static ProjectGroupJsonConfig group=new ProjectGroupJsonConfig();
 		group.setName("default");
 		group.setDescription("defaultGroup");
 	 
- 		MavenProjectBaseInfo b=new MavenProjectBaseInfo();
+ 		ProjectBaseInfo b=new ProjectBaseInfo();
 		b.setCreateTime(System.currentTimeMillis());
 		b.setDescription("中文project111");
 		b.setExraProperties("");
 		b.setGroupId("test");
 		b.setId("中文");
 		b.setName("中文project111");
-		b.setJdk("1.7");
-		b.setMavenId("3.3.9");
+
 		b.setLastModifyTime(b.getCreateTime());
 		b.setMailOnfail("mailoffail@w.com");
 		b.setMailOnReovery(null);
@@ -52,10 +51,10 @@ static ProjectGroupJsonConfig group=new ProjectGroupJsonConfig();
 		try {
 			GroupAction.createGroup(group);
 			p.getBaseInfo().setGroupId("default");
-			ProjectAction.AddMavenProject(p);
+			ProjectAction.AddProject(p);
 			p.getBaseInfo().setId("test2");
 			p.getBaseInfo().setName("test2");
-			ProjectAction.AddMavenProject(p);
+			ProjectAction.AddProject(p);
 			ProjectAction.triggerBuild("test2");
 			 
 		} catch (Exception e) {

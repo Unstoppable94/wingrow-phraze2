@@ -13,14 +13,15 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.winhong.plugins.cicd.Maven.MavenProject;
-import com.winhong.plugins.cicd.Maven.MavenProjectBaseInfo;
+import com.winhong.plugins.cicd.data.base.BaseProject;
 import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
 import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.data.base.Trigger;
+import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.property.Property;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.system.ProjectType;
 import com.winhong.plugins.cicd.system.SonarConfig;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
@@ -32,11 +33,11 @@ public class ProjectAction {
 	public ProjectAction() {
 		// TODO Auto-generated constructor stub
 	}
-
+	private static final String jsonfile="/pro.json";
 	private static final Logger log = LoggerFactory
 			.getLogger(ProjectAction.class);
 
-	private static final String jobConfigFile = "WinGrow/config/jobConfig.xml";
+	//private static final String jobConfigFile = "WinGrow/config/jobConfig.xml";
 
 	private static final String projectDateDir = "/projects/";
 
@@ -45,7 +46,7 @@ public class ProjectAction {
 	
  
 	
-	public static boolean AddMavenProject(MavenProject project)
+	public static boolean AddProject(BaseProject project)
 			throws Exception {
 		
 		
@@ -64,12 +65,12 @@ public class ProjectAction {
 			throw new Exception("项目已经存在:"+dir.getAbsolutePath());
 		}
 		project.getBaseInfo().setCreateTime(System.currentTimeMillis());
-		 return AddOrModifyMavenProject(project);
+		 return AddOrModifyProject(project);
 		
 	}
 	
 	
-	public static boolean ModifyMavenProject(MavenProject project)
+	public static boolean ModifyProject(BaseProject project)
 			throws Exception {
 		
 		String projectId = project.getBaseInfo().getId();
@@ -79,7 +80,7 @@ public class ProjectAction {
 			throw new Exception("项目不存在");
 		}
 		project.getBaseInfo().setCreateTime(System.currentTimeMillis());
-		 return AddOrModifyMavenProject(project);
+		 return AddOrModifyProject(project);
 		
 	}
 	
@@ -99,7 +100,7 @@ public class ProjectAction {
 	 * @return
 	 * @throws Exception
 	 */
-	private static boolean AddOrModifyMavenProject(MavenProject project)
+	private static boolean AddOrModifyProject(BaseProject project)
 			throws Exception {
 
 		//InnerConfig config = InnerConfig.defaultConfig();
@@ -113,14 +114,14 @@ public class ProjectAction {
 		String content = genProjectXml(project);
 		//
 		String LatestJsonfilename = dir.getAbsolutePath()
-				+ "/Maven.json@Latest";
+				+ jsonfile+"@Latest";
 
 		
 		JenkinsClient client = JenkinsClient.defaultClient();
 
 		// 调整归属group/view
 		if (client.jobExist(id)) {
-			String str = readLatestMavenProject(id);
+			String str = readLatestProject(id);
 			MavenProject old = (MavenProject) Tools.objectFromJsonString(str,
 					MavenProject.class);
 
@@ -155,7 +156,7 @@ public class ProjectAction {
 		
 		String json=Tools.getJson(project);
 		
-		String Jsonfilename = dir.getAbsolutePath() + "/Maven.json@"
+		String Jsonfilename = dir.getAbsolutePath() + jsonfile+"@"
 				+ currentMs;
 		
 		log.debug("save file:"+Jsonfilename);
@@ -173,7 +174,7 @@ public class ProjectAction {
 		Tools.saveStringToFile(json, LatestJsonfilename);
 		//Files.createLink(newLink, existingFile);
 		//修改credential
-		 MavenProjectBaseInfo baseinfo = project.getBaseInfo();
+		 ProjectBaseInfo baseinfo = project.getBaseInfo();
 		//@TODO create credential fail 
  		client.createCredential(baseinfo.getId(),baseinfo.getSCMUser(),baseinfo.getSCMPassword(), "scm");
 				 
@@ -188,7 +189,7 @@ public class ProjectAction {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean DeleteMavenProject(String projectId) throws Exception {
+	public static boolean DeleteProject(String projectId) throws Exception {
 
 		InnerConfig config = InnerConfig.defaultConfig();
 
@@ -224,8 +225,8 @@ public class ProjectAction {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getMavenProjectAsString(String projectId) throws Exception{
-		return readLatestMavenProject( projectId);
+	public static String getProjectAsString(String projectId) throws Exception{
+		return readLatestProject( projectId);
 		
 	}
 	
@@ -235,9 +236,9 @@ public class ProjectAction {
 	 * @return
 	 * @throws Exception
 	 */
-	public static MavenProject getMavenProject(String projectId) throws Exception{
-		 String s=readLatestMavenProject( projectId);
-		 return (MavenProject) Tools.objectFromJsonString(s, MavenProject.class);
+	public static BaseProject getProject(String projectId) throws Exception{
+		 String s=readLatestProject( projectId);
+		 return (BaseProject) Tools.objectFromJsonString(s, BaseProject.class);
 		
 	}
 	
@@ -248,24 +249,26 @@ public class ProjectAction {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String readLatestMavenProject(String projectId)
+	public static String readLatestProject(String projectId)
 			throws Exception {
 		//InnerConfig config = InnerConfig.defaultConfig();
 
 		File dir = getProjectDirName(projectId);
 		
 		String LatestJsonfilename = dir.getAbsolutePath()
-				+ "/Maven.json@Latest";
+				+ jsonfile+"@Latest";
 		log.debug("filename:"+LatestJsonfilename);
 		return Tools.readFile(new File(LatestJsonfilename)).toString();
 	}
 
-	private static String genProjectXml(MavenProject project)
+	private static String genProjectXml(BaseProject project)
 			throws IOException, InstantiationException, IllegalAccessException {
 
-		String projectXml = Tools.readResource(jobConfigFile);
+		String filename=ProjectType.getConfigXml(project.getBaseInfo().getProjectType());
+		log.debug("config xml:"+filename);
+		String projectXml = Tools.readResource(filename);
 
-		MavenProjectBaseInfo baseinfo = project.getBaseInfo();
+		ProjectBaseInfo baseinfo = project.getBaseInfo();
 		String triggerType = baseinfo.getTrigger();
 		if (triggerType != null
 				&& (triggerType.equalsIgnoreCase("period") || triggerType
@@ -335,8 +338,8 @@ public class ProjectAction {
 			projectXml = projectXml.replace("$exraProperties", "");
 
 		// Maven Project replace
-		projectXml = projectXml.replace("$mavenId", baseinfo.getMavenId());
-		projectXml = projectXml.replace("$jdk", baseinfo.getJdk());
+		//projectXml = projectXml.replace("$mavenId", baseinfo.getMavenId());
+		//projectXml = projectXml.replace("$jdk", baseinfo.getJdk());
 
 		// replace stages values
 		ArrayList<Stage> stages = project.getWorkflow().getStages();
