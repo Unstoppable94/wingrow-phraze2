@@ -69,8 +69,9 @@ static ProjectGroupJsonConfig group=new ProjectGroupJsonConfig();
 		try {
 			GroupAction.createGroup(group);
 			
-//			GroupAction.modifyGroup(group);
-			System.out.println(ProjectGroup.listAllGroup(null,0,2));
+			GroupAction.modifyGroup(group);
+			System.out.println("ProjectGroup==="+ProjectGroup.listAllGroup(null,0,2));
+			
 		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -90,12 +90,13 @@ public class GroupAction {
 		// ProjectGroupJsonConfig group
 
 		// 移动所有项目到默认group
- 		String url = Config.getJenkinsConfig().getUrl()
-				+ projectStatusurl.replace("#jobname", id);
+ 		String url =   projectStatusurl.replace("#jobname", id);
 
+ 		String output=JenkinsClient.defaultClient().httpSimpleGet(url);
 		@SuppressWarnings("unchecked")
-		JobListOfView v = (JobListOfView) Tools.objectFromJsonUrl(url,
+		JobListOfView v = (JobListOfView) Tools.objectFromJsonString(output, 
 				JobListOfView.class);
+		
 
 		ArrayList<Job> jobs = v.getJobs();
 		for (int i = 0; i < jobs.size(); i++) {
@@ -112,7 +113,6 @@ public class GroupAction {
 					+ System.currentTimeMillis() + "_deleted"));
 
 		}
-		// return modifyProjectGroupJson(id, null,modifyAction);
 
 		return false;
 

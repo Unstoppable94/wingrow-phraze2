@@ -33,6 +33,21 @@ public class JobView {
 	@Expose
 	private String imageCmd;
 
+	/**
+	 * ProjectType ,defined in class:ProjectType ,add in phase 2
+	 */
+	@Expose
+	private String projectType;
+	
+	
+	public String getProjectType() {
+		return projectType;
+	}
+
+	public void setProjectType(String projectType) {
+		this.projectType = projectType;
+	}
+
 	public String getId() {
 		return id;
 	}

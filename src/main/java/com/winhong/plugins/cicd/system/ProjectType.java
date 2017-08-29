@@ -63,5 +63,10 @@ public class ProjectType {
 		return relist;
 	}
 
+
+	public static String getDisplayName(String type) {
+		return types.get(type).getDisplayName();
+	}
+
 	
 }

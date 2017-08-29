@@ -29,14 +29,14 @@ public class Tools {
 	public Tools() {
 	}
 
-	public static final String IN_PROGRESS	="IN_PROGRESS";
-	public static final String FAILED	="FAILED";
-	public static final String SUCCESS	="SUCCESS";
-	public static final String NOTBUILD	="NOTBUILD";
-	
+	public static final String IN_PROGRESS = "IN_PROGRESS";
+	public static final String FAILED = "FAILED";
+	public static final String SUCCESS = "SUCCESS";
+	public static final String NOTBUILD = "NOTBUILD";
+
 	public static String colorToStatus(String color) {
 		if (color.endsWith("anime"))
-			return  IN_PROGRESS;
+			return IN_PROGRESS;
 		else if (color.startsWith("red"))
 			return FAILED;
 		else if (color.startsWith("blue"))
@@ -47,13 +47,11 @@ public class Tools {
 	}
 
 	public static String getJson(Object o) {
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-				.serializeNulls().create();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 		return gson.toJson(o);
 	}
 
-	public static void saveStringToFile(String str, String filename)
-			throws IOException {
+	public static void saveStringToFile(String str, String filename) throws IOException {
 		File file = new File(filename);
 		if (!file.exists())
 			file.createNewFile();
@@ -76,7 +74,7 @@ public class Tools {
 		ClassLoader classLoader = Tools.class.getClassLoader();
 
 		InputStream fis = classLoader.getResourceAsStream(resourcename);
-	 
+
 		return IOUtils.toString(fis);
 
 	}
@@ -92,8 +90,7 @@ public class Tools {
 	 * @throws FileNotFoundException
 	 *             文件不存在
 	 */
-	public static Object objectFromJsonResource(String resourcename,
-			Class<?> cla) throws FileNotFoundException {
+	public static Object objectFromJsonResource(String resourcename, Class<?> cla) throws FileNotFoundException {
 		// ClassLoader classLoader = cla.getClassLoader();
 		// URL res = classLoader.getResource(resourcename);
 		// if (res==null){
@@ -118,15 +115,13 @@ public class Tools {
 		// and resources separation.
 		//
 
-		InputStream fis = cla.getClassLoader()
-				.getResourceAsStream(resourcename);
+		InputStream fis = cla.getClassLoader().getResourceAsStream(resourcename);
 
 		// InputStream fis = new FileInputStream(file);
 		// create JsonReader object
 		JsonReader jsonReader = new JsonReader(new InputStreamReader(fis));
 
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-				.serializeNulls().create();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
 		return gson.fromJson(jsonReader, cla);
 	}
@@ -142,16 +137,14 @@ public class Tools {
 	 * @throws FileNotFoundException
 	 *             文件不存在
 	 */
-	public static Object objectFromJsonFile(String filename, Class cla)
-			throws FileNotFoundException {
+	public static Object objectFromJsonFile(String filename, Class cla) throws FileNotFoundException {
 
 		File file = new File(filename);
 		InputStream fis = new FileInputStream(file);
 		// create JsonReader object
 		JsonReader jsonReader = new JsonReader(new InputStreamReader(fis));
 
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-				.serializeNulls().create();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
 		return gson.fromJson(jsonReader, cla);
 	}
@@ -167,23 +160,27 @@ public class Tools {
 	 * @throws MalformedURLException
 	 *             URL异常
 	 * @throws IOException
-	 *             IO
+	 *             IO //
 	 */
-	public static Object objectFromJsonUrl(String url, Type type)
-			throws MalformedURLException, IOException {
-		String json = IOUtils.toString(new URL(url));
+	// public static Object objectFromJsonUrl(String url, Type type)
+	// throws MalformedURLException, IOException {
+	// String json = IOUtils.toString(new URL(url));
+	//
+	// Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+	// .serializeNulls().create();
+	//
+	// return gson.fromJson(json, type);
+	// }
 
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-				.serializeNulls().create();
+	public static Object objectFromJsonString(String content, Type type) throws MalformedURLException, IOException {
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
-		return gson.fromJson(json, type);
+		return gson.fromJson(content, type);
 	}
 
-	public static Object objectFromJsonString(String json, Class cla)
-			throws FileNotFoundException {
+	public static Object objectFromJsonString(String json, Class cla) throws FileNotFoundException {
 
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-				.serializeNulls().create();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
 		return gson.fromJson(json, cla);
 	}
@@ -202,15 +199,13 @@ public class Tools {
 	 *             异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object objectFromJsonUrl(String url, Class cla)
-			throws MalformedURLException, IOException {
-		String json = IOUtils.toString(new URL(url));
-
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-				.serializeNulls().create();
-
-		return gson.fromJson(json, cla);
-	}
+//	public static Object objectFromJsonUrl(String url, Class cla) throws MalformedURLException, IOException {
+//		String json = IOUtils.toString(new URL(url));
+//
+//		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
+//
+//		return gson.fromJson(json, cla);
+//	}
 
 	// Gson gson = new
 	// GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
@@ -319,8 +314,7 @@ public class Tools {
 		sourceLength = source.length();
 		findPos = str.indexOf(source, fromIndex);
 		while (findPos >= 0) {
-			str = str.substring(0, findPos) + target
-					+ str.substring(findPos + sourceLength);
+			str = str.substring(0, findPos) + target + str.substring(findPos + sourceLength);
 
 			fromIndex = findPos + target.length();
 			findPos = str.indexOf(source, fromIndex);
@@ -382,8 +376,7 @@ public class Tools {
 		return removeContent(text, jspStartTag, jspEndTag);
 	}
 
-	public static String removeContent(String text, String startTag,
-			String endTag) {
+	public static String removeContent(String text, String startTag, String endTag) {
 		int startPos = text.indexOf(startTag);
 		int endPos = 0 - endTag.length();
 		StringBuffer ret = new StringBuffer("");
@@ -402,18 +395,15 @@ public class Tools {
 	public static StringBuffer readFile(File file) throws IOException {
 		String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 
-
 		return new StringBuffer(buffer);
 	}
 
-	public static StringBuffer readFileAndRemoveEmptyLine(File file)
-			throws IOException {
+	public static StringBuffer readFileAndRemoveEmptyLine(File file) throws IOException {
 		// FileReader input = new FileReader(file);
 		// BufferedReader in = new BufferedReader(input);
 		StringBuffer buffer = new StringBuffer();
 		String line = "";
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				new FileInputStream(file)));
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 		try {
 			while ((line = in.readLine()) != null) {
 				if (line.trim().length() > 0)
@@ -461,7 +451,7 @@ public class Tools {
 		return returnStr;
 
 	}
-	
+
 	public static String ToGBK(String InStr) {
 		String returnStr = null;
 		try {

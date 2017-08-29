@@ -570,7 +570,7 @@ public class JenkinsClient {
 
 		if (code >= 200 && code < 300) {
 			return true;
-		} else {
+		} else if (code!=403) {
 			InputStream serverOut = connection.getInputStream();
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					serverOut));
@@ -583,7 +583,8 @@ public class JenkinsClient {
 			log.debug(connection.getResponseMessage());
 			throw new IOException("Server out:" + out);
 		}
-		// return false;
+		else
+			return true;
 
 	}
 

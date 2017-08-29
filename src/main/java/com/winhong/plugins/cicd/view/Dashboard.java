@@ -21,8 +21,9 @@ import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.data.base.BaseProject;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
-import com.winhong.plugins.cicd.view.innerData.Job;
+ import com.winhong.plugins.cicd.view.innerData.Job;
 import com.winhong.plugins.cicd.view.innerData.PipelineRun;
 import com.winhong.plugins.cicd.view.innerData.ProjectStatus;
 import com.winhong.plugins.cicd.view.innerData.ProjectStatusStat;
@@ -81,8 +82,13 @@ public class Dashboard {
 	IOException, InstantiationException, IllegalAccessException {
 
 		//InnerConfig config = InnerConfig.defaultConfig();
-		String url = Config.getJenkinsConfig().getUrl() + viewPath+getAllJobsUrl;
-		ProjectStatus status = (ProjectStatus) Tools.objectFromJsonUrl(url,
+		String url = viewPath+getAllJobsUrl;
+		
+		
+		String output=JenkinsClient.defaultClient().httpSimpleGet(url);
+
+ 		
+		ProjectStatus status = (ProjectStatus) Tools.objectFromJsonString(output,
 				ProjectStatus.class);
 		ArrayList<Job> jobs = status.getJobs();
 
@@ -123,8 +129,10 @@ public class Dashboard {
 	IOException, InstantiationException, IllegalAccessException {
 
 		 
-		String url = Config.getJenkinsConfig().getUrl() + viewPath+getAllJobsUrl;
-		ProjectStatus status = (ProjectStatus) Tools.objectFromJsonUrl(url,
+		String url = viewPath+getAllJobsUrl;
+		ProjectStatus status = (ProjectStatus) 
+				Tools.objectFromJsonString(
+				JenkinsClient.defaultClient().httpSimpleGet(url),
 				ProjectStatus.class);
 		ArrayList<Job> jobs = status.getJobs();
 
@@ -212,7 +220,12 @@ public class Dashboard {
 			String url = Config.getJenkinsConfig().getUrl()
 					+ runUrl.replace("jobname", build.getProject()).replace(
 							"number", "" + build.getNumber());
-			PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(url,
+			String output=JenkinsClient.defaultClient().httpSimpleGet(url);
+
+	 		
+		 
+			
+			PipelineRun run = (PipelineRun) Tools.objectFromJsonString(url,
 					PipelineRun.class);
 			// 为了显示需求，修改name为项目名称，默认为#112 112为build number
 			BaseProject pro=ProjectAction.getProject(build.getProject());

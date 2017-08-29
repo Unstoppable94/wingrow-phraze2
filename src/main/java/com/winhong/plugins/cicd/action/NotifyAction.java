@@ -2,10 +2,10 @@ package com.winhong.plugins.cicd.action;
 
 import java.io.File;
 import java.io.FileInputStream;
- import java.io.InputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
- import java.security.GeneralSecurityException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -34,8 +34,9 @@ import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.EmailTemplate;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.system.SMTPConfig;
+import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
-import com.winhong.plugins.cicd.view.innerData.Build;
+ import com.winhong.plugins.cicd.view.innerData.Build;
 import com.winhong.plugins.cicd.view.innerData.Job;
 import com.winhong.plugins.cicd.view.innerData.JobListOfView;
 
@@ -49,11 +50,11 @@ public class NotifyAction {
 	private static boolean running = true;
 
 	public static void init() {
-//		Runtime.getRuntime().addShutdownHook(new Thread() {
-//			public void run() {
-//			//	System.out.println("reached point of no return ...");
-//			}
-//		});
+		// Runtime.getRuntime().addShutdownHook(new Thread() {
+		// public void run() {
+		// // System.out.println("reached point of no return ...");
+		// }
+		// });
 
 		SignalHandler handler = new SignalHandler() {
 			public void handle(Signal sig) {
@@ -92,8 +93,8 @@ public class NotifyAction {
 				}
 
 			} catch (Exception e) {
- 				e.printStackTrace();
- 				try {
+				e.printStackTrace();
+				try {
 					Thread.sleep(60 * 1000);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
@@ -203,7 +204,7 @@ public class NotifyAction {
 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = Config.getJenkinsConfig().getUrl() + getBuildUrl;
+		String url = getBuildUrl;
 		String logFileName = datadir + notifyLogDir + notifyLogFile;
 		File sendLogFile = new File(logFileName);
 
@@ -223,8 +224,11 @@ public class NotifyAction {
 		}
 		if (sendlog == null)
 			sendlog = new HashMap<String, sendlogItem>();
+
+		String output = JenkinsClient.defaultClient().httpSimpleGet(url);
+
 		@SuppressWarnings("unchecked")
-		JobListOfView v = (JobListOfView) Tools.objectFromJsonUrl(url, JobListOfView.class);
+		JobListOfView v = (JobListOfView) Tools.objectFromJsonString(output, JobListOfView.class);
 
 		// Job job=(Job) tools.objectFromJsonUrl(url, Job.class);
 		// project.getBaseInfo().
@@ -258,8 +262,8 @@ public class NotifyAction {
 						sendResult = SendNodifyEmail(smtpConfig, recoveryTemplate,
 								project.getBaseInfo().getMailOnfail(), project.getBaseInfo(), job);
 					}
-				} 
-				
+				}
+
 				if (status.equals(Tools.SUCCESS) && project.getBaseInfo().getMailOnSuccess() != null
 						&& !project.getBaseInfo().getMailOnSuccess().equals("")) {
 					sendResult = SendNodifyEmail(smtpConfig, successTemplate, project.getBaseInfo().getMailOnSuccess(),
@@ -281,7 +285,7 @@ public class NotifyAction {
 		String res = gson.toJson(sendlog, type);
 
 		Tools.saveStringToFile(res, logFileName);
-		log.debug("save check  result to "+logFileName);
+		log.debug("save check  result to " + logFileName);
 	}
 
 	private static boolean SendNodifyEmail(SMTPConfig smtpConfig, EmailTemplate template, String mailto,

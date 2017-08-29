@@ -22,39 +22,34 @@ import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.displayData.DisplayBuild;
 import com.winhong.plugins.cicd.view.innerData.Artifact;
 import com.winhong.plugins.cicd.view.innerData.Build;
 import com.winhong.plugins.cicd.view.innerData.Job;
+import com.winhong.plugins.cicd.view.innerData.JobListOfView;
 import com.winhong.plugins.cicd.view.innerData.PipelineRun;
 import com.winhong.plugins.cicd.view.innerData.Stage;
 import com.winhong.plugins.cicd.view.innerData.StatusOfStat;
 
 public class ProjectView {
 
-	
 	// private BaseProject project;
 
-	private static final Logger log = LoggerFactory
-			.getLogger(ProjectView.class);
+	private static final Logger log = LoggerFactory.getLogger(ProjectView.class);
 
 	private String projectid;
 
 	private static final String buildsUrl = "/api/json?tree=builds[name,building,result,number,duration,timestamp,building,artifacts[fileName,relativePath]]";
 
 	private static final String simpleJobsUrl = "/api/json?tree=jobs[name]";
-	
 
-	
-
-	
 	private static int maxrows = 300;
 
 	private static final int defaultMaxLine = 10;
 
-	public static String getProjectList(int start, int maxLine)
-			throws Exception {
+	public static String getProjectList(int start, int maxLine) throws Exception {
 		return getProjectList(null, start, maxLine);
 	}
 
@@ -112,35 +107,34 @@ public class ProjectView {
 	private static final String projectDateDir = "/projects/";
 	private static final String mavenFile = "/Maven.json@Latest";
 
- 	
-	public static String getProjectList(String projectName, int start,
-			int maxLine) throws Exception {
+	public static String getProjectList(String projectName, int start, int maxLine) throws Exception {
 
 		InnerConfig config = InnerConfig.defaultConfig();
 		// File folder = new File(config.getDataDir()
 		// + projectDateDir);
 
 		// File[] listOfFiles = folder.listFiles();
-		String url = Config.getJenkinsConfig().getUrl() + simpleJobsUrl;
+		String url = simpleJobsUrl;
 
 		ArrayList<BaseProject> groups = new ArrayList<BaseProject>();
-		
-		jobList v = (jobList) Tools.objectFromJsonUrl(url, jobList.class);
+
+		String output = JenkinsClient.defaultClient().httpSimpleGet(url);
+
+		jobList v = (jobList) Tools.objectFromJsonString(output, jobList.class);
 		log.debug("url:" + url);
 
 		ArrayList<simpleJobinfo> jenkinsJobs = v.jobs;
 
 		for (int i = 0; i < jenkinsJobs.size(); i++) {
 
-			File mavenfile = new File(config.getDataDir() + projectDateDir
-					+ jenkinsJobs.get(i).getName() + mavenFile);
+			File mavenfile = new File(config.getDataDir() + projectDateDir + jenkinsJobs.get(i).getName() + mavenFile);
 			if (mavenfile.exists()) {
 
-				MavenProject maven = (MavenProject) Tools.objectFromJsonFile(
-						mavenfile.getAbsolutePath(), MavenProject.class);
-				log.debug("get maven"+maven.getBaseInfo().getName());
+				MavenProject maven = (MavenProject) Tools.objectFromJsonFile(mavenfile.getAbsolutePath(),
+						MavenProject.class);
+				log.debug("get maven" + maven.getBaseInfo().getName());
 				if (projectName != null && projectName != "") {
-					if (projectName.indexOf(maven.getBaseInfo().getName())>=0)
+					if (projectName.indexOf(maven.getBaseInfo().getName()) >= 0)
 						groups.add(maven);
 				} else {
 
@@ -167,17 +161,17 @@ public class ProjectView {
 			j.setId(base.getId());
 			j.setGroupId(base.getGroupId());
 
-			try{
+			try {
 				ProjectGroupJsonConfig group;
-				 
-				group=(ProjectGroupJsonConfig) GroupAction.getProjectGroupObject(j.getGroupId());
+
+				group = (ProjectGroupJsonConfig) GroupAction.getProjectGroupObject(j.getGroupId());
 				j.setGroupName(group.getName());
-			}catch(Exception e){
-				log.error("Group id "+j.groupId+"定义文件没有找到");
+			} catch (Exception e) {
+				log.error("Group id " + j.groupId + "定义文件没有找到");
 				j.setGroupName(j.groupId);
-				//throw e;
+				// throw e;
 			}
-			
+
 			j.setCreateTime(base.getCreateTime());
 			j.setName(base.getName());
 
@@ -193,19 +187,18 @@ public class ProjectView {
 
 	}
 
-	public static String getBuildsInfo(String projectid, int start,
-			int maxLine, String buildStatus, String latestStage)
+	public static String getBuildsInfo(String projectid, int start, int maxLine, String buildStatus, String latestStage)
 			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		if (maxLine == 0)
 			maxLine = defaultMaxLine;
 
-		InnerConfig config = InnerConfig.defaultConfig();
-
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
-				+ buildsUrl;
-		Job job = (Job) Tools.objectFromJsonUrl(url, Job.class);
+		String url = "/job/" + projectid + buildsUrl;
+
+		String output = JenkinsClient.defaultClient().httpSimpleGet(url);
+
+		Job job = (Job) Tools.objectFromJsonString(output, Job.class);
 		// project.getBaseInfo().
 		ArrayList<DisplayBuild> list = new ArrayList<DisplayBuild>();
 		buildList returnlist = new ProjectView().new buildList();
@@ -218,14 +211,13 @@ public class ProjectView {
 			Build build = builds.get(i);
 
 			// filter
-			if (buildStatus != null && !buildStatus.equals("")
-					&& !buildStatus.equalsIgnoreCase("ALL")) {
+			if (buildStatus != null && !buildStatus.equals("") && !buildStatus.equalsIgnoreCase("ALL")) {
 				if (!build.getResult().equals(buildStatus)) {
 					continue;
 				}
 			}
 
-			DisplayBuild b =  new DisplayBuild();
+			DisplayBuild b = new DisplayBuild();
 
 			b.number = build.getNumber();
 
@@ -239,48 +231,44 @@ public class ProjectView {
 			else
 				b.status = build.getResult();
 			b.logUrl = "/job/" + projectid + "/" + b.number + "/consoleText";
-			
+
 			for (int k = 0; k < build.getArtifacts().size(); k++) {
 				Artifact art = build.getArtifacts().get(k);
 				String filename = art.getFileName();
 				if (art.getFileName().startsWith("image--")) {
 
-					String imageName = filename.substring(7,
-							filename.length() - 4);
-					b.imageUrl=("docker pull "
-							+ URLDecoder.decode(imageName));
+					String imageName = filename.substring(7, filename.length() - 4);
+					b.imageUrl = ("docker pull " + URLDecoder.decode(imageName));
 				} else {
-					b.artifactUrl = "/job/" + projectid + "/" + b.number
-							+ "/artifact/"
+					b.artifactUrl = "/job/" + projectid + "/" + b.number + "/artifact/"
 							+ build.getArtifacts().get(k).getRelativePath();
-					
-					//j.setArtifact(art);
+
+					// j.setArtifact(art);
 					// url=""
 				}
 
 			}
-			
-		
+
 			// TODO get imageurl
-			//b.imageUrl = "";
+			// b.imageUrl = "";
 			// get last stageinfo
-			String singleRunUrl = Config.getJenkinsConfig().getUrl() + "/job/"
-					+ projectid + "/" + build.getNumber() + "/wfapi/describe";
+			String singleRunUrl = "/job/" + projectid + "/" + build.getNumber() + "/wfapi/describe";
+			output = JenkinsClient.defaultClient().httpSimpleGet(singleRunUrl);
 
-			PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(
-					singleRunUrl, PipelineRun.class);
-			Stage stage = run.getStages().get(run.getStages().size() - 1);
+			PipelineRun run = (PipelineRun) Tools.objectFromJsonString(output, PipelineRun.class);
+			if (run.getStages().size() > 1) {
+				Stage stage = run.getStages().get(run.getStages().size() - 1);
 
-			// filter
-			if (latestStage != null && !latestStage.equals("")) {
-				if (!stage.getName().equalsIgnoreCase(latestStage)) {
-					continue;
+				if (latestStage != null && !latestStage.equals("")) {
+					if (!stage.getName().equalsIgnoreCase(latestStage)) {
+						continue;
+					}
 				}
-			}
-			b.setLastStage(stage.getName());
-			b.setLastStageStatus(stage.getStatus());
+				b.setLastStage(stage.getName());
+				b.setLastStageStatus(stage.getStatus());
 
-			list.add(b);
+				list.add(b);
+			}
 			// if (list.size()>(start+maxLine))
 			// break;
 		}
@@ -299,29 +287,25 @@ public class ProjectView {
 			end = start;
 
 		//
-		returnlist.results = new ArrayList<DisplayBuild>(list.subList(start,
-				end));
+		returnlist.results = new ArrayList<DisplayBuild>(list.subList(start, end));
 		returnlist.total = list.size();
 		return Tools.getJson(returnlist);
 
 	}
 
-	
 	public static String getLatestBuild(String projectid)
 			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
-		 
-		 
 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
-				+ buildsUrl + "{0,1}";
+		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid + buildsUrl + "{0,1}";
 		log.debug(url);
-		Job job = (Job) Tools.objectFromJsonUrl(url, Job.class);
-		if (job.getBuilds().size()>0)
+		Job job = (Job) Tools.objectFromJsonString(url, Job.class);
+		if (job.getBuilds().size() > 0)
 			return Tools.getJson(job.getBuilds().get(0));
 		return "";
- 	}
+	}
+
 	/**
 	 * 获取build 信息
 	 * 
@@ -332,8 +316,8 @@ public class ProjectView {
 	 * @return
 	 * @throws MalformedURLException
 	 * @throws IOException
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
 	public static String getBuildsInfo(String projectid, int start, int maxLine)
 			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
@@ -344,14 +328,14 @@ public class ProjectView {
 			start = 0;
 
 		}
-		InnerConfig config = InnerConfig.defaultConfig();
 
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
-				+ buildsUrl + "{" + start + "," + (start + maxLine) + "}";
-		log.debug(url);
-		Job job = (Job) Tools.objectFromJsonUrl(url, Job.class);
+		String url = "/job/" + projectid + buildsUrl + "{" + start + "," + (start + maxLine) + "}";
+
+		String output = JenkinsClient.defaultClient().httpSimpleGet(url);
+
+		Job job = (Job) Tools.objectFromJsonString(output, Job.class);
 
 		// project.getBaseInfo().
 		ArrayList<DisplayBuild> list = new ArrayList<DisplayBuild>();
@@ -364,7 +348,7 @@ public class ProjectView {
 		for (int i = 0; i < builds.size(); i++) {
 			Build build = builds.get(i);
 
-			DisplayBuild b =  new DisplayBuild();
+			DisplayBuild b = new DisplayBuild();
 
 			b.number = build.getNumber();
 
@@ -379,39 +363,35 @@ public class ProjectView {
 				b.status = build.getResult();
 
 			b.logUrl = "/job/" + projectid + "/" + b.number + "/consoleText";
-			
+
 			for (int k = 0; k < build.getArtifacts().size(); k++) {
 				Artifact art = build.getArtifacts().get(k);
 				String filename = art.getFileName();
 				if (art.getFileName().startsWith("image--")) {
 
-					String imageName = filename.substring(7,
-							filename.length() - 4);
-					b.imageUrl=("docker pull "
-							+ URLDecoder.decode(imageName));
+					String imageName = filename.substring(7, filename.length() - 4);
+					b.imageUrl = ("docker pull " + URLDecoder.decode(imageName));
 				} else {
-					b.artifactUrl = "/job/" + projectid + "/" + b.number
-							+ "/artifact/"
+					b.artifactUrl = "/job/" + projectid + "/" + b.number + "/artifact/"
 							+ build.getArtifacts().get(k).getRelativePath();
-					
-					//j.setArtifact(art);
+
+					// j.setArtifact(art);
 					// url=""
 				}
 
 			}
-			
+
 			// get last stageinfo
-			String singleRunUrl = Config.getJenkinsConfig().getUrl() + "/job/"
-					+ projectid + "/" + build.getNumber() + "/wfapi/describe";
+			String singleRunUrl = "/job/" + projectid + "/" + build.getNumber() + "/wfapi/describe";
+			output = JenkinsClient.defaultClient().httpSimpleGet(singleRunUrl);
 
-			PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(
-					singleRunUrl, PipelineRun.class);
-			Stage stage = new Stage();
-			if (run.getStages().size() > 0)
-				stage = run.getStages().get(run.getStages().size() - 1);
+			PipelineRun run = (PipelineRun) Tools.objectFromJsonString(output, PipelineRun.class);
+			if (run.getStages().size() > 1) {
+				Stage stage = run.getStages().get(run.getStages().size() - 1);
 
-			b.setLastStage(stage.getName());
-			b.setLastStageStatus(stage.getStatus());
+				b.setLastStage(stage.getName());
+				b.setLastStageStatus(stage.getStatus());
+			}
 
 			list.add(b);
 			// if (list.size()>(start+maxLine))
@@ -422,11 +402,11 @@ public class ProjectView {
 
 		// get totle builds number
 
-		String totolUrl = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
-				+ "/api/json?depth=0";
+		String totolUrl = "/job/" + projectid + "/api/json?depth=0";
 		log.debug("totolUrl:" + totolUrl);
+		output = JenkinsClient.defaultClient().httpSimpleGet(totolUrl);
 
-		Job job2 = (Job) Tools.objectFromJsonUrl(totolUrl, Job.class);
+		Job job2 = (Job) Tools.objectFromJsonString(output, Job.class);
 
 		returnlist.total = job2.getBuilds().size();
 
@@ -442,24 +422,22 @@ public class ProjectView {
 	 * @return
 	 * @throws MalformedURLException
 	 * @throws IOException
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
 	public static String getSingleBuildsInfo(String projectid, int buildNumber)
 			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
- 
+
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid + "/"
-				+ buildNumber + "/api/json";
+		String url = "/job/" + projectid + "/" + buildNumber + "/api/json";
+		String output = JenkinsClient.defaultClient().httpSimpleGet(url);
 
-		Build build = (Build) Tools.objectFromJsonUrl(url, Build.class);
+		Build build = (Build) Tools.objectFromJsonString(output, Build.class);
 
-		DisplayBuild b =  new DisplayBuild();
+		DisplayBuild b = new DisplayBuild();
 
 		b.number = build.getNumber();
-
-		// System.out.println("getDuration:"+build.getDuration()+","+build.getTimestamp()+","+build.getArtifacts().size());
 
 		b.buildDate = build.getTimestamp();
 		b.duration = build.getDuration();
@@ -470,36 +448,32 @@ public class ProjectView {
 			b.status = build.getResult();
 
 		b.logUrl = "/job/" + projectid + "/" + b.number + "/consoleText";
-		
+
 		for (int k = 0; k < build.getArtifacts().size(); k++) {
 			Artifact art = build.getArtifacts().get(k);
 			String filename = art.getFileName();
 			if (art.getFileName().startsWith("image--")) {
 
-				String imageName = filename.substring(7,
-						filename.length() - 4);
-				b.imageUrl=("docker pull "
-						+ URLDecoder.decode(imageName));
+				String imageName = filename.substring(7, filename.length() - 4);
+				b.imageUrl = ("docker pull " + URLDecoder.decode(imageName));
 			} else {
-				b.artifactUrl = "/job/" + projectid + "/" + b.number
-						+ "/artifact/"
+				b.artifactUrl = "/job/" + projectid + "/" + b.number + "/artifact/"
 						+ build.getArtifacts().get(k).getRelativePath();
-				
-				//j.setArtifact(art);
-				// url=""
+
 			}
 
 		}
 		// get last stageinfo
-		String singleRunUrl = Config.getJenkinsConfig().getUrl() + "/job/"
-				+ projectid + "/" + build.getNumber() + "/wfapi/describe";
+		String singleRunUrl = "/job/" + projectid + "/" + build.getNumber() + "/wfapi/describe";
+		output = JenkinsClient.defaultClient().httpSimpleGet(singleRunUrl);
 
-		PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(singleRunUrl,
-				PipelineRun.class);
-		Stage stage = run.getStages().get(run.getStages().size() - 1);
+		PipelineRun run = (PipelineRun) Tools.objectFromJsonString(output, PipelineRun.class);
+		if (run.getStages().size() > 1) {
+			Stage stage = run.getStages().get(run.getStages().size() - 1);
 
-		b.setLastStage(stage.getName());
-		b.setLastStageStatus(stage.getStatus());
+			b.setLastStage(stage.getName());
+			b.setLastStageStatus(stage.getStatus());
+		}
 
 		ArrayList<DisplayBuild> list = new ArrayList<DisplayBuild>();
 		list.add(b);
@@ -525,16 +499,16 @@ public class ProjectView {
 	 * @return json
 	 * @throws MalformedURLException
 	 * @throws IOException
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
 	public static String getSingleRun(String projectId, int buildNumber)
 			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
- 		String url = Config.getJenkinsConfig().getUrl()
-				+ runUrl.replace("jobname", projectId).replace("number",
-						"" + buildNumber);
-		PipelineRun run = (PipelineRun) Tools.objectFromJsonUrl(url,
-				PipelineRun.class);
+		String url =   runUrl.replace("jobname", projectId).replace("number", "" + buildNumber);
+		//run.getStages().size() 
+		String output = JenkinsClient.defaultClient().httpSimpleGet(url);
+
+		PipelineRun run = (PipelineRun) Tools.objectFromJsonString(output, PipelineRun.class);
 		run.setName(projectId);
 		return Tools.getJson(run);
 
@@ -550,10 +524,11 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
-	public String getRecentFailRuns() throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
+	public String getRecentFailRuns()
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		return getRecentRuns("FAILED,ABORTED");
 	}
 
@@ -565,11 +540,11 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
-	public String getRecentSucessRuns() throws MalformedURLException,
-			IOException, InstantiationException, IllegalAccessException {
+	public String getRecentSucessRuns()
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		return getRecentRuns("SUCCESS");
 	}
 
@@ -581,10 +556,11 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
-	public String getRecentAllRuns() throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
+	public String getRecentAllRuns()
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		return getRecentRuns(null);
 	}
 
@@ -596,21 +572,22 @@ public class ProjectView {
 	 *             异常
 	 * @throws IOException
 	 *             异常
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
-	public String getRecentRuns(String Status) throws MalformedURLException,
-			IOException, InstantiationException, IllegalAccessException {
- 
+	public String getRecentRuns(String Status)
+			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
+
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = Config.getJenkinsConfig().getUrl() + "/job/" + projectid
-				+ wfrunUrl;
+		String url = "/job/" + projectid + wfrunUrl;
 
-		ArrayList<PipelineRun> runs = (ArrayList<PipelineRun>) Tools
-				.objectFromJsonUrl(url,
-						new TypeToken<ArrayList<PipelineRun>>() {
-						}.getType());
+		String output = JenkinsClient.defaultClient().httpSimpleGet(url);
+
+		@SuppressWarnings("unchecked")
+		ArrayList<PipelineRun> runs = (ArrayList<PipelineRun>) Tools.objectFromJsonString(output,
+				new TypeToken<ArrayList<PipelineRun>>() {
+				}.getType());
 
 		// Job job=(Job) tools.objectFromJsonUrl(url, Job.class);
 		// project.getBaseInfo().
@@ -679,9 +656,7 @@ public class ProjectView {
 
 		@Expose
 		String groupName;
-		
-		
-		
+
 		public String getGroupName() {
 			return groupName;
 		}
@@ -727,6 +702,5 @@ public class ProjectView {
 		}
 
 	}
-
 
 }

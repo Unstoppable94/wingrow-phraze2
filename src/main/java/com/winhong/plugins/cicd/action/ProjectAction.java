@@ -238,7 +238,8 @@ public class ProjectAction {
 	 */
 	public static BaseProject getProject(String projectId) throws Exception{
 		 String s=readLatestProject( projectId);
-		 return (BaseProject) Tools.objectFromJsonString(s, BaseProject.class);
+		 return BaseProject.createProjectFromJson(s);
+		 //return (BaseProject) Tools.objectFromJsonString(s, BaseProject.class);
 		
 	}
 	

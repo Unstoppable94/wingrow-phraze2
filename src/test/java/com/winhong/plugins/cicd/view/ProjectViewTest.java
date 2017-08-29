@@ -30,12 +30,12 @@ public class ProjectViewTest {
 
 	@Test
 	public void testGetBuildsInfoSingle() {
-		ProjectView v=new ProjectView("maskio");
+		ProjectView v=new ProjectView("pro1503915201251");
 		try {
-			String s=v.getSingleBuildsInfo("maskio",214);
+			String s=v.getSingleBuildsInfo("pro1503915201251",1);
 			System.out.println(s);
-		} catch (IOException | InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+			 
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
 		}
@@ -47,9 +47,9 @@ public class ProjectViewTest {
 	@Test
 	public void testGetBuildsInfo() {
  		try {
-			String s=ProjectView.getBuildsInfo("maskio",0, 0);
+			String s=ProjectView.getBuildsInfo("pro1503915201251",0, 0);
 			System.out.println(s);
-		} catch (IOException | InstantiationException | IllegalAccessException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -60,11 +60,11 @@ public class ProjectViewTest {
 	
 	@Test
 	public void testGetBuildsInfo2() {
-		ProjectView v=new ProjectView("maskio");
+		ProjectView v=new ProjectView("pro1503915201251");
 		try {
-			String s=v.getBuildsInfo("maskio",0, 0,"FAILURE","");
+			String s=v.getBuildsInfo("pro1503915201251",0, 0,"FAILURE","");
 			System.out.println(s);
-		} catch (IOException | InstantiationException | IllegalAccessException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -75,11 +75,11 @@ public class ProjectViewTest {
 	
 	@Test
 	public void testGetBuildsInfo3() {
-		ProjectView v=new ProjectView("maskio");
+		ProjectView v=new ProjectView("pro1503915201251");
 		try {
-			String s=v.getBuildsInfo("maskio",0, 0,"FAILURE","Sonar");
+			String s=v.getBuildsInfo("pro1503915201251",0, 0,"FAILURE","Sonar");
 			System.out.println(s);
-		} catch (IOException | InstantiationException | IllegalAccessException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -90,11 +90,11 @@ public class ProjectViewTest {
 	
 	@Test
 	public void testGetBuildsInfo4() {
-		ProjectView v=new ProjectView("maskio");
+		ProjectView v=new ProjectView("pro1503915201251");
 		try {
-			String s=v.getBuildsInfo("maskio",0, 0,"","sonar");
+			String s=v.getBuildsInfo("pro1503915201251",0, 0,"","sonar");
 			System.out.println(s);
-		} catch (IOException | InstantiationException | IllegalAccessException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("testGetBuildsInfo");
@@ -105,7 +105,7 @@ public class ProjectViewTest {
 	
 	@Test
 	public void testgetRecentFailRuns() {
-		ProjectView v=new ProjectView("maskio");
+		ProjectView v=new ProjectView("pro1503915201251");
 		try {
 			String s=v.getRecentFailRuns();
 			System.out.println(s);
@@ -120,7 +120,7 @@ public class ProjectViewTest {
 	
 	@Test
 	public void testGetAllRecentRuns() {
-		ProjectView v=new ProjectView("maskio");
+		ProjectView v=new ProjectView("pro1503915201251");
 		try {
 			String s=v.getRecentAllRuns();
 			System.out.println(s);
@@ -135,7 +135,7 @@ public class ProjectViewTest {
 	
 	@Test
 	public void getRecentSucessRuns() {
-		ProjectView v=new ProjectView("maskio");
+		ProjectView v=new ProjectView("pro1503915201251");
 		try {
 			String s=v.getRecentSucessRuns();
 			System.out.println(s);
@@ -164,7 +164,7 @@ public class ProjectViewTest {
 	@Test
 	public void testsearchAllProject() {
 		try {
-			System.out.println(ProjectView.getProjectList("maskio",0, 0));
+			System.out.println(ProjectView.getProjectList("pro1503915201251",0, 0));
 		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -176,7 +176,7 @@ public class ProjectViewTest {
 	@Test
 	public void testgetSingleRun() {
 		try {
-			System.out.println(ProjectView.getSingleRun("maskio",214));
+			System.out.println(ProjectView.getSingleRun("pro1503915201251",1));
 		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

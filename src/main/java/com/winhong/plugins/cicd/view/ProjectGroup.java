@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.NoSuchFileException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.tools.Tool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,8 @@ import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.system.ProjectType;
+import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
 import com.winhong.plugins.cicd.view.displayData.JobView;
@@ -75,7 +80,7 @@ public class ProjectGroup {
 
 	}
 
-	private final static String viewsUrl = "/api/json?tree=views[name,url,description]";
+//private final static String viewsUrl = "/api/json?tree=views[name,url,description]";
 	private final static String projectGroupDir = "/projectGroup/";
 
 	private static final int defaultMaxLine = 10;
@@ -175,17 +180,24 @@ public class ProjectGroup {
 
 	private final static String jobDashboardUrl = "todo/";
 
+	//
+	/**
+	 * get proejct stat info  of a group
+	 * @param viewName group name
+	 * @return
+	 * @throws Exception
+	 */
 	public static String getProjectGroupStatInfo(String viewName)
 			throws Exception {
 
  
 		// status=gson.fromJson(json, new
 		// TypeToken<ArrayList<StatusOfStat>>(){}.getType());
-		String url = Config.getJenkinsConfig().getUrl()
-				+ projectStatusurl.replace("#jobname", viewName);
-
+		String url =  projectStatusurl.replace("#jobname", viewName);
+		
+		String output=JenkinsClient.defaultClient().httpSimpleGet(url);
 		@SuppressWarnings("unchecked")
-		JobListOfView v = (JobListOfView) Tools.objectFromJsonUrl(url,
+		JobListOfView v = (JobListOfView) Tools.objectFromJsonString(output, 
 				JobListOfView.class);
 
 		// Job job=(Job) tools.objectFromJsonUrl(url, Job.class);
@@ -204,6 +216,16 @@ public class ProjectGroup {
 			
 			//j.setStatus(job.getColor());
 			Build build = job.getLastBuild();
+			BaseProject pro =null;
+			try {
+				  pro = ProjectAction.getProject(job.getName());
+			}catch (NoSuchFileException e) { 
+				//file not exist 
+				log.warn("project file be removed:"+e.getLocalizedMessage());
+				continue;
+			}
+			//set display name 
+			j.setProjectType(ProjectType.getDisplayName(pro.getBaseInfo().getProjectType()));
 			if (build == null) {
 				j.setStatus(Tools.NOTBUILD);
 			} else {
@@ -212,15 +234,7 @@ public class ProjectGroup {
 				j.setStatus(Tools.colorToStatus(job.getColor()));
 				
 				j.setDuration(build.getDuration());
-				BaseProject pro = ProjectAction.getProject(job.getName());
-				// String imageName=pro.getWorkflow().getStages().get
-				// TODO 识别docker iamge 及maven artifacts
-				// if (build.getArtifacts().size() == 2) {
-				// // TODO 修改image 下载命令
-				// j.setImageCmd(build.getArtifacts().get(1).getDisplayPath());
-				// }
-				//if (build.getArtifacts().size() == 1)
-				//	j.setArtifact(build.getArtifacts().get(0));
+
 				for (int k = 0; k < build.getArtifacts().size(); k++) {
 					Artifact art = build.getArtifacts().get(k);
 					String filename = art.getFileName();
@@ -264,39 +278,6 @@ public class ProjectGroup {
 		// 获取项目组信息
 
 		return Tools.getJson(info);
-
-	}
-
-	private class JenkinsVews {
-
-		@Expose
-		ArrayList<View> views = new ArrayList<View>();
-		@Expose
-		String _class;
-
-		public ArrayList<View> getViews() {
-			return views;
-		}
-
-		@SuppressWarnings("unused")
-		public void setViews(ArrayList<View> views) {
-			this.views = views;
-		}
-
-		@SuppressWarnings("unused")
-		public String get_class() {
-			return _class;
-		}
-
-		@SuppressWarnings("unused")
-		public void set_class(String _class) {
-			this._class = _class;
-		}
-
-		@SuppressWarnings("unused")
-		public JenkinsVews() {
-			super();
-		}
 
 	}
 
