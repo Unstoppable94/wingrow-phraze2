@@ -133,7 +133,7 @@ public class JenkinsClient {
 		log.debug("serverUrl:"+serverUrl);
 		//return httpSimpleModifyWithoutContentType(new URL(serverUrl));
 		
-		int code=httpJobModifyReturnCode(new URL(serverUrl), "", "application/json");
+		int code=httpModifyWithReturnCode(new URL(serverUrl), "", "application/json");
 		if (code ==403 ||(code >= 200 && code < 300))
 			return true;
 		return false;
@@ -157,7 +157,10 @@ public class JenkinsClient {
 		// job
 		// named
 		// 'test'
-		return httpJobModify(serverUrl, null);
+		int code = httpModifyWithReturnCode(serverUrl,null,null);
+		if (code==403 || (code >= 200 && code < 300))
+			return true;
+		return false;
 	}
 
 	public boolean modifyJob(String jobId, String content) throws IOException {
@@ -333,23 +336,24 @@ public class JenkinsClient {
 		// 以上为测试代码
 		int code = connection.getResponseCode();
 
-		InputStream serverOut = connection.getInputStream();
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				serverOut));
-		String line = "";
-		String out = "";
-		while ((line = in.readLine()) != null) {
-			out += line;
-		}
+		
 
 		log.debug(serverUrl.toString() + " return code:" + code);
 		log.debug(connection.getResponseMessage());
 		
 		
-		if (code >= 200 && code < 300) {
+		if (code >= 200 && code < 300 ) {
 			return true;
-		} else {
-			
+		} 
+		else {
+			InputStream serverOut = connection.getInputStream();
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					serverOut));
+			String line = "";
+			String out = "";
+			while ((line = in.readLine()) != null) {
+				out += line;
+			}
 			throw new IOException("Server out:" + out);
 		}
 
@@ -737,7 +741,7 @@ public class JenkinsClient {
 	
 	
 	
-	private int httpJobModifyReturnCode(URL serverUrl, String content,
+	private int httpModifyWithReturnCode(URL serverUrl, String content,
 			String contentType) throws IOException {
 
 		if (crumbField == null)

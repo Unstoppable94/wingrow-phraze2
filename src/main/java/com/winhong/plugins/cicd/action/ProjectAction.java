@@ -33,7 +33,7 @@ public class ProjectAction {
 	public ProjectAction() {
 		// TODO Auto-generated constructor stub
 	}
-	private static final String jsonfile="/pro.json";
+	public static final String jsonfile="/pro.json";
 	private static final Logger log = LoggerFactory
 			.getLogger(ProjectAction.class);
 
@@ -42,6 +42,7 @@ public class ProjectAction {
 	private static final String projectDateDir = "/projects/";
 
 	private static final String hisProjectDateDir = "/deletedProjects/";
+	public static final String Latestjsonfile = "/pro.json@Latest";
 
 	
  
@@ -114,7 +115,7 @@ public class ProjectAction {
 		String content = genProjectXml(project);
 		//
 		String LatestJsonfilename = dir.getAbsolutePath()
-				+ jsonfile+"@Latest";
+				+  Latestjsonfile;
 
 		
 		JenkinsClient client = JenkinsClient.defaultClient();
@@ -257,7 +258,7 @@ public class ProjectAction {
 		File dir = getProjectDirName(projectId);
 		
 		String LatestJsonfilename = dir.getAbsolutePath()
-				+ jsonfile+"@Latest";
+				+ Latestjsonfile;
 		log.debug("filename:"+LatestJsonfilename);
 		return Tools.readFile(new File(LatestJsonfilename)).toString();
 	}

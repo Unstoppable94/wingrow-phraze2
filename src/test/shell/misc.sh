@@ -1,4 +1,4 @@
-curl  -X POST -H "Content-Type:application/json" http://localhost:8080/cicdweb/webapi/misc/sonar --data-binary @sonar.json
+curl  -X GET -H "Content-Type:application/json" http://localhost:8100/webapi/misc/env --data-binary @sonar.json
 
 
 curl  -X POST -H "Content-Type:application/json" http://localhost:8080/cicdweb/webapi/misc/mirror --data-binary @mirror.json

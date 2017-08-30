@@ -19,7 +19,7 @@ public class GroupActionTest extends GroupAction {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		group.setId("group1");
+		group.setId("group12");
 		group.setName("组一");
 		group.setDescription("描述");
 	
@@ -44,7 +44,7 @@ public class GroupActionTest extends GroupAction {
 			GroupAction.createGroup(group);
 			group.setName("ss");
 			GroupAction.modifyGroup(group);
-			//GroupAction.deleteGroup(group.getId());
+			GroupAction.deleteGroup(group.getId());
 		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -20,7 +20,7 @@ static ProjectGroupJsonConfig group=new ProjectGroupJsonConfig();
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		group.setId("group1");
+		group.setId("group11");
 		group.setName("组一");
 		group.setDescription("描述");
 	}

@@ -81,10 +81,7 @@ public class ProjectGroupRest {
 	}
 	
 	
-//	
-//	
-//
-//	@Path("/{groupId}")
+
 	@POST
 	@Produces("application/json;charset=UTF-8")
 	@Consumes("application/json")

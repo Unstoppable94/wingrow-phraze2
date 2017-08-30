@@ -22,6 +22,7 @@ import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.maven.MavenProject;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.system.ProjectType;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.displayData.DisplayBuild;
@@ -50,7 +51,7 @@ public class ProjectView {
 	private static final int defaultMaxLine = 10;
 
 	public static String getProjectList(int start, int maxLine) throws Exception {
-		return getProjectList(null, start, maxLine);
+		return getProjectList(null, null,start, maxLine);
 	}
 
 	// public static String getProjectList(String projectName, int start,
@@ -105,9 +106,17 @@ public class ProjectView {
 	// }
 
 	private static final String projectDateDir = "/projects/";
-	private static final String mavenFile = "/Maven.json@Latest";
-
-	public static String getProjectList(String projectName, int start, int maxLine) throws Exception {
+ 
+ 
+	/**
+	 * @param projectName Project Name
+	 * @param ProjectType Project Type
+	 * @param start start line number
+	 * @param maxLine max show lines 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getProjectList(String projectName,String projectType, int start, int maxLine) throws Exception {
 
 		InnerConfig config = InnerConfig.defaultConfig();
 		// File folder = new File(config.getDataDir()
@@ -124,22 +133,36 @@ public class ProjectView {
 		log.debug("url:" + url);
 
 		ArrayList<simpleJobinfo> jenkinsJobs = v.jobs;
-
+		// filter
 		for (int i = 0; i < jenkinsJobs.size(); i++) {
 
-			File mavenfile = new File(config.getDataDir() + projectDateDir + jenkinsJobs.get(i).getName() + mavenFile);
+			File mavenfile = new File(config.getDataDir() + projectDateDir + jenkinsJobs.get(i).getName() + ProjectAction.Latestjsonfile);
 			if (mavenfile.exists()) {
-
+				//just need baseinfo ,so use any project is fine
 				MavenProject maven = (MavenProject) Tools.objectFromJsonFile(mavenfile.getAbsolutePath(),
 						MavenProject.class);
 				log.debug("get maven" + maven.getBaseInfo().getName());
+				boolean namefilter=false;
 				if (projectName != null && projectName != "") {
 					if (projectName.indexOf(maven.getBaseInfo().getName()) >= 0)
-						groups.add(maven);
+						namefilter=true;
 				} else {
 
-					groups.add(maven);
+					namefilter=true;
+					
 				}
+				if (namefilter==false)
+						continue;
+				boolean typefilter=false;
+				log.debug("maven.getBaseInfo():"+maven.getBaseInfo().getId());
+				if (projectType != null && projectType != "" && maven.getBaseInfo().getProjectType()!=null) {
+					if (maven.getBaseInfo().getProjectType().equals(projectType))
+						typefilter=true;
+				} else if (maven.getBaseInfo().getProjectType()!=null) {
+					typefilter=true;
+				}
+				if (typefilter==true)
+						groups.add(maven);
 			}
 
 		}
@@ -158,6 +181,7 @@ public class ProjectView {
 				break;
 			simpleJobinfo j = new ProjectView().new simpleJobinfo();
 			ProjectBaseInfo base = groups.get(i).getBaseInfo();
+			
 			j.setId(base.getId());
 			j.setGroupId(base.getGroupId());
 
@@ -174,7 +198,12 @@ public class ProjectView {
 
 			j.setCreateTime(base.getCreateTime());
 			j.setName(base.getName());
+			if (base.getProjectType()!=null)
+			j.setProjectType(ProjectType.getDisplayName(base.getProjectType()));
+			else {
+				j.setProjectType("类型未知");
 
+			}
 			retList.jobs.add(j);
 
 		}
@@ -656,6 +685,18 @@ public class ProjectView {
 
 		@Expose
 		String groupName;
+		
+		@Expose
+		String projectType;
+		
+
+		public String getProjectType() {
+			return projectType;
+		}
+
+		public void setProjectType(String projectType) {
+			this.projectType = projectType;
+		}
 
 		public String getGroupName() {
 			return groupName;
