@@ -75,9 +75,14 @@ public class InnerConfig {
 	}
 	
 	public static void init() throws FileNotFoundException {
+		
 		 config=(InnerConfig) Tools.objectFromJsonResource(filename,InnerConfig.class);
-		 //replace with system environments
 		 
+		 //replace with system environments
+		 //dataDir":"/Users/xiehq/git/wingrow-test/Data",
+		 String WINGROW_DATA = System.getenv("WINGROW_DATA");
+		 if (WINGROW_DATA!=null && WINGROW_DATA.isEmpty() == false) 
+			 config.setDataDir(WINGROW_DATA);
 	}
 	public static InnerConfig defaultConfig() throws FileNotFoundException{
 		if (config==null) {

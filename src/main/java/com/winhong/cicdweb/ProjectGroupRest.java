@@ -23,6 +23,7 @@ import com.winhong.plugins.cicd.view.ProjectGroup;
 import com.winhong.plugins.cicd.view.displayData.ProjectGroupInfo;
 
 @Path("/projectgroup")
+@Consumes("application/json;charset=UTF-8")
 public class ProjectGroupRest {
 
 	public ProjectGroupRest() {
@@ -34,6 +35,7 @@ public class ProjectGroupRest {
 	
 	@GET
 	@Produces("application/json;charset=UTF-8")
+	@Consumes("application/json;charset=UTF-8")
 	public String listAllGroup(@QueryParam("firstResult")int firstResult,
 			@QueryParam("maxResult")int maxResult,@QueryParam("groupName")String name){
 		try {

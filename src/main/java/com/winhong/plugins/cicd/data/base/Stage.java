@@ -132,7 +132,22 @@ public    class  Stage {
 		return false;
 	}
 	
-	
+	/**
+	 * 根据source 的值更新整个stage，用于项目修改时候
+	 * @param source 原stage
+	 */
+	public void cloneValue(Stage source) {
+		
+		for (int i=0;i<elements.size();i++){
+			Property temp = elements.get(i);
+			
+			Property s=source.getProperty(temp.getId());
+			//if (temp.getId().equals(id)){
+			elements.get(i).setValue(s.getValue());
+ 			//	return true;
+			//}			
+		}
+	}
 	/**
 	 * 返回属性值，没有找到属性返回null
 	 * @param id 属性ID

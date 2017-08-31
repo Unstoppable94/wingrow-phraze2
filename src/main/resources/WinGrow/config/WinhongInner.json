@@ -1,18 +1,6 @@
 {  
   "JenkinsDir":"/Users/xiehq/git/jenkins-plugins/work",
-    "dataDir":"/Users/xiehq/git/wingrow-test/Data",
-  "gitlab":{  
-    "url":"10.0.2.50:180",
-    "user":"xiehq",
-    "password":"acd12345"
-  },
-  "jenkins":{  
-    "url":"http://192.168.101.6:8080",
-    "user":"jenkins",
-    "password":"jenkins",
-    "jdk":null,
-    "maven":null
-  },
+   "dataDir":"/Users/xiehq/git/wingrow-test/Data",
   "jdk":[  
     {  
       "id":"jdk1.8",
@@ -32,9 +20,9 @@
       "path":"/maven3.3"
     },
     {  
-      "id":"maven-3.2.1",
-      "version":"3.2.1",
-      "path":"/maven3.2"
+      "id":"maven-2.1.0",
+      "version":"2.10",
+      "path":"/maven-2.1.0"
     }
   ],
   "successTemplate":{  

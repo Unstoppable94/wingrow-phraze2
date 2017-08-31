@@ -1,5 +1,7 @@
 package com.winhong.plugins.cicd.data.base;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +56,29 @@ public abstract class BaseProject {
 		return workflow;
 	}
 
+	public void reInitWorkflow() throws InstantiationException, IllegalAccessException {
+		
+		Class<BaseProject> cls=ProjectType.getClass(this.getBaseInfo().getProjectType());
+		BaseProject base=cls.newInstance();
+		
+		ArrayList<Stage> stages = base.getWorkflow().getStages();
+		ArrayList<Stage> oldStages = this.getWorkflow().getStages();
+
+		for (int i=0;i<stages.size();i++) {
+			//stages.
+			String stageid=stages.get(i).getId();
+			for (int j=0;j<oldStages.size();j++) {
+				Stage old = oldStages.get(i);
+				if (old.getId().equals(stageid)) {
+					stages.get(i).cloneValue(old);
+				}
+			}
+			//.cloneValue(this.get)
+		}
+		this.getWorkflow().setStages(stages);
+	}
+	
+	
 	public void setWorkflow(Workflow workflow) {
 		this.workflow = workflow;
 	}

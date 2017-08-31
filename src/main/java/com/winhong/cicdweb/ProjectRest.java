@@ -20,6 +20,7 @@ import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.ProjectView;
 
 @Path("/project")
+@Consumes("application/json;charset=UTF-8")
 public class ProjectRest {
 
 	public ProjectRest() {
@@ -106,7 +107,8 @@ public class ProjectRest {
 	@Consumes("application/json")
 	public String addProject(String json) {
 		try {
-			BaseProject project = (BaseProject) Tools.objectFromJsonString(json, BaseProject.class);
+			BaseProject project = BaseProject.createProjectFromJson(json);
+			//(BaseProject) Tools.objectFromJsonString(json, BaseProject.class);
 
 			log.debug(Tools.getJson(project));
 

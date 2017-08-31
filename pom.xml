@@ -86,11 +86,6 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-jetty-http</artifactId>
-			<version>2.25</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -109,7 +104,14 @@
 			<artifactId>jersey-container-servlet-core</artifactId>
 			<version>2.25</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>2.21</version>
+		</dependency>
+		
+		
+		
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
@@ -127,21 +129,10 @@
 	<build>
 		<finalName>cicd-jetty</finalName>
 		<plugins>
-		<!-- <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.5.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>com.winhong.jetty.App</mainClass>
-				</configuration>
-			</plugin>  -->	
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>exec-maven-plugin</artifactId> 
+				<version>1.5.0</version> <executions> <execution> <goals> <goal>java</goal> 
+				</goals> </execution> </executions> <configuration> <mainClass>com.winhong.jetty.App</mainClass> 
+				</configuration> </plugin> -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>

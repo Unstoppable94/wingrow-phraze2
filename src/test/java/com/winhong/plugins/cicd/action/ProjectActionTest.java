@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,6 +16,8 @@ import org.junit.Test;
 import com.winhong.plugins.cicd.data.base.ProjectBaseInfo;
 import com.winhong.plugins.cicd.docker.TranditionalDockerProject;
 import com.winhong.plugins.cicd.maven.MavenProject;
+import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.system.JdkConfig;
 import com.winhong.plugins.cicd.system.ProjectType;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.displayData.DisplayBuild;
@@ -154,6 +157,23 @@ public class ProjectActionTest {
 		}
 	}
 	
+	@Test
+	public void testreadLatestProject() {
+		try {
+			
+		String projectId="pro1504146316430";
+		ArrayList<JdkConfig> jdk=InnerConfig.defaultConfig().getJdk();
+		JdkConfig n=new JdkConfig("test","test","test");
+		jdk.add(n);
+		InnerConfig.defaultConfig().setJdk(  jdk);
+		ArrayList<JdkConfig> jdk2=InnerConfig.defaultConfig().getJdk();
+		System.out.println("jdk size"+jdk2.size());
+		System.out.println(ProjectAction.readLatestProject(  projectId));
+		}catch (Exception e) {
+ 			e.printStackTrace();
+			fail();
+		}
+	}
 	//public static DisplayBuild    triggerBuild(String projectName) 
 	
 }

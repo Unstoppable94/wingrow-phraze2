@@ -259,8 +259,14 @@ public class ProjectAction {
 		
 		String LatestJsonfilename = dir.getAbsolutePath()
 				+ Latestjsonfile;
-		log.debug("filename:"+LatestJsonfilename);
-		return Tools.readFile(new File(LatestJsonfilename)).toString();
+		//log.debug("filename:"+LatestJsonfilename);
+		String json= Tools.readFile(new File(LatestJsonfilename)).toString();
+		// 初始化，更新enum
+		BaseProject project=BaseProject.createProjectFromJson(json);
+		project.reInitWorkflow();
+		
+		return Tools.getJson(project);
+		
 	}
 
 	private static String genProjectXml(BaseProject project)

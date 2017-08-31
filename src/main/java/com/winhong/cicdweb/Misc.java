@@ -29,6 +29,7 @@ import com.winhong.plugins.cicd.system.SonarConfig;
 import com.winhong.plugins.cicd.tool.Tools;
 
 @Path("/misc")
+@Consumes("application/json;charset=UTF-8")
 public class Misc {
 
 	

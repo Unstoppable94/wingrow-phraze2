@@ -30,6 +30,7 @@ import com.winhong.plugins.cicd.user.User;
 import com.winhong.plugins.cicd.view.UserView;
 
 @Path("/user")
+@Consumes("application/json;charset=UTF-8")
 public class UserManage {
 
 	public UserManage() {

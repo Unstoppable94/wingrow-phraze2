@@ -22,6 +22,7 @@ import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
 
 @Path("/")
+@Consumes("application/json;charset=UTF-8")
 public class Login {
 
 	private static final Logger log = LoggerFactory.getLogger(UserManage.class);

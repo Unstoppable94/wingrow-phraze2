@@ -5,12 +5,12 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider.General;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +19,7 @@ import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.Dashboard;
 
 @Path("dashboard")
+@Consumes("application/json;charset=UTF-8")
 public class DashboardRest {
 
 	private static final Logger log = LoggerFactory.getLogger(DashboardRest.class);

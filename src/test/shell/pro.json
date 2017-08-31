@@ -1,28 +1,25 @@
 {  
    "baseInfo":{  
-      "mavenId":"Maven-3.3.9",
-      "jdk":"jdk1.8",
-      "cloud":null,
-      "imageName":null,
-      "id":"pro149",
-      "name":"wwwwww",
-      "description":"测试",
-      "SCMUrl":"http://10.0.2.50:180/winhong/ciexample",
+      "id":"",
+      "name":"testbycurl",
+      "description":"testbycurl",
+      "SCMUrl":"http://10.0.2.50:180/winhong/ciexample.git",
       "SCMUser":"xiehq",
       "SCMPassword":"acd12345",
       "SCMBranch":"master",
       "SCMTYPE":"git",
-      "trigger":"manual",
-      "triggerProperty":null,
-      "exraProperties":"MAVEN_OPTS\u003d-Xms256m -Xmx1512m",
-      "createTime":0,
-      "lastModifyTime":0,
+      "trigger":"",
+      "triggerProperty":"5 * * * *",
+      "exraProperties":"",
+      "createTime":1504066319248,
+      "lastModifyTime":1504066319248,
       "lastModifyer":null,
-      "mailOnfail":null,
+      "mailOnfail":"mailoffail@w.com",
       "mailOnSuccess":null,
       "mailOnReovery":null,
       "groupId":"default",
-      "maxExcutiontime":30
+      "projectType":"mavenProject",
+      "maxExcutiontime":60
    },
    "workflow":{  
       "formProperties":[  
@@ -31,6 +28,52 @@
             "name":"编译",
             "description":"调用Maven进行编译",
             "elements":[  
+               {  
+                  "id":"maven",
+                  "type":"enum",
+                  "readable":true,
+                  "writable":true,
+                  "required":true,
+                  "value":"",
+                  "enumValues":[  
+                     {  
+                        "id":"maven-3.3.9",
+                        "name":"3.3.9"
+                     },
+                     {  
+                        "id":"maven-3.2.1",
+                        "name":"3.2.1"
+                     }
+                  ],
+                  "datePattern":"",
+                  "minLength":1,
+                  "maxLength":1,
+                  "name":"Maven版本",
+                  "description":"编译时候使用的Maven版本️ "
+               },
+               {  
+                  "id":"jdk",
+                  "type":"enum",
+                  "readable":true,
+                  "writable":true,
+                  "required":true,
+                  "value":"",
+                  "enumValues":[  
+                     {  
+                        "id":"jdk1.8",
+                        "name":"Jdk1.8"
+                     },
+                     {  
+                        "id":"jdk1.7",
+                        "name":"Jdk1.7"
+                     }
+                  ],
+                  "datePattern":"",
+                  "minLength":1,
+                  "maxLength":1,
+                  "name":"JDK版本",
+                  "description":"编译时候使用的JDK版本️ "
+               },
                {  
                   "id":"compileGoal",
                   "type":"string",
@@ -202,7 +245,7 @@
                   "readable":true,
                   "writable":true,
                   "required":true,
-                  "value":"true",
+                  "value":"false",
                   "enumValues":[  
 
                   ],
@@ -296,7 +339,7 @@
                   "readable":true,
                   "writable":true,
                   "required":true,
-                  "value":"true",
+                  "value":"false",
                   "enumValues":[  
 
                   ],
@@ -335,16 +378,9 @@
                   "readable":true,
                   "writable":true,
                   "required":true,
-                  "value":"10.0.2.50",
+                  "value":"",
                   "enumValues":[  
-                     {  
-                        "id":"10.0.2.50",
-                        "name":"10.0.2.50"
-                     },
-                     {  
-                        "id":"10.0.2.53",
-                        "name":"10.0.2.53"
-                     }
+
                   ],
                   "datePattern":"",
                   "minLength":1,
@@ -357,8 +393,8 @@
                   "type":"string",
                   "readable":true,
                   "writable":true,
-                  "required":true,
-                  "value":"ciexample",
+                  "required":false,
+                  "value":"",
                   "enumValues":[  
 
                   ],
@@ -395,16 +431,39 @@
          },
          {  
             "id":"deployToRancher",
-            "name":"部署到Rancher",
-            "description":"部署到Rancher",
+            "name":"部署应用",
+            "description":"部署应用到指定环境",
             "elements":[  
+               {  
+                  "id":"environment",
+                  "type":"enum",
+                  "readable":true,
+                  "writable":true,
+                  "required":true,
+                  "value":"",
+                  "enumValues":[  
+                     {  
+                        "id":"1a5",
+                        "name":"Default"
+                     },
+                     {  
+                        "id":"1a14",
+                        "name":"Test"
+                     }
+                  ],
+                  "datePattern":"",
+                  "minLength":1,
+                  "maxLength":1,
+                  "name":"部署环境",
+                  "description":"部署的 Service  NAME,采用remove 后run 模式部署️ "
+               },
                {  
                   "id":"skip",
                   "type":"boolean",
                   "readable":true,
                   "writable":true,
                   "required":true,
-                  "value":"true",
+                  "value":"false",
                   "enumValues":[  
 
                   ],
@@ -419,7 +478,7 @@
                   "type":"string",
                   "readable":true,
                   "writable":true,
-                  "required":true,
+                  "required":false,
                   "value":"",
                   "enumValues":[  
 
@@ -427,15 +486,15 @@
                   "datePattern":"",
                   "minLength":10,
                   "maxLength":50,
-                  "name":"Rancher service",
-                  "description":"部署的Rancher Service  NAME，采用remove 后run 模式部署️ "
+                  "name":"部署服务service",
+                  "description":"部署的 Service  NAME,采用remove 后run 模式部署️，格式为stack/service "
                },
                {  
                   "id":"arg",
                   "type":"string",
                   "readable":true,
                   "writable":true,
-                  "required":true,
+                  "required":false,
                   "value":"",
                   "enumValues":[  
 
@@ -443,15 +502,15 @@
                   "datePattern":"",
                   "minLength":0,
                   "maxLength":250,
-                  "name":"Rancher 启动参数",
-                  "description":"Rancher run的启动参数，可以不输入️"
+                  "name":"启动参数",
+                  "description":"服务启动参数如 -p8080:8080 ️"
                },
                {  
                   "id":"cmd",
                   "type":"string",
                   "readable":true,
                   "writable":true,
-                  "required":true,
+                  "required":false,
                   "value":"",
                   "enumValues":[  
 
@@ -460,7 +519,7 @@
                   "minLength":0,
                   "maxLength":250,
                   "name":"容器启动命令",
-                  "description":"容器启动命令，可以不输入️"
+                  "description":"Docker容器启动命令,可以不输入️"
                }
             ]
          }

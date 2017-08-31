@@ -52,6 +52,8 @@ public class MavenWorkflow extends Workflow {
 	}
 
 	
+	 
+	
 
 	public String getJson() {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()

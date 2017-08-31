@@ -2,11 +2,14 @@ package com.winhong.jetty;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.winhong.plugins.cicd.system.Config;
@@ -16,18 +19,22 @@ import com.winhong.plugins.cicd.system.RancherConfig;
 public class App {
 
 	public static void main(String[] args) {
+		InetSocketAddress bindAdress = new InetSocketAddress("0.0.0.0", 8100);
+		Server server = new Server(bindAdress);
 
-		Server server = new Server(8100);
+		ResourceConfig config = new ResourceConfig();
+		config.packages("com.winhong.cicdweb");
+		ServletHolder jerseyServlet = new ServletHolder(new ServletContainer(config));
 
-		ServletContextHandler ctx = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		ServletContextHandler context = new ServletContextHandler(server, "/");
+		context.addServlet(jerseyServlet, "/webapi/*");
+		try {
+			initConfig();
+		} catch (InstantiationException | IllegalAccessException | IOException e) {
 
-		ctx.setContextPath("/");
-		server.setHandler(ctx);
-
-		ServletHolder serHol = ctx.addServlet(ServletContainer.class, "/webapi/*");
-		serHol.setInitOrder(1);
-		serHol.setInitParameter("jersey.config.server.provider.packages", "com.winhong.cicdweb");
-
+			e.printStackTrace();
+			return;
+		}
 		try {
 			server.start();
 			server.join();
@@ -47,13 +54,13 @@ public class App {
 	 * ${slave_executors} JENKINS_PASSWORD="w12sedwiokd" JENKINS_USERNAME="jenkins"
 	 * EMAIL_SSL=FALSE; EMAIL_PORT=25; EMAIL_HOST= EMAIL_USER= EMAIL_PASSWORD=
 	 */
-	public void initConfig() throws IOException, InstantiationException, IllegalAccessException {
+	public static void initConfig() throws IOException, InstantiationException, IllegalAccessException {
 		initRancherConfig();
 		initJenkinsConfig();
 	}
-	
-	public void initJenkinsConfig() throws IOException, InstantiationException, IllegalAccessException {
-		
+
+	public static void initJenkinsConfig() throws IOException, InstantiationException, IllegalAccessException {
+
 		JenkinsConfig jenkinsConfig = new JenkinsConfig();
 		try {
 			jenkinsConfig = Config.getJenkinsConfig();
@@ -61,20 +68,21 @@ public class App {
 			jenkinsConfig = new JenkinsConfig();
 		}
 		String JENKINS_MASTER = System.getenv("JENKINS_MASTER");
-		if (JENKINS_MASTER!=null && JENKINS_MASTER.isEmpty() == false)
+		if (JENKINS_MASTER != null && JENKINS_MASTER.isEmpty() == false)
 			jenkinsConfig.setUrl(JENKINS_MASTER);
 		String JENKINS_USERNAME = System.getenv("JENKINS_USERNAME");
-		if (JENKINS_USERNAME!=null && JENKINS_USERNAME.isEmpty() == false)
+		if (JENKINS_USERNAME != null && JENKINS_USERNAME.isEmpty() == false)
 			jenkinsConfig.setUser(JENKINS_USERNAME);
-		 
+
 		String JENKINS_PASSWORD = System.getenv("JENKINS_PASSWORD");
-		if (JENKINS_PASSWORD!=null && JENKINS_PASSWORD.isEmpty() == false)
+		if (JENKINS_PASSWORD != null && JENKINS_PASSWORD.isEmpty() == false)
 			jenkinsConfig.setPassword(JENKINS_PASSWORD);
 
 		Config.saveConfig(jenkinsConfig);
-		
+
 	}
-	public void initRancherConfig() throws IOException, InstantiationException, IllegalAccessException {
+
+	public static void initRancherConfig() throws IOException, InstantiationException, IllegalAccessException {
 
 		RancherConfig rancherConfig = new RancherConfig();
 		try {
@@ -83,16 +91,16 @@ public class App {
 			rancherConfig = new RancherConfig();
 		}
 		String WINGARDEN_URL = System.getenv("WINGARDEN_URL");
-		if (WINGARDEN_URL!=null && WINGARDEN_URL.isEmpty() == false)
+		if (WINGARDEN_URL != null && WINGARDEN_URL.isEmpty() == false)
 			rancherConfig.setServerUrl(WINGARDEN_URL);
 		String SECRETKEY = System.getenv("SECRETKEY");
-		if (SECRETKEY!=null &&  SECRETKEY.isEmpty() == false)
+		if (SECRETKEY != null && SECRETKEY.isEmpty() == false)
 			rancherConfig.setSecureKey(SECRETKEY);
 		String ENVIRONMENT = System.getenv("ENVIRONMENT");
-		if (ENVIRONMENT!=null &&  ENVIRONMENT.isEmpty() == false)
+		if (ENVIRONMENT != null && ENVIRONMENT.isEmpty() == false)
 			rancherConfig.setEnvID(ENVIRONMENT);
 		String ACCESSKEY = System.getenv("ACCESSKEY");
-		if (ACCESSKEY!=null && ACCESSKEY.isEmpty() == false)
+		if (ACCESSKEY != null && ACCESSKEY.isEmpty() == false)
 			rancherConfig.setAccessKey(ACCESSKEY);
 
 		Config.saveConfig(rancherConfig);
