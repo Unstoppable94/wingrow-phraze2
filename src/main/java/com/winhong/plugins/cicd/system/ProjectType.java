@@ -21,10 +21,10 @@ public class ProjectType {
 	//static HashMap<String, String> typesDisplay=new HashMap<String, String>();
 	static ArrayList<EnumList> relist = new ArrayList<EnumList>();
 	static {
-		types.put(MavenProject, new ProjectTypeDefine("Maven",MavenProject.class,"WinGrow/config/mavenJobConfig.xml"));
+		types.put(MavenProject, new ProjectTypeDefine("Maven",MavenProject.class,"WinGrow/config/MavenJobConfig.xml"));
 		 
 		types.put(TraditionalDocker, new ProjectTypeDefine("传统Docker",TranditionalDockerProject.class,"WinGrow/config/TraditionalJobConfig.xml"));
-		types.put(MultistageDocker, new ProjectTypeDefine("多Stage Docker",MultiStageDockerProject.class,"WinGrow/config/jobConfig.xml"));
+		types.put(MultistageDocker, new ProjectTypeDefine("多Stage Docker",MultiStageDockerProject.class,"WinGrow/config/DockerJobConfig.xml"));
 
 		initEnum();
 		//types.put("mavenProject", MavenProject.class);
