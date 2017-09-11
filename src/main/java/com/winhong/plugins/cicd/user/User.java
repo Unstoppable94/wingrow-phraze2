@@ -7,20 +7,13 @@ public class User {
 	public static  final String adminRole="admin";
 	public static  final String operatorRole="operator";
 	public static  final String readonly="readonly";
-
-		
+	public static  final String LDAP="ldap";
+	public static  final String LOCAL="local";
+	
 		@Expose
 		String id;
 		
-		public String getId() {
-			return id;
-		}
-
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
+		
 
 		@Expose
 		private String username;
@@ -33,10 +26,7 @@ public class User {
 		@Expose
 		private String role;
 		
-		
-		public User() {
-	 	}
-
+	
 		
 		/**
 		 * 
@@ -47,6 +37,80 @@ public class User {
 		@Expose
 		long latestModifyTime;
 		
+		@Expose
+		String userType;
+		
+		@Expose
+		long passwordExpired;
+		
+		
+		public User() {
+	 	}
+
+		
+
+		 
+
+
+		public String getUserType() {
+			return userType;
+		}
+
+
+
+
+
+
+		public void setUserType(String userType) {
+			this.userType = userType;
+		}
+
+
+
+
+
+
+		public long getPasswordExpired() {
+			return passwordExpired;
+		}
+
+
+
+		public void setPasswordExpired(long passwordExpired) {
+			this.passwordExpired = passwordExpired;
+		}
+
+
+
+		public static String getAdminrole() {
+			return adminRole;
+		}
+
+
+
+		public static String getOperatorrole() {
+			return operatorRole;
+		}
+
+
+
+		public static String getReadonly() {
+			return readonly;
+		}
+
+
+
+		public static String getLdap() {
+			return LDAP;
+		}
+
+
+
+		public static String getLocal() {
+			return LOCAL;
+		}
+
+
 
 		public long getCreateTime() {
 			return createTime;
@@ -97,5 +161,15 @@ public class User {
 			this.role = role;
 		}
 		
+		
+		public String getId() {
+			return id;
+		}
+
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
 		
 }

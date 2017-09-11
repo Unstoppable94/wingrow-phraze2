@@ -29,6 +29,8 @@ public class InnerConfig {
 	
 	//@Expose
 	//private JenkinsConfig jenkins=new JenkinsConfig();
+	@Expose
+	int PasswordExprired=15;
 	
 	
 	@Expose
@@ -154,6 +156,23 @@ public class InnerConfig {
 		this.recoveryTemplate = recoveryTemplate;
 	}
 
+	public static InnerConfig getConfig() {
+		return config;
+	}
+
+	public static void setConfig(InnerConfig config) {
+		InnerConfig.config = config;
+	}
+
+	public int getPasswordExprired() {
+		return PasswordExprired;
+	}
+
+	public void setPasswordExprired(int passwordExprired) {
+		PasswordExprired = passwordExprired;
+	}
+	
+	
  
 
 }

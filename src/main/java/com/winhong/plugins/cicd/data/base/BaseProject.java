@@ -68,7 +68,7 @@ public abstract class BaseProject {
 			//stages.
 			String stageid=stages.get(i).getId();
 			for (int j=0;j<oldStages.size();j++) {
-				Stage old = oldStages.get(i);
+				Stage old = oldStages.get(j);
 				if (old.getId().equals(stageid)) {
 					stages.get(i).cloneValue(old);
 				}

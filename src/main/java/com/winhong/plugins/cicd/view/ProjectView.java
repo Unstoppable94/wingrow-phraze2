@@ -144,7 +144,7 @@ public class ProjectView {
 				log.debug("get maven" + maven.getBaseInfo().getName());
 				boolean namefilter=false;
 				if (projectName != null && projectName != "") {
-					if (projectName.indexOf(maven.getBaseInfo().getName()) >= 0)
+					if (maven.getBaseInfo().getName().indexOf(projectName) >= 0)
 						namefilter=true;
 				} else {
 

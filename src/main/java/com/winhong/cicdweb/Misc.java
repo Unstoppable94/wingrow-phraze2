@@ -53,6 +53,20 @@ public class Misc {
 			return WebTools.Error(e);
 		}
 	} 
+	
+	
+	@GET
+	@Path("stagesinfo")
+	@Produces("application/json;charset=utf-8")
+	public String getAllStageDefines() {
+		try {
+			return Tools.getJson( ProjectType.getStageDisplaylist());
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.debug(e.getLocalizedMessage());
+			return WebTools.Error(e);
+		}
+	} 
 //
 //	@GET
 //	@Path("maven")

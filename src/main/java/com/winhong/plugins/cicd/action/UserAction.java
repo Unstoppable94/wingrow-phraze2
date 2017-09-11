@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.tool.RandomString;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
 
@@ -35,6 +37,7 @@ public class UserAction {
 				User defaultUser = new User();
 				defaultUser.setUsername(defaultAdmin);
 				defaultUser.setRole(User.adminRole);
+				defaultUser.setUserType(User.LOCAL);
 				defaultUser.setPassword(defaultPassword);
 				addUser(defaultUser);
 				
@@ -94,8 +97,7 @@ public class UserAction {
 		File dir = new File(InnerConfig.defaultConfig().getDataDir() + userDir);
 
 		if (dir.exists() == false)
-			;
-		dir.mkdirs();
+			dir.mkdirs();
 
 		String temp = InnerConfig.defaultConfig().getDataDir() + userDir
 				+ URLEncoder.encode(name, "UTF-8") + ".json";
@@ -118,14 +120,18 @@ public class UserAction {
 
 	}
 
-	public static User modifyUser(User user) throws IOException {
+	public static User modifyUser(User user,boolean modifyPassword) throws IOException {
 		if (!userExist(user.getUsername()))
 			throw new IOException("用户不存在");
-		//密码处理，
-		if (user.getPassword().equals(PasswordMask)){
+		//密码处理，判断是否用户本身
+
+		if (user.getPassword().equals(PasswordMask) || modifyPassword==false){
+		
+			
 			User oldUser = getUserinfo(user.getUsername());
 			user.setPassword(oldUser.getPassword());
 		}
+ 
 		long time = System.currentTimeMillis();
 		user.setLatestModifyTime(time);
 		File file = new File(getUserfilename(user.getUsername()));
@@ -144,8 +150,7 @@ public class UserAction {
 				+ deletedUserDir);
 
 		if (dir.exists() == false)
-			;
-		dir.mkdirs();
+			dir.mkdirs();
 
 		long time = System.currentTimeMillis();
 		 
@@ -153,8 +158,6 @@ public class UserAction {
 
 		file.renameTo(new File(file.getAbsoluteFile() + "@" + time+"_deleted"));
 
-		//tools.saveStringToFile(tools.getJson(user),
-	//			getUserfilename(user.getUsername() + "@" + time + ));
 		return true;
 
 	}
@@ -166,4 +169,43 @@ public class UserAction {
 		return file.exists();
 	}
 
+	
+ 
+ 	/**
+ 	 * reset user password 
+ 	 * @param username
+ 	 * @return
+ 	 * @throws IOException
+ 	 */
+ 	public static String resetPassword(String username)
+			throws IOException {
+		 User user=getUserinfo(username);
+		 String password=RandomString.nextString();
+		 user.setPassword(password);
+		 
+		 long expired=System.currentTimeMillis()+InnerConfig.defaultConfig().getPasswordExprired()*60*1000;
+		 user.setPasswordExpired(expired);
+		 log.debug("RandomString:"+password);
+		 modifyUser(user,true);
+		 return password;
+		 
+	}
+	
+ 	
+ 	public static User Login(String username,String password) throws FileNotFoundException, UnsupportedEncodingException {
+ 		User user=getUserinfo(username);
+ 		if (user.getUserType().endsWith(User.LOCAL)) {
+ 			long expired=user.getPasswordExpired();
+ 			long now=System.currentTimeMillis();
+ 			if (expired>0 && expired<now) {
+ 				log.info("Password Expired:"+username);
+ 				return null;
+ 			}
+ 			if (user.getPassword().equals(password)) {
+ 				return user;
+ 			}
+ 		}
+ 		//TODO LDAP LOGIN
+ 		return null;
+ 	}
 }

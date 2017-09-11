@@ -65,12 +65,12 @@ static ProjectGroupJsonConfig group=new ProjectGroupJsonConfig();
 	}
 	
 	@Test
-	public void testlistAllGroup() {
+	public void testGrouBYname() {
 		try {
 			GroupAction.createGroup(group);
 			
 			GroupAction.modifyGroup(group);
-			System.out.println("ProjectGroup==="+ProjectGroup.listAllGroup(null,0,2));
+			System.out.println("ProjectGroup==="+ProjectGroup.listAllGroup("一",0,2));
 			
 		} catch ( Exception e) {
 			// TODO Auto-generated catch block

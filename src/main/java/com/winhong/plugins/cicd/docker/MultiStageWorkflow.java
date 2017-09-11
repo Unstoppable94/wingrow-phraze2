@@ -25,7 +25,6 @@ public class MultiStageWorkflow extends Workflow {
 
 	private void Init(String string) {
 		ArrayList<Stage> s = new ArrayList<Stage>();
-		s.add(new Compile());
 		s.add(new Build()); 
 		this.setStages(s);
 

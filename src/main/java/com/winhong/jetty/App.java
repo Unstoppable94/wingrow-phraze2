@@ -5,16 +5,19 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.JenkinsConfig;
 import com.winhong.plugins.cicd.system.RancherConfig;
+import com.winhong.plugins.cicd.tool.RandomString;
+
+ 
 
 public class App {
 
@@ -27,7 +30,12 @@ public class App {
 		ServletHolder jerseyServlet = new ServletHolder(new ServletContainer(config));
 
 		ServletContextHandler context = new ServletContextHandler(server, "/");
+		//close for dev
+		//config.register(JWTSecurityFilter.class);
+		//config.register(UsePrivilegeFilter.class);
+		
 		context.addServlet(jerseyServlet, "/webapi/*");
+		
 		try {
 			initConfig();
 		} catch (InstantiationException | IllegalAccessException | IOException e) {
@@ -57,6 +65,8 @@ public class App {
 	public static void initConfig() throws IOException, InstantiationException, IllegalAccessException {
 		initRancherConfig();
 		initJenkinsConfig();
+		//init password reset random
+		RandomString.init(16);
 	}
 
 	public static void initJenkinsConfig() throws IOException, InstantiationException, IllegalAccessException {

@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.winhong.plugins.cicd.action.UserAction;
+import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
+import com.winhong.plugins.cicd.jwt.TokenUtil;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.system.RancherConfig;
@@ -78,7 +80,7 @@ public class UserManage {
 				
 			}
 			User user = UserAction.addUser(inputUser);
-
+			user.setPassword(UserAction.PasswordMask);
 			return Tools.getJson(user);
 
 		} catch (Exception e) {
@@ -111,14 +113,29 @@ public class UserManage {
 	@Path("/{username}")
 	@Produces("application/json;charset=UTF-8")
 	@Consumes("application/json")
-	public String addUser(@PathParam("username") String username,
-			String json) {
+	public String addUser(@PathParam("username") String username,@QueryParam("action") String action,
+			String json,@Context HttpServletRequest req) {
 		try {
-			if (!UserAction.userExist(username)) {
+			if (action.equalsIgnoreCase("resetpassword")) {
+				return "{\"newPassword\":\""+UserAction.resetPassword(username)+"\"}";
+			}
+			
+			User old=UserAction.getUserinfo(getLoginUser(req));
+			if (old==null) {
 				return WebTools.Error("修改失败，用户不存在");
 			}
-			User user = UserAction.modifyUser((User) Tools
-					.objectFromJsonString(json, User.class));
+			
+			User input=(User) Tools
+					.objectFromJsonString(json, User.class);
+			boolean pa=false;
+			if (old.getUsername().equals(username))
+					pa=true;
+			else {
+				if (input.getPassword().equals(UserAction.PasswordMask)==false) {
+					return WebTools.Error("除用户本身外，不允许修改用户密码！");
+				}
+			}
+			User user = UserAction.modifyUser(input,pa);
 
 			return Tools.getJson(user);
 
@@ -129,6 +146,7 @@ public class UserManage {
 		}
 	}
 
+	
 	@DELETE
 	@Path("/{username}")
 	@Produces("application/json;charset=UTF-8")
@@ -147,4 +165,10 @@ public class UserManage {
 		}
 	}
 
+	public static String getLoginUser( HttpServletRequest req) {
+		String head=req.getHeader(JWTSecurityFilter.AuthHeader);
+		String jwsToken = JWTSecurityFilter.extractJwtTokenFromAuthorizationHeader(
+				head);
+		return TokenUtil.getName(jwsToken);
+	}
 }

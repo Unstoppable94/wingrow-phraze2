@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.winhong.plugins.cicd.tool.RandomString;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
 
@@ -26,7 +27,8 @@ public class UserActionTest extends UserAction {
 		user.setUsername("中文用户");
 		user.setPassword("密码");
 		user.setRole("admin");
-		
+		user.setUserType(User.LOCAL);
+		RandomString.init(12);
 	}
 
 	@AfterClass
@@ -84,7 +86,7 @@ public class UserActionTest extends UserAction {
 		try {
 			user.setUsername("修改用户");
 			UserAction.addUser(user);
-			UserAction.modifyUser(user);
+			UserAction.modifyUser(user,false);
 			System.out.println(UserAction.getAllUser("修改").size());
 			ArrayList<User> t = UserAction.getAllUser("修改");
 			if (t.size()!=1)
@@ -127,4 +129,58 @@ public class UserActionTest extends UserAction {
 		fail();
 	}
 
+	@Test
+	public void testResetPassword() {
+		try {
+			
+			UserAction.addUser(user);
+			UserAction.resetPassword(user.getUsername());
+			System.out.println(UserAction.getUserinfo(user.getUsername()));
+			
+		} catch (IOException e) {
+			 
+			e.printStackTrace();
+			fail();
+		}finally{
+			try {
+				UserAction.deleteUser(user.getUsername());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+ 	}
+	
+	
+	@Test
+	public void testResetPasswordExpired() {
+		try {
+			
+			UserAction.addUser(user);
+			//UserAction.resetPassword(user.getUsername());
+			user.setPasswordExpired(System.currentTimeMillis());
+			UserAction.modifyUser(user,true);
+			Thread.sleep(10);
+			User u = UserAction.Login(user.getUsername(),user.getPassword());
+			if (u!=null)
+				fail();
+ 			
+		} catch (IOException e) {
+			 
+			e.printStackTrace();
+			fail();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				UserAction.deleteUser(user.getUsername());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+ 	}
 }

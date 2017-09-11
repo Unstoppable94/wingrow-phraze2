@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import org.slf4j.Logger;
@@ -18,6 +19,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.annotations.Expose;
 import com.winhong.plugins.cicd.action.UserAction;
+import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
+import com.winhong.plugins.cicd.jwt.Token;
+import com.winhong.plugins.cicd.jwt.TokenUtil;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
 
@@ -27,35 +31,50 @@ public class Login {
 
 	private static final Logger log = LoggerFactory.getLogger(UserManage.class);
 
-	public static final String userAttr="user";
+	public static final String userAttr = "user";
+
 	public Login() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	// @QueryParam("username") String username, @QueryParam("password") String
+	// password)
+	// public String createGroup(String json)
+
 	@POST
 	@Path("login")
 	@Produces("application/json;charset=utf-8")
-	public String login(@FormParam("username") String username,
-			@FormParam("password") String password,
-			@Context final HttpServletResponse response,
-			@Context HttpServletRequest req) throws Exception {
+	@Consumes("application/json")
+	public String login(String json) throws Exception {
 		try {
+			User t = (User) Tools.objectFromJsonString(json, User.class);
+			String username = t.getUsername();
+			String password = t.getPassword();
+
 			log.debug("login ----------username:" + username);
 
-			User user = UserAction.getUserinfo(username);
+			User user = UserAction.Login(username, password);
 			if (user == null || user.getUsername() == null) {
 				return WebTools.Error("用户不存在、或者密码错误");
 			}
 
-			if (user.getPassword().equals(password)) {
-				HttpSession session = req.getSession(true);
-				session.setAttribute(userAttr, user);
-				log.debug("login successful----------username:" + username);
+			log.debug("login successful----------username:" + username);
 
-				response.sendRedirect(req.getContextPath()+"/index.html");
-			}
+			// Issue a token (can be a random String persisted to a database or a JWT token)
+			// The issued token must be associated to a user
+			// Return the issued token
+			String role = user.getRole();
+			String[] roles = { role };
+			String jwtString = TokenUtil.getJWTString(username, roles);
+			Token token = new Token();
+			token.setAuthorization(jwtString);
+			token.setExpires(TokenUtil.getExpiryDate().getTime());
 
-			return WebTools.Error("用户不存在、或者密码错误");
+			// return response.ok(token).build();
+			// LoginedToken.put(jwtString, new Date());
+			return Tools.getJson(token);
+			// return "{\"token\":\""+jwtString+"\"}";
+
 			// return tools.getJson(InnerConfig.defaultConfig().getMaven());
 		} catch (java.io.FileNotFoundException e) {
 			return WebTools.Error("用户不存在、或者密码错误");
@@ -67,21 +86,17 @@ public class Login {
 		}
 
 	}
-	
+
 	@POST
-	@Path("/logout")
+	@Path("logout")
 	@Produces("application/json;charset=utf-8")
-	public String logout(@Context final HttpServletResponse response,
-			@Context HttpServletRequest req) throws Exception {
+	public String logout(@Context HttpServletRequest req)
+			throws Exception {
 		try {
-			log.debug("logout");
-			HttpSession session = req.getSession(true);
-			session.removeAttribute(userAttr);
-			//response.sendRedirect("../../login.html");
-
-			return "{\"relocation\":\"./login.html\"}";
-		//	return WebTools.Error("logint.html");
-			// return tools.getJson(InnerConfig.defaultConfig().getMaven());
+			String key = req.getHeader(JWTSecurityFilter.AuthHeader);
+			log.debug("key="+key);
+			TokenUtil.removeToken(key);
+			return "{\"result\":\"ok\"}";
 
 		} catch (Exception e) {
 
@@ -92,60 +107,21 @@ public class Login {
 
 	}
 
-
-	
 	@GET
-	@Path("/selfInfo")
-	@Produces("application/json;charset=UTF-8")
-	public String getUser(@Context final HttpServletResponse response,
-			@Context HttpServletRequest req)   {
-		try {
-			User user =  (User) req.getSession().getAttribute(userAttr);
-			
-			User retUser = new User();
-			if (user==null)
-					return WebTools.Error("not login");
-			retUser.setUsername(user.getUsername());
-			retUser.setCreateTime(user.getCreateTime());
-			retUser.setLatestModifyTime(user.getLatestModifyTime());
-			retUser.setRole(user.getRole());
-			retUser.setPassword(UserAction.PasswordMask);
-			
-			return Tools.getJson(retUser);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.debug(e.getLocalizedMessage());
-			return WebTools.Error(e);
-		}
-	}
-	
-	@PUT
 	@Path("selfInfo")
-	@Produces("application/json;charset=utf-8")
-	public String modifyProject(@PathParam("username") String username,
-			String json,
-			@Context final HttpServletResponse response,
-			@Context HttpServletRequest req)  {
+	@Produces("application/json;charset=UTF-8")
+	public String getUser(@Context final HttpServletResponse response, @Context HttpServletRequest req) {
 		try {
-			HttpSession session = req.getSession(true);
-			Password inputPass=(Password) Tools.objectFromJsonString(json, Password.class);
+			String name=UserManage.getLoginUser(req);
 			
-			
-			User sessionUser = (User) session.getAttribute(userAttr);
-			//session.removeAttribute(userAttr);
-			if (!sessionUser.getPassword().equals(inputPass.oldPassword)){
-				log.debug("old="+sessionUser.getPassword());
-				log.debug("input="+inputPass.oldPassword);
+			if (name == null||name.isEmpty())
+				return WebTools.Error("not login");
+			User user=UserAction.getUserinfo(name);
 
-				return WebTools.Error("旧密码不对！");
-				
-				 
-			}
-				
-			sessionUser.setPassword(inputPass.password);
+
+			//User retUser = new User();
 			
-			User user = UserAction.modifyUser((sessionUser) );
+			user.setPassword(UserAction.PasswordMask);
 
 			return Tools.getJson(user);
 
@@ -155,39 +131,80 @@ public class Login {
 			return WebTools.Error(e);
 		}
 	}
+
+	@PUT
+	@Path("selfInfo")
+	@Produces("application/json;charset=utf-8")
+	public String modifySelf( String json,
+			@Context final HttpServletResponse response, @Context HttpServletRequest req) {
+		try {
+			 
+			String name=UserManage.getLoginUser(req);
+			 
+			Password inputPass = (Password) Tools.objectFromJsonString(json, Password.class);
+
+			User sessionUser=UserAction.getUserinfo(name);
+			// session.removeAttribute(userAttr);
+			if (!sessionUser.getPassword().equals(inputPass.oldPassword)) {
+				log.debug("old=" + sessionUser.getPassword());
+				log.debug("input=" + inputPass.oldPassword);
+
+				return WebTools.Error("旧密码不对！");
+
+			}
+
+			sessionUser.setPassword(inputPass.password);
+
+			User user = UserAction.modifyUser(sessionUser,true);
+			user.setPassword(UserAction.PasswordMask);
+			return Tools.getJson(user);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.debug(e.getLocalizedMessage());
+			return WebTools.Error(e);
+		}
+	}
+
 	
-	private class Password{
-		
+	private class Password {
+
 		@Expose
 		String oldPassword;
-		
+
 		@Expose
 		String password;
-		
+
 		@Expose
 		String passwordRepeat;
+
 		public String getOldPassword() {
 			return oldPassword;
 		}
+
 		public void setOldPassword(String oldPassword) {
 			this.oldPassword = oldPassword;
 		}
-		 
+
 		public String getPasswordRepeat() {
 			return passwordRepeat;
 		}
+
 		public void setPasswordRepeat(String passwordRepeat) {
 			this.passwordRepeat = passwordRepeat;
 		}
+
 		public Password() {
 			super();
- 		}
+		}
+
 		public String getPassword() {
 			return password;
 		}
+
 		public void setPassword(String password) {
 			this.password = password;
 		}
-	 
+
 	}
 }

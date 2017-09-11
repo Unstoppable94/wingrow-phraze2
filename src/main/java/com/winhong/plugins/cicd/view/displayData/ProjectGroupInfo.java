@@ -8,21 +8,19 @@ import com.winhong.plugins.cicd.view.innerData.ProjectStatusStat;
 public class ProjectGroupInfo{
 	
 	@Expose
+	int total;
+	
+	@Expose
 	ProjectStatusStat stat;
 	
 	@Expose
-	ArrayList<JobView> projects;
+	private ArrayList<JobView> results = new ArrayList<JobView>();
 	
 	public ProjectGroupInfo() {
 		super();
 	}
 
-	public ArrayList<JobView> getProjects() {
-		return projects;
-	}
-	public void setProjects(ArrayList<JobView> projects) {
-		this.projects = projects;
-	}
+	 
 	public String getName() {
 		return name;
 	}
@@ -66,7 +64,30 @@ public class ProjectGroupInfo{
 	public void setLastModifyTime(long lastModifyTime) {
 		this.lastModifyTime = lastModifyTime;
 	}
-	 
 
+
+	public int getTotal() {
+		return total;
+	}
+
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+
+	public ArrayList<JobView> getResults() {
+		return results;
+	}
+
+
+	public void setResults(ArrayList<JobView> results) {
+		this.results = results;
+	}
+	 
+	
+
+	 
+	 
 	
 }

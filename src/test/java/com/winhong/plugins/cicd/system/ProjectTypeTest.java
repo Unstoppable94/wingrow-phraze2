@@ -37,4 +37,10 @@ public class ProjectTypeTest {
 		//fail("Not yet implemented");
 	}
 
+	@Test
+	public void testGetStageTypeList() {
+		ArrayList<EnumList> w = ProjectType.getStageDisplaylist();
+		System.out.println(Tools.getJson(w));
+		//fail("Not yet implemented");
+	}
 }

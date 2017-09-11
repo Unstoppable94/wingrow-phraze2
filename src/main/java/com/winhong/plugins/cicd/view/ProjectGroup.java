@@ -34,6 +34,7 @@ import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
 import com.winhong.plugins.cicd.view.displayData.JobView;
 import com.winhong.plugins.cicd.view.displayData.ProjectGroupInfo;
+import com.winhong.plugins.cicd.view.displayData.ProjectGroupJobList;
 import com.winhong.plugins.cicd.view.innerData.Artifact;
 import com.winhong.plugins.cicd.view.innerData.Build;
 import com.winhong.plugins.cicd.view.innerData.Job;
@@ -107,15 +108,16 @@ public class ProjectGroup {
 				String fileName = listOfFiles[i].getName();
 				log.debug("filename:" + fileName);
 				if (fileName.endsWith(".json")) {
-					if (groupName != null && groupName != "")
-						if (URLDecoder.decode(fileName, "UTF-8").indexOf(
-								groupName) < 0) {
-							continue;
-						}
+					
 					ProjectGroupJsonConfig u = (ProjectGroupJsonConfig) Tools
 							.objectFromJsonFile(
 									listOfFiles[i].getAbsolutePath(),
 									ProjectGroupJsonConfig.class);
+					if (groupName != null && groupName != "")
+						if (u.getName().indexOf(
+								groupName) < 0) {
+							continue;
+						}
 					log.debug("add group:" + u.getName());
 
 					groups.add(u);
@@ -274,11 +276,16 @@ public class ProjectGroup {
 				file, ProjectGroupInfo.class);
 
 		info.setStat(stat);
-		info.setProjects(list);
+		info.setTotal(stat.total); 
+		info.setResults(list); 
+		//info.setJobList(joblist);
 		// 获取项目组信息
 
 		return Tools.getJson(info);
 
 	}
 
+	
+	
+	
 }

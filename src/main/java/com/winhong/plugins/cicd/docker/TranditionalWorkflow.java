@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.data.base.Workflow;
 import com.winhong.plugins.cicd.dockerStep.Build;
+import com.winhong.plugins.cicd.dockerStep.Compile;
 
 public class TranditionalWorkflow extends Workflow { 
 
@@ -24,6 +25,7 @@ public class TranditionalWorkflow extends Workflow {
 
 	private void Init(String string) {
 		ArrayList<Stage> s = new ArrayList<Stage>();
+		s.add(new Compile());
 		s.add(new Build()); 
 		this.setStages(s);
 

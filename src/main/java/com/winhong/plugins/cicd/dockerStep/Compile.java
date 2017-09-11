@@ -7,7 +7,7 @@ import com.winhong.plugins.cicd.property.commonString;
 public class Compile extends Stage{
 
 	private final static String id="dockercompile";
-	private final static String name="编译";
+	private final static String name="Docker编译";
 	private final static String description="调用指定Docker image进行代码编译";
 	
 	

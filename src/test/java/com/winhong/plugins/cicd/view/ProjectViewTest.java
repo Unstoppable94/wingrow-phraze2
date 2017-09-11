@@ -177,9 +177,21 @@ public class ProjectViewTest {
 	
 	
 	@Test
+	public void testsearchAllProjectByName() {
+		try {
+			System.out.println(ProjectView.getProjectList("docker","",0, 0));
+		} catch ( Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+		
+	}
+	
+	@Test
 	public void testsearchSpecTypeProject() {
 		try {
-			System.out.println(ProjectView.getProjectList("",ProjectType.TraditionalDocker,0, 0));
+			System.out.println(ProjectView.getProjectList("",ProjectType.MavenProject,0, 0));
 		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
