@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.winhong.plugins.cicd.data.base.BaseProject;
 import com.winhong.plugins.cicd.data.base.EnumList;
 import com.winhong.plugins.cicd.tool.Tools;
 
@@ -18,13 +19,26 @@ public class ProjectTypeTest {
 
 	@Test
 	public void testGetClassString() {
-		
+		try {
+			System.out.println(BaseProject.NewProject(ProjectType.TraditionalDocker));
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		System.out.println(ProjectType.getClass(ProjectType.MultistageDocker));
 
 	}
 
 	@Test
 	public void testGetGroovy() {
+		try {
+			System.out.println(BaseProject.NewProject(ProjectType.MavenProject));
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		System.out.println(ProjectType.getConfigXml(ProjectType.MavenProject));
 
 		//fail("Not yet implemented");

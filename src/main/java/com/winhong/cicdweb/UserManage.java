@@ -116,22 +116,22 @@ public class UserManage {
 	public String addUser(@PathParam("username") String username,@QueryParam("action") String action,
 			String json,@Context HttpServletRequest req) {
 		try {
-			if (action.equalsIgnoreCase("resetpassword")) {
+			
+			if (action!=null && action.equalsIgnoreCase("resetpassword")) {
 				return "{\"newPassword\":\""+UserAction.resetPassword(username)+"\"}";
 			}
 			
-			User old=UserAction.getUserinfo(getLoginUser(req));
-			if (old==null) {
-				return WebTools.Error("修改失败，用户不存在");
-			}
+			String LoginUser = getLoginUser(req);
+ 			 
 			
 			User input=(User) Tools
 					.objectFromJsonString(json, User.class);
 			boolean pa=false;
-			if (old.getUsername().equals(username))
+			if (LoginUser!=null && LoginUser.equals(username))
 					pa=true;
 			else {
-				if (input.getPassword().equals(UserAction.PasswordMask)==false) {
+				String passowrd=input.getPassword();
+				if (passowrd!=null && passowrd.equals(UserAction.PasswordMask)==false) {
 					return WebTools.Error("除用户本身外，不允许修改用户密码！");
 				}
 			}
@@ -167,6 +167,8 @@ public class UserManage {
 
 	public static String getLoginUser( HttpServletRequest req) {
 		String head=req.getHeader(JWTSecurityFilter.AuthHeader);
+		if (head==null)
+				return null;
 		String jwsToken = JWTSecurityFilter.extractJwtTokenFromAuthorizationHeader(
 				head);
 		return TokenUtil.getName(jwsToken);

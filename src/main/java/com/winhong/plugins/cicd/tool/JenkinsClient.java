@@ -53,7 +53,7 @@ public class JenkinsClient {
 
 	}
 
-	public static JenkinsClient defaultClient() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static JenkinsClient defaultClient() throws InstantiationException, IllegalAccessException, IOException {
  		if (client == null) {
  			JenkinsConfig con = Config.getJenkinsConfig();
 			client = new JenkinsClient(con.getUrl(), con.getUser(), con.getPassword());
@@ -271,7 +271,7 @@ public class JenkinsClient {
 
 			return true;
 		} else {
-			throw new IOException("Get crumb failed! code=" + code);
+			throw new IOException("Get crumb failed! code=" + code+"url="+url);
 		}
 		// return false;
 	}
@@ -534,7 +534,8 @@ public class JenkinsClient {
 
 		@SuppressWarnings("resource")
 		// File file = new File(re.getFile());
-		String content = Tools.readResource(viewConfigFile);
+		//
+		String content = Tools.readResource(viewConfigFile,false);
 
 		// description = new String(description.getBytes("GBK"), "ASCII");
 

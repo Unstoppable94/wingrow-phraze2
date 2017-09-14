@@ -56,7 +56,7 @@ public class RegistryListTest {
 	}
 	
 	@Test
-	public void testDefaultConfig() {
+	public void testDefaultConfig() throws IOException {
 		
 		try {
 			ArrayList<RegistryConfig> list = Config.getRegistryList().getRegistries();

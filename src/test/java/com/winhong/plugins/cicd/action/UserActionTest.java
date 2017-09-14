@@ -120,7 +120,7 @@ public class UserActionTest extends UserAction {
 			UserAction.addUser(user);
 			UserAction.deleteUser(user.getUsername());
 			 
-			System.out.println(UserAction.getUserinfo(user.getUsername()));
+			System.out.println(Tools.getJson(UserAction.getUserinfo(user.getUsername())));
 		} catch (IOException e) {
 			 
 			e.printStackTrace();
@@ -135,8 +135,7 @@ public class UserActionTest extends UserAction {
 			
 			UserAction.addUser(user);
 			UserAction.resetPassword(user.getUsername());
-			System.out.println(UserAction.getUserinfo(user.getUsername()));
-			
+			System.out.println(Tools.getJson(UserAction.getUserinfo(user.getUsername())));			
 		} catch (IOException e) {
 			 
 			e.printStackTrace();

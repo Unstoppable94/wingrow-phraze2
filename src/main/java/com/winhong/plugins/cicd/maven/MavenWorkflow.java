@@ -44,7 +44,7 @@ public class MavenWorkflow extends Workflow {
 		s.add(new MavenTest());
 		s.add(new Artifact());
 		s.add(new Sonar());
-		s.add(new CreateImage());
+		s.add(new CreateImage(true));
 		s.add(new PushImage());
 		s.add(new DeployToRancher());
 		this.setStages(s);

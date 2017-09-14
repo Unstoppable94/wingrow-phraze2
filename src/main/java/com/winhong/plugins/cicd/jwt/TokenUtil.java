@@ -28,6 +28,7 @@ public class TokenUtil {
 	
 	private static int defaultExpiryMins=15;
 	
+
 	private static int defaultVersion=1;
 	
 	
@@ -157,5 +158,15 @@ public class TokenUtil {
 	public static Date getExpiryDate() {
 		
 		return getExpiryDate(defaultExpiryMins);
+	}
+	
+	
+
+	public static int getDefaultExpiryMins() {
+		return defaultExpiryMins;
+	}
+
+	public static void setDefaultExpiryMins(int defaultExpiryMins) {
+		TokenUtil.defaultExpiryMins = defaultExpiryMins;
 	}
 }

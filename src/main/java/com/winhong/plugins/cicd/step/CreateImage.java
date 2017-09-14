@@ -34,19 +34,23 @@ public class CreateImage extends Stage {
 	final private String tagId = "tag";
 
 	private commonString tag = new commonString(tagId, "", 1, 30,
-			"Docker tag", "docker tag,系统生成的时候会默认在TAG后面加上编译执行序号️");
+			"Docker tag", "docker tag, 格式为dir/image,系统生成的时候会默认在TAG后面加上编译执行序号");
 
-  
+	private commonString dockerfile=new commonString("dockerfile","./Dockerfile",2,100, "Dockerfile","默认为代码根目录下的Dockerfile " );
 
+
+	 
 	/**
-	 * 生产一个新的sonar对象
+	 * 生产一个新的Image
 	 */
-	public CreateImage() {
+	public CreateImage(boolean canSkip) {
 		super(id, name, description);
-		//this.setProperty(continueOnfail);
-		this.setProperty(skip);
+		if (canSkip)
+			this.setProperty(skip);
  		this.setProperty(registry);
 		this.setProperty(tag);
+ 		this.setProperty(dockerfile);
+		
  	}
 
 	/*
@@ -58,8 +62,7 @@ public class CreateImage extends Stage {
 	public boolean check() throws ConfigCheckException {
 
 		skip = new Skip(this.getProperty(skip.getId()));
-		// TODO
-
+ 
 		return true;
 	}
 

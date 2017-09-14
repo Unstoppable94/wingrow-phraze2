@@ -1,8 +1,10 @@
 package com.winhong.jetty;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.file.NoSuchFileException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,12 +14,20 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import com.winhong.plugins.cicd.jwt.TokenUtil;
+import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
 import com.winhong.plugins.cicd.system.Config;
+import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.system.JenkinsConfig;
 import com.winhong.plugins.cicd.system.RancherConfig;
+import com.winhong.plugins.cicd.system.RegistryConfig;
+import com.winhong.plugins.cicd.system.RegistryList;
+import com.winhong.plugins.cicd.system.RegistryMirrorConfig;
+import com.winhong.plugins.cicd.system.SMTPConfig;
+import com.winhong.plugins.cicd.system.SonarConfig;
 import com.winhong.plugins.cicd.tool.RandomString;
-
- 
+import com.winhong.plugins.cicd.tool.Tools;
+import com.winhong.plugins.cicd.tool.Encryptor;
 
 public class App {
 
@@ -30,14 +40,22 @@ public class App {
 		ServletHolder jerseyServlet = new ServletHolder(new ServletContainer(config));
 
 		ServletContextHandler context = new ServletContextHandler(server, "/");
-		//close for dev
-		//config.register(JWTSecurityFilter.class);
-		//config.register(UsePrivilegeFilter.class);
-		
+		// close for dev
+		// config.register(JWTSecurityFilter.class);
+		// config.register(UsePrivilegeFilter.class);
+
 		context.addServlet(jerseyServlet, "/webapi/*");
-		
+
 		try {
+
+			initDirs();
 			initConfig();
+			// SET login token expire time
+			int defaultExpiryMins = 15;
+			String TOKEN_EXPIRY = System.getenv("TOKEN_EXPIRY");
+			if (TOKEN_EXPIRY != null && TOKEN_EXPIRY.isEmpty() == false)
+				defaultExpiryMins = Integer.parseInt(TOKEN_EXPIRY);
+			TokenUtil.setDefaultExpiryMins(defaultExpiryMins);
 		} catch (InstantiationException | IllegalAccessException | IOException e) {
 
 			e.printStackTrace();
@@ -63,10 +81,52 @@ public class App {
 	 * EMAIL_SSL=FALSE; EMAIL_PORT=25; EMAIL_HOST= EMAIL_USER= EMAIL_PASSWORD=
 	 */
 	public static void initConfig() throws IOException, InstantiationException, IllegalAccessException {
-		initRancherConfig();
-		initJenkinsConfig();
-		//init password reset random
+		boolean force = false;
+		String forceStr = System.getenv("FORCE_INIT");
+
+		if (forceStr != null && forceStr.equalsIgnoreCase("true"))
+			force = true;
+
+		if (!isInited() || force) {
+			initJenkinsConfig();
+			// avoid reinit after restart
+			initRancherConfig();
+
+			initSmtpConfig();
+			initSonarConfig();
+			initOpenLDAPConfig();
+			// init password reset random
+			// TODO DOCKER CONFIG
+			initRegisterConfig();
+
+		}
 		RandomString.init(16);
+		// flowing env should only use in testing
+		initTestConfig();
+	}
+
+	public static boolean isInited() {
+		try {
+			Config.getJenkinsConfig();
+		} catch (FileNotFoundException | NoSuchFileException e) {
+			return false;
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return true;
+
+	}
+
+	public static void initDirs() throws IOException, InstantiationException, IllegalAccessException {
+		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects", "projectGroup" };
+		String parent = InnerConfig.defaultConfig().getDataDir();
+		for (int i = 0; i < subdirs.length; i++) {
+			File dir = new File(parent + "/" + subdirs[i]);
+
+			if (dir.exists() == false)
+				dir.mkdirs();
+		}
+
 	}
 
 	public static void initJenkinsConfig() throws IOException, InstantiationException, IllegalAccessException {
@@ -74,9 +134,11 @@ public class App {
 		JenkinsConfig jenkinsConfig = new JenkinsConfig();
 		try {
 			jenkinsConfig = Config.getJenkinsConfig();
-		} catch (FileNotFoundException | InstantiationException | IllegalAccessException e) {
+		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
 			jenkinsConfig = new JenkinsConfig();
 		}
+		String Encrypted = System.getenv("IS_ENCRYPTED");
+
 		String JENKINS_MASTER = System.getenv("JENKINS_MASTER");
 		if (JENKINS_MASTER != null && JENKINS_MASTER.isEmpty() == false)
 			jenkinsConfig.setUrl(JENKINS_MASTER);
@@ -85,8 +147,12 @@ public class App {
 			jenkinsConfig.setUser(JENKINS_USERNAME);
 
 		String JENKINS_PASSWORD = System.getenv("JENKINS_PASSWORD");
-		if (JENKINS_PASSWORD != null && JENKINS_PASSWORD.isEmpty() == false)
-			jenkinsConfig.setPassword(JENKINS_PASSWORD);
+		if (JENKINS_PASSWORD != null && JENKINS_PASSWORD.isEmpty() == false) {
+			if (Encrypted != null && Encrypted.equalsIgnoreCase("true"))
+				jenkinsConfig.setPassword(Encryptor.decrypt(JENKINS_PASSWORD));
+			else
+				jenkinsConfig.setPassword(JENKINS_PASSWORD);
+		}
 
 		Config.saveConfig(jenkinsConfig);
 
@@ -97,15 +163,22 @@ public class App {
 		RancherConfig rancherConfig = new RancherConfig();
 		try {
 			rancherConfig = Config.getRancherConfig();
-		} catch (FileNotFoundException | InstantiationException | IllegalAccessException e) {
+		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
 			rancherConfig = new RancherConfig();
 		}
+		String Encrypted = System.getenv("IS_ENCRYPTED");
 		String WINGARDEN_URL = System.getenv("WINGARDEN_URL");
 		if (WINGARDEN_URL != null && WINGARDEN_URL.isEmpty() == false)
 			rancherConfig.setServerUrl(WINGARDEN_URL);
 		String SECRETKEY = System.getenv("SECRETKEY");
-		if (SECRETKEY != null && SECRETKEY.isEmpty() == false)
-			rancherConfig.setSecureKey(SECRETKEY);
+		if (SECRETKEY != null && SECRETKEY.isEmpty() == false) {
+			if (Encrypted != null && Encrypted.equalsIgnoreCase("true"))
+				rancherConfig.setSecureKey(Encryptor.decrypt(SECRETKEY));
+			else
+				rancherConfig.setSecureKey(SECRETKEY);
+
+		}
+
 		String ENVIRONMENT = System.getenv("ENVIRONMENT");
 		if (ENVIRONMENT != null && ENVIRONMENT.isEmpty() == false)
 			rancherConfig.setEnvID(ENVIRONMENT);
@@ -116,5 +189,163 @@ public class App {
 		Config.saveConfig(rancherConfig);
 
 		// =new RancherConfig();
+	}
+
+	public static void initSmtpConfig() throws IOException, InstantiationException, IllegalAccessException {
+
+		SMTPConfig SMTPConfig = new SMTPConfig();
+		try {
+			SMTPConfig = Config.getSMTPConfig();
+		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
+			SMTPConfig = new SMTPConfig();
+		}
+		String SMTP_HOST = System.getenv("SMTP_HOST");
+		if (SMTP_HOST != null && SMTP_HOST.isEmpty() == false)
+			SMTPConfig.setHost(SMTP_HOST);
+		String SMTP_USER = System.getenv("SMTP_USER");
+		if (SMTP_USER != null && SMTP_USER.isEmpty() == false)
+			SMTPConfig.setUser(SMTP_HOST);
+
+		String Encrypted = System.getenv("IS_ENCRYPTED");
+		String SMTP_PASSWORD = System.getenv("SMTP_PASSWORD");
+		if (SMTP_PASSWORD != null && SMTP_PASSWORD.isEmpty() == false) {
+			if (Encrypted != null && Encrypted.equalsIgnoreCase("true"))
+				SMTPConfig.setPassword(Encryptor.decrypt(SMTP_PASSWORD));
+			else
+				SMTPConfig.setPassword(SMTP_PASSWORD);
+
+		}
+		String SMTP_PORT = System.getenv("SMTP_PORT");
+		if (SMTP_PORT != null && SMTP_PORT.isEmpty() == false)
+			SMTPConfig.setPort(Integer.parseInt(SMTP_PORT));
+
+		String SMTP_SSL = System.getenv("SMTP_SSL");
+		if (SMTP_SSL != null && SMTP_SSL.equalsIgnoreCase("TRUE"))
+			SMTPConfig.setSsl(true);
+		else
+			SMTPConfig.setSsl(false);
+		Config.saveConfig(SMTPConfig);
+
+		// =new RancherConfig();
+	}
+
+	public static void initSonarConfig() throws IOException, InstantiationException, IllegalAccessException {
+
+		SonarConfig sonarConfig = new SonarConfig();
+		try {
+			sonarConfig = Config.getSonarConfig();
+		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
+			sonarConfig = new SonarConfig();
+		}
+		String Encrypted = System.getenv("IS_ENCRYPTED");
+		String SONAR_URL = System.getenv("SONAR_URL");
+		if (SONAR_URL != null && SONAR_URL.isEmpty() == false)
+			sonarConfig.setSonarUrl(SONAR_URL);
+
+		String SONAR_PASSWORD = System.getenv("SONAR_PASSWORD");
+
+		if (SONAR_PASSWORD != null && SONAR_PASSWORD.isEmpty() == false) {
+			if (Encrypted != null && Encrypted.equalsIgnoreCase("true"))
+				sonarConfig.setPassword(Encryptor.decrypt(SONAR_PASSWORD));
+			else
+				sonarConfig.setPassword(SONAR_PASSWORD);
+
+		}
+
+		String SONAR_USER = System.getenv("SONAR_USER");
+		if (SONAR_USER != null && SONAR_USER.isEmpty() == false)
+			sonarConfig.setUser(SONAR_USER);
+
+		Config.saveConfig(sonarConfig);
+
+		// =new SonarConfig();
+	}
+
+	public static void initOpenLDAPConfig() throws IOException, InstantiationException, IllegalAccessException {
+
+		OpenLDAPConfig openLDAPConfig = new OpenLDAPConfig();
+		try {
+			openLDAPConfig = Config.getOpenLDAPConfig();
+		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
+			openLDAPConfig = new OpenLDAPConfig();
+		}
+
+		String LDAP_URL = System.getenv("LDAP_URL");
+		if (LDAP_URL != null && LDAP_URL.isEmpty() == false)
+			openLDAPConfig.setPROVIDER_URL(LDAP_URL);
+
+		String LDAP_SEARACHBASE = System.getenv("LDAP_SEARACHBASE");
+		if (LDAP_SEARACHBASE != null && LDAP_SEARACHBASE.isEmpty() == false)
+			openLDAPConfig.setSearchBase(LDAP_SEARACHBASE);
+
+		String LDAP_USER = System.getenv("LDAP_USER");
+		// SECURITY_PRINCIPAL
+		if (LDAP_USER != null && LDAP_USER.isEmpty() == false)
+			openLDAPConfig.setSECURITY_PRINCIPAL(LDAP_USER);
+
+		String Encrypted = System.getenv("IS_ENCRYPTED");
+		String LDAP_PASSWORD = System.getenv("LDAP_PASSWORD");
+
+		if (LDAP_PASSWORD != null && LDAP_PASSWORD.isEmpty() == false) {
+			if (Encrypted != null && Encrypted.equalsIgnoreCase("true"))
+				openLDAPConfig.setSECURITY_CREDENTIALS(Encryptor.decrypt(LDAP_PASSWORD));
+			else
+				openLDAPConfig.setSECURITY_CREDENTIALS(LDAP_PASSWORD);
+
+		}
+
+		String LDAP_TIMEOUT = System.getenv("LDAP_TIMEOUT");
+		if (LDAP_TIMEOUT != null && LDAP_TIMEOUT.isEmpty() == false)
+			openLDAPConfig.setConnect_Timeout(LDAP_TIMEOUT);
+
+		Config.saveConfig(openLDAPConfig);
+
+		// =new openLDAPConfig();
+	}
+
+	public static void initRegisterConfig() throws IOException, InstantiationException, IllegalAccessException {
+
+		RegistryList registries = new RegistryList();
+
+		String DOCKER_REGISTRER_SERVER = System.getenv("DOCKER_REGISTRER_SERVER");
+		String DOCKER_REGISTRER_AUTH = System.getenv("DOCKER_REGISTRER_AUTH");
+		String DOCKER_REGISTRER_INSECURE = System.getenv("DOCKER_REGISTRER_INSECURE");
+		RegistryConfig register = null;
+		if (DOCKER_REGISTRER_SERVER != null && DOCKER_REGISTRER_SERVER.isEmpty() == false) {
+			// String server, String auth, String email, boolean b
+			register = new RegistryConfig(DOCKER_REGISTRER_SERVER, DOCKER_REGISTRER_AUTH, "",
+					Boolean.parseBoolean(DOCKER_REGISTRER_INSECURE));
+			registries.getRegistries().add(register);
+			Config.saveConfig(registries);
+
+		}
+
+		RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
+		String DOCKER_MIRROR = System.getenv("DOCKER_MIRROR");
+
+		if (DOCKER_MIRROR != null && DOCKER_MIRROR.isEmpty() == false) {
+			if (DOCKER_MIRROR.startsWith("http")) {
+				dockerMirror.setUrl(DOCKER_MIRROR);
+				Config.saveConfig(dockerMirror);
+
+			}
+		} else if (register != null) {
+			if (register.isSecure())
+				dockerMirror.setUrl("https://" + register.getServer());
+			else
+				dockerMirror.setUrl("http://" + register.getServer());
+			Config.saveConfig(dockerMirror);
+		}
+
+	}
+
+	public static void initTestConfig() throws IOException, InstantiationException, IllegalAccessException {
+
+		String TEST_DOCKER_DAEMON = System.getenv("TEST_DOCKER_DAEMON");
+		if (TEST_DOCKER_DAEMON != null && TEST_DOCKER_DAEMON.isEmpty() == false)
+			Config.setDockerDaemonfile(TEST_DOCKER_DAEMON);
+		String TEST_DOCKER_CONFIG = System.getenv("TEST_DOCKER_CONFIG");
+		if (TEST_DOCKER_CONFIG != null && TEST_DOCKER_CONFIG.isEmpty() == false)
+			Config.setDockerConfigJson(TEST_DOCKER_CONFIG);
 	}
 }

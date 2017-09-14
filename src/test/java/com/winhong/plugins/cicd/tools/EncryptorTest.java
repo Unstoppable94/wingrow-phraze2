@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
  
 
-public class Encryptor {
+public class EncryptorTest {
 	
 						  // xpor
 	private static final String key = "libbsd0 libdns-e"; // 128 bit key

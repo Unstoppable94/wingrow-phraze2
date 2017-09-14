@@ -6,8 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.data.base.Workflow;
-import com.winhong.plugins.cicd.dockerStep.Build;
-import com.winhong.plugins.cicd.dockerStep.Compile;
+import com.winhong.plugins.cicd.step.CreateImage;
+import com.winhong.plugins.cicd.step.DeployToRancher;
 
 public class MultiStageWorkflow extends Workflow { 
 
@@ -25,7 +25,8 @@ public class MultiStageWorkflow extends Workflow {
 
 	private void Init(String string) {
 		ArrayList<Stage> s = new ArrayList<Stage>();
-		s.add(new Build()); 
+		s.add(new CreateImage(false)); 
+		s.add(new DeployToRancher());
 		this.setStages(s);
 
 	}

@@ -43,3 +43,11 @@ curl -X POST -H "$CRUMB" http://10.211.55.6:8080/createItem?name=maskio2  --data
 curl -X GET  -H "Content-Type:application/json" http://192.168.101.4:8100/webapi/project
 
 curl -X POST  -H "Content-Type:application/json" http://192.168.101.4:8100/webapi/project --data-binary @pro.json
+curl -X POST  -H "Content-Type:application/json" http://localhost:8100/webapi/project --data-binary @pro.json
+
+
+curl -X POST  -H "Content-Type:application/json" http://localhost:8100/webapi/project --data-binary @newMavenPro.json
+curl -X POST  -H "Content-Type:application/json" http://localhost:8100/webapi/project --data-binary @multiDockerPro.json
+
+
+

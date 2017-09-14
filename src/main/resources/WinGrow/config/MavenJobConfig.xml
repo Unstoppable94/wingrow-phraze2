@@ -48,6 +48,7 @@ DeployToRancher_skip=$deployToRancher_skip
 DeployToRancher_service=$deployToRancher_service
 DeployToRancher_arg=$deployToRancher_arg
 DeployToRancher_cmd=$deployToRancher_cmd
+DeployToRancher_environment=$deployToRancher_environment
 
 
 Findbugs_skip=$findbugs_skip
@@ -93,7 +94,7 @@ def extcode
 
  node{
     sh &quot;pwd&quot;
-    extcode = load &apos;/var/lib/jenkins/stat/JenkinsFunc.groovy&apos;
+    extcode = load &apos;/jenkins-groovy/MavenFunc.groovy&apos;
 
     extcode.extMain()
  }

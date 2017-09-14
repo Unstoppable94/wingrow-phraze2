@@ -1,0 +1,12 @@
+{
+    "live-restore": true,
+    "registry-mirrors": ["$mirror"],
+    "insecure-registries": [$insecure-registries],
+    "log-driver": "json-file",
+    "log-opts": {
+      "labels" : "app",
+      "env" : "os",
+      "max-file" : "3",
+      "max-size": "10m"
+        } 
+}

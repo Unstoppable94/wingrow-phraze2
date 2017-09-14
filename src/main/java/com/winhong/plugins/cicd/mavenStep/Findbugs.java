@@ -39,11 +39,12 @@ public class Findbugs extends Stage {
 	//	public commonTextArea(String id,String value,int min,int max,String name,String description){
 	final private String  inFilterContentId="inFilterContent";
 	
-	private commonTextArea inFilterContent=new commonTextArea(inFilterContentId, "", 0, 10240, "findbugs 规则", "配置infilter URL ，本项内容不起作用️");
+	private commonTextArea inFilterContent=new commonTextArea(inFilterContentId, "", 0, 10240, "findbugs 规则", "配置infilter URL ，本项内容不起作用️",false);
 	
 	final private String  excludeFilterContentId="excludeFilterContent";
 	
-	private commonTextArea excludeFilterContent=new commonTextArea(excludeFilterContentId, "", 0, 10240, "findbugs 忽略错误内容", "配置infilter URL ，本项内容不起作用️");
+	private commonTextArea excludeFilterContent=new commonTextArea(excludeFilterContentId, "", 
+			0, 10240, "findbugs 忽略错误内容", "配置infilter URL ，本项内容不起作用️",false);
 
 	
 	/**

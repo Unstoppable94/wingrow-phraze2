@@ -13,7 +13,7 @@ public class OpenLDAPTest {
 	@Test
 	public void testValidateConfigNormal() {
 		
-		String ldapAdServer = "ldap://192.168.101.114:389";
+		String ldapAdServer = "ldap://192.168.101.93:389";
 		String ldapSearchBase = "ou=winhong,DC=wingarden,DC=com";
 
 		String ldapUsername = "cn=administrator,cn=users,dc=wingarden,dc=com"; // SECURITY_PRINCIPAL
@@ -35,7 +35,7 @@ public class OpenLDAPTest {
 	@Test
 	public void testValidateConfigNormal2() {
 		
-		String ldapAdServer = "ldap://192.168.101.114:389";
+		String ldapAdServer = "ldap://192.168.101.93:389";
 		String ldapSearchBase = "cn=winhong,DC=wingarden,DC=com";
 
 		String ldapUsername = "cn=xiehq,cn=winhong,dc=wingarden,dc=com"; // SECURITY_PRINCIPAL

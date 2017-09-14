@@ -100,6 +100,8 @@ public class RancherConfig {
 	private static String cliJsonTemplate="{\"accessKey\":\"#accessKey\",\"secretKey\":\"#secretKey\",\"url\":\"#url/v2-beta/schemas\",\"environment\":\"#envid\"}";
 	
 	public String genCLiJson(){
+		if (this.accessKey==null)
+			return cliJsonTemplate;
 		String temp=cliJsonTemplate.replace("#accessKey", this.accessKey);
 		temp=temp.replace("#secretKey", this.secureKey);
 		temp=temp.replace("#url", this.serverUrl);

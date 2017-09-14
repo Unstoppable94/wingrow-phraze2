@@ -22,7 +22,7 @@ public class Compile extends Stage{
  
 	private commonString dockeruser=new commonString("dockeruser","",2,50, "docker运行用户","编译docker运行时用户，不输入时候使用image默认用户" );
 	
-	private commonString dockerworkdir=new commonString("dockerworkdir","",2,50, "docker运行目录","编译docker运行时目录，不输入时候使用image默认目录" );
+	private commonString dockerworkdir=new commonString("dockerworkdir","/src",2,50, "docker运行目录","编译docker运行时目录，不输入时候使用image默认目录" );
  
 	
 	private commonString dockercmd=new commonString("dockercmd","",2,50, "编译命令","编译命令，不输入使用image默认命令" );

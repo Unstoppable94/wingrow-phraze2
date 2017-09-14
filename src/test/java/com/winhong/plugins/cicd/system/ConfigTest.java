@@ -91,7 +91,7 @@ public class ConfigTest {
 			fail("Not yet implemented");
 			else 
 				System.out.println(f.getAuth());	
-		} catch (FileNotFoundException | InstantiationException | IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail();

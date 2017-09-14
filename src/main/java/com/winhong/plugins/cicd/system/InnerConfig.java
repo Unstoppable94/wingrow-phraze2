@@ -3,6 +3,7 @@ package com.winhong.plugins.cicd.system;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -76,9 +77,10 @@ public class InnerConfig {
 		super();
 	}
 	
-	public static void init() throws FileNotFoundException {
+	public static void init() throws IOException {
 		
-		 config=(InnerConfig) Tools.objectFromJsonResource(filename,InnerConfig.class);
+		// inner config save without encrypt
+		 config=(InnerConfig) Tools.objectFromJsonResource(filename,InnerConfig.class,false);
 		 
 		 //replace with system environments
 		 //dataDir":"/Users/xiehq/git/wingrow-test/Data",
@@ -86,7 +88,7 @@ public class InnerConfig {
 		 if (WINGROW_DATA!=null && WINGROW_DATA.isEmpty() == false) 
 			 config.setDataDir(WINGROW_DATA);
 	}
-	public static InnerConfig defaultConfig() throws FileNotFoundException{
+	public static InnerConfig defaultConfig() throws IOException{
 		if (config==null) {
 			 init();
 			  

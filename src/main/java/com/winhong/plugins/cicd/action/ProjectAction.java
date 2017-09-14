@@ -86,7 +86,7 @@ public class ProjectAction {
 	}
 	
 	
-	public static File getProjectDirName(String id) throws FileNotFoundException, UnsupportedEncodingException{
+	public static File getProjectDirName(String id) throws IOException{
 		InnerConfig config = InnerConfig.defaultConfig();
 
 		return new File(config.getDataDir() + projectDateDir 
@@ -274,7 +274,8 @@ public class ProjectAction {
 
 		String filename=ProjectType.getConfigXml(project.getBaseInfo().getProjectType());
 		log.debug("config xml:"+filename);
-		String projectXml = Tools.readResource(filename);
+		//configxml template saving without encrypt
+		String projectXml = Tools.readResource(filename,false);
 
 		ProjectBaseInfo baseinfo = project.getBaseInfo();
 		String triggerType = baseinfo.getTrigger();

@@ -1,6 +1,7 @@
 package com.winhong.plugins.cicd.mavenProperty;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.winhong.plugins.cicd.data.base.EnumList;
@@ -50,8 +51,7 @@ public class JdkProperty extends Property{
 					return true;
 				}
 			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+		} catch ( IOException e) {
 			e.printStackTrace();
 		}
 		

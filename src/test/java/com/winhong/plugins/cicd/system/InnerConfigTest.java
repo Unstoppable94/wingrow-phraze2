@@ -3,6 +3,7 @@ package com.winhong.plugins.cicd.system;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.junit.After;
@@ -32,7 +33,7 @@ public class InnerConfigTest {
 	}
 
 	@Test
-	public void testDefaultConfig() {
+	public void testDefaultConfig() throws IOException {
 		try {
 			InnerConfig t = InnerConfig.defaultConfig();
 			EmailTemplate e = new EmailTemplate();
@@ -90,7 +91,7 @@ public class InnerConfigTest {
 	}
 
 	@Test
-	public void testEnvrionment() {
+	public void testEnvrionment() throws IOException {
 		HashMap<String, String> map = new HashMap();
 
 		map.put("WINGROW_DATA", "/wingrow_data");

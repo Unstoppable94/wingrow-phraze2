@@ -180,7 +180,7 @@ public class GroupAction {
 	private static int addOrModifAction = 4;
 
 	public static String getProjectGroupJsonfilename(String name)
-			throws FileNotFoundException, UnsupportedEncodingException {
+			throws IOException {
 		String temp = InnerConfig.defaultConfig().getDataDir()
 				+ projectGroupDir + URLEncoder.encode(name, "UTF-8") + ".json";
 		return temp;

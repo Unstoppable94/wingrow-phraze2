@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,19 +12,17 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import com.winhong.plugins.cicd.view.innerData.Build;
 
 public class Tools {
 
@@ -54,12 +51,29 @@ public class Tools {
 		return gson.toJson(o);
 	}
 
+	
+	
+	/**
+	 * By default ,all file save with encrypting
+	 * @param str
+	 * @param filename
+	 * @throws IOException
+	 */
 	public static void saveStringToFile(String str, String filename) throws IOException {
+		 
+		saveStringToFile(  str,   filename,true) ;
+	}
+	
+	
+	public static void saveStringToFile(String str, String filename,boolean encrypt) throws IOException {
 		File file = new File(filename);
 		if (!file.exists())
 			file.createNewFile();
 		FileWriter fileWrite = new FileWriter(file);
-		fileWrite.write(str);
+		if (encrypt)
+			fileWrite.write(Encryptor.encrypt(str));
+		else
+			fileWrite.write(str);
 		fileWrite.close();
 
 	}
@@ -73,15 +87,19 @@ public class Tools {
 	 * @throws IOException
 	 *             exception
 	 */
-	public static String readResource(String resourcename) throws IOException {
+	public static String readResource(String resourcename,boolean isEncrypt) throws IOException {
 		ClassLoader classLoader = Tools.class.getClassLoader();
 
 		InputStream fis = classLoader.getResourceAsStream(resourcename);
-
-		return IOUtils.toString(fis);
-
+		if (isEncrypt)
+			return Encryptor.decrypt(IOUtils.toString(fis));
+		else
+			return (IOUtils.toString(fis));
 	}
 
+	
+	
+	
 	/**
 	 * 从json格式的资源文件中生成对象
 	 * 
@@ -90,44 +108,25 @@ public class Tools {
 	 * @param cla
 	 *            类名称
 	 * @return 对象
-	 * @throws FileNotFoundException
-	 *             文件不存在
+	 * @throws IOException 
 	 */
-	public static Object objectFromJsonResource(String resourcename, Class<?> cla) throws FileNotFoundException {
-		// ClassLoader classLoader = cla.getClassLoader();
-		// URL res = classLoader.getResource(resourcename);
-		// if (res==null){
-		// throw new FileNotFoundException(resourcename);
-		// }
-		// File file = new File(res.getFile());
+	public static Object objectFromJsonResource(String resourcename, Class<?> cla) throws IOException {
+		
+		return objectFromJsonResource(  resourcename, cla, true);
+		 
+	}
+	
+	
+public static Object objectFromJsonResource(String resourcename, Class<?> cla,boolean isEncrypt) throws IOException {
+		
 
-		// You cannot do this
-		//
-		// File src = new File(resourceUrl.toURI()); //ERROR HERE
-		// it is not a file! When you run from the ide you don't have any error,
-		// because you don't run a jar file. In the IDE classes and resources
-		// are extracted on the file system.
-		//
-		// But you can open an InputStream in this way:
-		//
-		// InputStream in =
-		// Model.class.getClassLoader().getResourceAsStream("/data.sav");
-		// Remove "/resource". Generally the IDEs separates on file system
-		// classes and resources. But when the jar is created they are put all
-		// together. So the folder level "/resource" is used only for classes
-		// and resources separation.
-		//
-
-		InputStream fis = cla.getClassLoader().getResourceAsStream(resourcename);
-
-		// InputStream fis = new FileInputStream(file);
-		// create JsonReader object
-		JsonReader jsonReader = new JsonReader(new InputStreamReader(fis));
+		String input=readResource(resourcename,isEncrypt);
 
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
-		return gson.fromJson(jsonReader, cla);
+		return gson.fromJson(input, cla);
 	}
+
 
 	/**
 	 * 从json格式的资源文件中生成对象
@@ -137,19 +136,15 @@ public class Tools {
 	 * @param cla
 	 *            类名称
 	 * @return 对象
-	 * @throws FileNotFoundException
-	 *             文件不存在
+	 * @throws IOException 
 	 */
-	public static Object objectFromJsonFile(String filename, Class cla) throws FileNotFoundException {
+	public static Object objectFromJsonFile(String filename, Class cla) throws IOException {
 
-		File file = new File(filename);
-		InputStream fis = new FileInputStream(file);
-		// create JsonReader object
-		JsonReader jsonReader = new JsonReader(new InputStreamReader(fis));
-
+		String str=readFile(new File(filename)).toString(); 
+ 
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
-		return gson.fromJson(jsonReader, cla);
+		return gson.fromJson(str, cla);
 	}
 
 	/**
@@ -165,15 +160,7 @@ public class Tools {
 	 * @throws IOException
 	 *             IO //
 	 */
-	// public static Object objectFromJsonUrl(String url, Type type)
-	// throws MalformedURLException, IOException {
-	// String json = IOUtils.toString(new URL(url));
-	//
-	// Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-	// .serializeNulls().create();
-	//
-	// return gson.fromJson(json, type);
-	// }
+	 
 
 	public static Object objectFromJsonString(String content, Type type) throws MalformedURLException, IOException {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
@@ -395,12 +382,39 @@ public class Tools {
 		return ret.toString();
 	}
 
+	/**
+	 * by defaul ,all file will save with encrypting
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	public static StringBuffer readFile(File file) throws IOException {
-		String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+		//String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 
-		return new StringBuffer(buffer);
+		return  readFileWithDecrypt(file);
 	}
 
+	
+	public static StringBuffer readFile(File file,boolean isEncrypted) throws IOException {
+		//String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+		if (isEncrypted)
+			return  readFileWithDecrypt(file);
+		else {
+			String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+			return new StringBuffer(buffer);
+		}
+				
+	}
+	
+	public static StringBuffer readFileWithDecrypt(File file) throws IOException {
+		
+		String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+		
+		return new StringBuffer(Encryptor.decrypt(buffer));
+	}
+	
+	
+	
 	public static StringBuffer readFileAndRemoveEmptyLine(File file) throws IOException {
 		// FileReader input = new FileReader(file);
 		// BufferedReader in = new BufferedReader(input);

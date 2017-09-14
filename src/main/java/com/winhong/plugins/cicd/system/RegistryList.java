@@ -63,18 +63,19 @@ public class RegistryList {
 	}
 	
 
-	public String inscure=" --insecure-registry #url";
+	public String inscure="\"#url\"";
 	
 	public String getInscureString(){
 		String temp="";
 		for (int i=0;i<registries.size();i++){
 			RegistryConfig config=registries.get(i);
 			if (config.isSecure()==false)
-			temp+= inscure.replace("#url", config.getServer());
+			temp+= inscure.replace("#url", config.getServer())+",";
 			
 		}
- 
-		return temp;
+		if (temp.isEmpty())
+				return "";
+		return temp.substring(0,temp.length()-1);
 	}
 	
 }

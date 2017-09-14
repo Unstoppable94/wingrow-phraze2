@@ -33,6 +33,22 @@ public class commonTextArea extends Property{
 				);
 	}
 	 
+	public commonTextArea(String id,String value,int min,int max,String name,String description,boolean required){
+		super(
+				id,
+				"string",
+				true,
+				true,
+				required,
+				value,
+				null,
+				"",
+				min,
+				max,
+				name,
+				description
+				);
+	}
 
 	@Override
 	public boolean check() throws ConfigCheckException {

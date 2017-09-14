@@ -26,7 +26,7 @@ public class OpenLDAPConfig {
 	String SECURITY_AUTHENTICATION="simple";
 	
 	@Expose
-	String SECURITY_PROTOCOL;
+	String SECURITY_PROTOCOL="";
 
 	@Expose
 	String SearchBase;
@@ -45,7 +45,7 @@ public class OpenLDAPConfig {
 		// String url = "ldap://" + ldapConfig.getServer() + ':' +
 		// String.valueOf(ldapConfig.getPort()) + '/';
 		props.put(Context.PROVIDER_URL, PROVIDER_URL);
-		if (SECURITY_PROTOCOL.equalsIgnoreCase("ssl"))
+		if (SECURITY_PROTOCOL!=null && SECURITY_PROTOCOL.equalsIgnoreCase("ssl"))
 			props.put(Context.SECURITY_PROTOCOL, SECURITY_PROTOCOL);
 		return props;
 	}
@@ -63,6 +63,12 @@ public class OpenLDAPConfig {
 		SECURITY_PROTOCOL = sECURITY_PROTOCOL;
 		SearchBase = searchBase;
 		Connect_Timeout = connect_Timeout;
+	}
+
+
+
+
+	public OpenLDAPConfig() {
 	}
 
 
@@ -122,8 +128,24 @@ public class OpenLDAPConfig {
 		SearchBase = searchBase;
 	}
 
-	public String getDomain() {
-		 
-		return "api.auth.ldap.openldap.domain";
+
+
+
+	public String getConnect_Timeout() {
+		return Connect_Timeout;
 	}
+
+
+
+
+	public void setConnect_Timeout(String connect_Timeout) {
+		Connect_Timeout = connect_Timeout;
+	}
+
+//	public String getDomain() {
+//		 
+//		return "api.auth.ldap.openldap.domain";
+//	}
+	
+	
 }

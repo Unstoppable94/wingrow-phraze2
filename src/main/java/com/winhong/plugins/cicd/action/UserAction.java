@@ -6,12 +6,16 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
+import com.winhong.plugins.cicd.openldap.OpenLDAP;
+import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
+import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.RandomString;
 import com.winhong.plugins.cicd.tool.Tools;
@@ -84,15 +88,14 @@ public class UserAction {
 		return users;
 	}
 
-	public static User getUserinfo(String name) throws FileNotFoundException,
-			UnsupportedEncodingException {
+	public static User getUserinfo(String name) throws IOException {
 		return (User) Tools.objectFromJsonFile(getUserfilename(name),
 				User.class);
 
 	}
 
 	private static String getUserfilename(String name)
-			throws FileNotFoundException, UnsupportedEncodingException {
+			throws IOException {
 
 		File dir = new File(InnerConfig.defaultConfig().getDataDir() + userDir);
 
@@ -125,7 +128,7 @@ public class UserAction {
 			throw new IOException("用户不存在");
 		//密码处理，判断是否用户本身
 
-		if (user.getPassword().equals(PasswordMask) || modifyPassword==false){
+		if (user.getPassword()==null || user.getPassword().equals(PasswordMask) || modifyPassword==false){
 		
 			
 			User oldUser = getUserinfo(user.getUsername());
@@ -140,6 +143,7 @@ public class UserAction {
 
 		Tools.saveStringToFile(Tools.getJson(user),
 				getUserfilename(user.getUsername()));
+		user.setPassword(PasswordMask);
 		return user;
 
 	}
@@ -163,7 +167,7 @@ public class UserAction {
 	}
 
 	public static boolean userExist(String username)
-			throws FileNotFoundException, UnsupportedEncodingException {
+			throws IOException {
 		File file = new File(getUserfilename(username));
 
 		return file.exists();
@@ -192,8 +196,13 @@ public class UserAction {
 	}
 	
  	
- 	public static User Login(String username,String password) throws FileNotFoundException, UnsupportedEncodingException {
- 		User user=getUserinfo(username);
+ 	public static User Login(String username,String password) throws IOException {
+ 		User user=null;
+ 		try {
+ 			user=getUserinfo(username);
+ 		} catch (  NoSuchFileException e) {
+ 			return null;
+ 		}
  		if (user.getUserType().endsWith(User.LOCAL)) {
  			long expired=user.getPasswordExpired();
  			long now=System.currentTimeMillis();
@@ -201,11 +210,21 @@ public class UserAction {
  				log.info("Password Expired:"+username);
  				return null;
  			}
- 			if (user.getPassword().equals(password)) {
- 				return user;
- 			}
+ 			if (!user.getPassword().equals(password)) 
+ 				return null;
+ 			
+ 		}else {
+ 			OpenLDAPConfig ldapConfig;
+			try {
+				ldapConfig = Config.getOpenLDAPConfig();
+				OpenLDAP.Login(ldapConfig, username, password);
+				 
+			} catch (  Exception e) {
+				log.info("OpenLDAPConfig login fail"+e.getMessage());
+				 return null;
+			}
+ 			
  		}
- 		//TODO LDAP LOGIN
- 		return null;
+ 		return user;
  	}
 }

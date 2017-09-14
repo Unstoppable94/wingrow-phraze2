@@ -1,0 +1,286 @@
+{  
+   "baseInfo":{  
+      "id":"",
+      "name":"traditionalDocker",
+      "description":"traditionalDocker",
+      "SCMUrl":"http://10.0.2.50:180/winhong/ciexample.git",
+      "SCMUser":"xiehq",
+      "SCMPassword":"acd12345",
+      "SCMBranch":"master",
+      "SCMTYPE":"git",
+      "trigger":"manual",
+      "triggerProperty":null,
+      "exraProperties":"",
+      "createTime":0,
+      "lastModifyTime":0,
+      "lastModifyer":null,
+      "mailOnfail":null,
+      "mailOnSuccess":null,
+      "mailOnReovery":null,
+      "groupId":"default",
+      "projectType":"traditionalDocker",
+      "maxExcutiontime":30
+   },
+
+ 
+
+   "workflow":{  
+      "formProperties":[  
+         {  
+            "id":"dockercompile",
+            "name":"Docker编译",
+            "description":"调用指定Docker image进行代码编译",
+            "elements":[  
+               {  
+                  "id":"image",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":true,
+                  "value":"maven:3-jdk-8-alpine",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":3,
+                  "maxLength":50,
+                  "name":"编译使用的image",
+                  "description":"编译使用的image，建议带上版本信息"
+               },
+               {  
+                  "id":"srcMap",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"/src",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":5,
+                  "maxLength":200,
+                  "name":"代码在容器内Mapping目录",
+                  "description":"代码目录在编译容器内的mapping设置"
+               },
+               {  
+                  "id":"distDirMap",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":2,
+                  "maxLength":50,
+                  "name":"输出目录mapping配置",
+                  "description":"输出结果目录配置，如果输出目录不在src目录下，请注意配置将，否则可能没有输出"
+               },
+               {  
+                  "id":"dockeruser",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":2,
+                  "maxLength":50,
+                  "name":"docker运行用户",
+                  "description":"编译docker运行时用户，不输入时候使用image默认用户"
+               },
+               {  
+                  "id":"dockerworkdir",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"/src",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":2,
+                  "maxLength":50,
+                  "name":"docker运行目录",
+                  "description":"编译docker运行时目录，不输入时候使用image默认目录"
+               },
+               {  
+                  "id":"dockercmd",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"mvn  --settings ./settings.xml -DskipTests=true clean package",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":2,
+                  "maxLength":50,
+                  "name":"编译命令",
+                  "description":"编译命令，不输入使用image默认命令"
+               }
+            ]
+         },
+         {  
+            "id":"createImage",
+            "name":"创建Image",
+            "description":"生成docker images",
+            "elements":[  
+               {  
+                  "id":"registry",
+                  "type":"enum",
+                  "readable":true,
+                  "writable":true,
+                  "required":true,
+                  "value":"10.0.2.50",
+                  "enumValues":[  
+                     {  
+                        "id":"10.0.2.50",
+                        "name":"10.0.2.50"
+                     }
+                  ],
+                  "datePattern":"",
+                  "minLength":1,
+                  "maxLength":1,
+                  "name":"Registry",
+                  "description":"Image 存放的Registry"
+               },
+               {  
+                  "id":"tag",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"winhong/ciexample-tra",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":1,
+                  "maxLength":30,
+                  "name":"Docker tag",
+                  "description":"docker tag, 格式为dir/image,系统生成的时候会默认在TAG后面加上编译执行序号"
+               },
+               {  
+                  "id":"dockerfile",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"./Dockerfile",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":2,
+                  "maxLength":100,
+                  "name":"Dockerfile",
+                  "description":"默认为代码根目录下的Dockerfile "
+               }
+            ]
+         },
+         {  
+            "id":"deployToRancher",
+            "name":"部署应用",
+            "description":"部署应用到指定环境",
+            "elements":[  
+               {  
+                  "id":"environment",
+                  "type":"enum",
+                  "readable":true,
+                  "writable":true,
+                  "required":true,
+                  "value":"1a5",
+                  "enumValues":[  
+                     {  
+                        "id":"1a5",
+                        "name":"Default"
+                     },
+                     {  
+                        "id":"1a14",
+                        "name":"Test"
+                     }
+                  ],
+                  "datePattern":"",
+                  "minLength":1,
+                  "maxLength":1,
+                  "name":"部署环境ID",
+                  "description":"部署的 Service 的环境ID"
+               },
+               {  
+                  "id":"skip",
+                  "type":"boolean",
+                  "readable":true,
+                  "writable":true,
+                  "required":true,
+                  "value":"false",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":0,
+                  "maxLength":0,
+                  "name":"是否跳过",
+                  "description":"是否跳过当前步骤"
+               },
+               {  
+                  "id":"service",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"test/ciexample-tra",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":10,
+                  "maxLength":50,
+                  "name":"部署服务service",
+                  "description":"部署的 Service  NAME,格式为stack/service ,service存在就升级，不存在就创建"
+               },
+               {  
+                  "id":"arg",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":0,
+                  "maxLength":250,
+                  "name":"启动参数",
+                  "description":"服务启动参数如 -p 8080:8080"
+               },
+               {  
+                  "id":"cmd",
+                  "type":"string",
+                  "readable":true,
+                  "writable":true,
+                  "required":false,
+                  "value":"",
+                  "enumValues":[  
+
+                  ],
+                  "datePattern":"",
+                  "minLength":0,
+                  "maxLength":250,
+                  "name":"容器启动命令",
+                  "description":"Docker容器启动命令,可以不输"
+               }
+            ]
+         }
+      ]
+   }
+}

@@ -22,6 +22,21 @@ curl  -X POST -H "Content-Type:application/json" http://localhost:8100/webapi/lo
 
    curl -X POST -H "Content-Type:application/json"   http://localhost:8100/webapi/logout -H "authorization":"eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA1MTEwMDI2LCJpYXQiOjE1MDUxMDkxMjYsImp0aSI6IjEifQ.C7f24p5u-cK1xRdoH1yFIwky72C7IbO9r8xRkbs9cJE"
 
+curl -X GET http://localhost:8100/webapi/user  -H "Content-Type:application/json" 
+
+curl -X POST http://localhost:8100/webapi/user  -H "Content-Type:application/json"  --data-binary @newuser.json
 
 
-curl -X POST http://localhost:8100/webapi/user  -H "Content-Type:application/json" -H "authorization":"eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA1MTEyNTc2LCJpYXQiOjE1MDUxMTE2NzYsImp0aSI6IjEifQ.IfuNdflS3NlremCnrMx1QgyhLC9WD6wJpOKhAEidEBY"  --data-binary @newuser.json
+curl  -X GET -H "Content-Type:application/json" http://192.168.101.4:8100/webapi/misc/stagesinfo  
+curl -X POST http://localhost:8100/webapi/user  -H "Content-Type:application/json"  --data-binary @newldapuser.json
+
+
+curl  -X POST -H "Content-Type:application/json" http://localhost:8100/webapi/login --data-binary @newldapuser.json
+
+
+
+curl  -X PUT -H "Content-Type:application/json" http://localhost:8100/webapi/user/admin2?action=resetpassword
+
+
+curl -X POST http://192.168.101.4:8100/webapi/user  -H "Content-Type:application/json"  --data-binary @newuser.json
+curl -X GET http://192.168.101.4:8100/webapi/user  -H "Content-Type:application/json"  --data-binary @newuser.json

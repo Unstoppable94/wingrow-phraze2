@@ -55,27 +55,23 @@ public class Login {
 
 			User user = UserAction.Login(username, password);
 			if (user == null || user.getUsername() == null) {
-				return WebTools.Error("用户不存在、或者密码错误");
+				log.info("login fail,username:" + username);
+				return WebTools.Error("用户不存在、或者密码错误或者过期");
 			}
 
-			log.debug("login successful----------username:" + username);
-
-			// Issue a token (can be a random String persisted to a database or a JWT token)
-			// The issued token must be associated to a user
-			// Return the issued token
 			String role = user.getRole();
 			String[] roles = { role };
 			String jwtString = TokenUtil.getJWTString(username, roles);
 			Token token = new Token();
 			token.setAuthorization(jwtString);
 			token.setExpires(TokenUtil.getExpiryDate().getTime());
-
-			// return response.ok(token).build();
-			// LoginedToken.put(jwtString, new Date());
-			return Tools.getJson(token);
-			// return "{\"token\":\""+jwtString+"\"}";
-
-			// return tools.getJson(InnerConfig.defaultConfig().getMaven());
+			
+			if (user.getUserType().equals(User.LOCAL) && user.getPasswordExpired()>0) {
+				token.setMustChangePassword(true);
+			}
+			else
+				token.setMustChangePassword(false);
+			return Tools.getJson(token); 
 		} catch (java.io.FileNotFoundException e) {
 			return WebTools.Error("用户不存在、或者密码错误");
 		} catch (Exception e) {

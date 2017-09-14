@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.winhong.plugins.cicd.data.base.EnumList;
+import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
 
@@ -23,14 +25,15 @@ public class Config {
 
 	private final static String configDir = "/config";
 	private static final Logger log = LoggerFactory.getLogger(Config.class);
-
+	private static String DockerDaemonfile="/etc/docker/daemon.json";
+	private static String DockerConfigJson="/.docker/config.json";
 	public Config() {
 		super();
 	}
-	
-	private static HashMap<String,Object> configs=new HashMap<String,Object>();
 
-	private static Object getConfig(Class cla) throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	private static HashMap<String, Object> configs = new HashMap<String, Object>();
+
+	private static Object getConfig(Class cla) throws InstantiationException, IllegalAccessException, IOException {
 		if (configs.containsKey(getClassName(cla))) {
 			return configs.get(getClassName(cla));
 		}
@@ -39,33 +42,35 @@ public class Config {
 		File dir = new File(dataDir + configDir);
 		if (dir.exists() == false)
 			dir.mkdirs();
-		
+
 		String filename = dir + "/" + getClassName(cla) + ".json";
-		File file=new File(filename);
-		if (file.exists()==false)
-			return cla.newInstance() ;
+		File file = new File(filename);
+		if (file.exists() == false)
+			throw new NoSuchFileException(filename);
 		log.debug(filename);
-		return Tools.objectFromJsonFile(filename, cla);
+		Object object = Tools.objectFromJsonFile(filename, cla);
+		configs.put(getClassName(cla), object);
+		return object;
 	}
 
-	public static SonarConfig getSonarConfig() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static SonarConfig getSonarConfig() throws InstantiationException, IllegalAccessException, IOException {
 		return (SonarConfig) getConfig(SonarConfig.class);
 	}
 
-	public static SMTPConfig getSMTPConfig() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static SMTPConfig getSMTPConfig() throws InstantiationException, IllegalAccessException, IOException {
 		return (SMTPConfig) getConfig(SMTPConfig.class);
 	}
-	
+
 	public static RegistryMirrorConfig getRegistryMirrorConfig()
-			throws FileNotFoundException, InstantiationException, IllegalAccessException {
+			throws InstantiationException, IllegalAccessException, IOException {
 		return (RegistryMirrorConfig) getConfig(RegistryMirrorConfig.class);
 	}
 
-	public static RancherConfig getRancherConfig() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static RancherConfig getRancherConfig() throws InstantiationException, IllegalAccessException, IOException {
 		return (RancherConfig) getConfig(RancherConfig.class);
 	}
 
-	public static RegistryList getRegistryList() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static RegistryList getRegistryList() throws InstantiationException, IllegalAccessException, IOException {
 		return (RegistryList) getConfig(RegistryList.class);
 	}
 
@@ -75,13 +80,13 @@ public class Config {
 	 * @param config
 	 * @return
 	 * @throws IOException
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
 	public static <E> boolean saveConfig(E config) throws IOException, InstantiationException, IllegalAccessException {
-		
+
 		configs.remove(getClassName(config.getClass()));
-		
+
 		if (saveConfig(getClassName(config.getClass()), Tools.getJson(config)) == false)
 			return false;
 		// //sonar-credential
@@ -93,8 +98,7 @@ public class Config {
 
 			JenkinsClient client = JenkinsClient.defaultClient();
 			SonarConfig c = (SonarConfig) config;
-			return client.createCredential("sonar", c.getUser(),
-					c.getPassword(), "credential");
+			return client.createCredential("sonar", c.getUser(), c.getPassword(), "credential");
 
 		}
 
@@ -110,11 +114,10 @@ public class Config {
 			RancherConfig c = (RancherConfig) config;
 			File file = new File(clijson);
 			if (file.exists()) {
-				file.renameTo(new File(clijson + "@"
-						+ System.currentTimeMillis()));
+				file.renameTo(new File(clijson + "@" + System.currentTimeMillis()));
 			}
-			 Tools.saveStringToFile(c.genCLiJson(), clijson);
-			 return true;	
+			Tools.saveStringToFile(c.genCLiJson(), clijson, false);
+			return true;
 		}
 
 		if (config.getClass().equals(RegistryList.class)) {
@@ -126,18 +129,30 @@ public class Config {
 			File dir = new File(home + "/.docker");
 			if (dir.exists() == false)
 				dir.mkdirs();
-			String dockerjson = home + "/.docker/config.json";
+			String dockerjson = home + DockerConfigJson;
 			log.debug("home" + dockerjson);
 			RegistryList c = (RegistryList) config;
 			File file = new File(dockerjson);
 			if (file.exists()) {
-				file.renameTo(new File(dockerjson + "@"
-						+ System.currentTimeMillis()));
+				file.renameTo(new File(dockerjson + "@" + System.currentTimeMillis()));
 			}
-			 Tools.saveStringToFile(c.getConfigJson(), dockerjson);
-			 return true	;
+			Tools.saveStringToFile(c.getConfigJson(), dockerjson, false);
+			return true;
 		}
-		
+
+		if (config.getClass().equals(RegistryMirrorConfig.class)) {
+			String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
+			RegistryList regList = Config.getRegistryList();
+			String daemon=Tools.readResource("WinGrow/config/daemon.json", false);
+			//String cmd = "dockerupdate.sh ";
+ 			daemon=Tools.strRep(daemon,"$mirror", mirrorUrl);
+			daemon=Tools.strRep(daemon,"$insecure-registries", regList.getInscureString());
+			
+			 
+			//runShell(cmd);
+			Tools.saveStringToFile(daemon, DockerDaemonfile , false);
+			return true;
+		}
 		return false;
 	}
 
@@ -166,8 +181,7 @@ public class Config {
 	 * @throws IOException
 	 *             异常
 	 */
-	public static boolean saveConfig(String name, String content)
-			throws IOException {
+	public static boolean saveConfig(String name, String content) throws IOException {
 		// Save Change
 		String dataDir = InnerConfig.defaultConfig().getDataDir();
 
@@ -179,12 +193,11 @@ public class Config {
 		File file = new File(filename);
 
 		if (file.exists()) {
-			String temp = dir + "/" + name + ".json"
-					+ System.currentTimeMillis();
+			String temp = dir + "/" + name + ".json" + System.currentTimeMillis();
 			file.renameTo(new File(temp));
 		}
 
-		 log.debug(filename);
+		log.debug(filename);
 		Tools.saveStringToFile(content, filename);
 
 		// File latest = new File(dir + "/" + name + ".json");
@@ -214,14 +227,13 @@ public class Config {
 	 * @param server
 	 *            server名称
 	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws IOException
 	 */
 	public static RegistryConfig getRegistryConfig(String server)
-			throws FileNotFoundException, InstantiationException, IllegalAccessException {
-		ArrayList<RegistryConfig> list = Config.getRegistryList()
-				.getRegistries();
+			throws InstantiationException, IllegalAccessException, IOException {
+		ArrayList<RegistryConfig> list = Config.getRegistryList().getRegistries();
 
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getServer().equals(server))
@@ -241,12 +253,10 @@ public class Config {
 		// if (registryList.size()==0){
 		try {
 
-			ArrayList<RegistryConfig> list = Config.getRegistryList()
-					.getRegistries();
+			ArrayList<RegistryConfig> list = Config.getRegistryList().getRegistries();
 			for (int i = 0; i < list.size(); i++) {
 
-				relist.add(new EnumList(list.get(i).getServer(), list.get(i)
-						.getServer()));
+				relist.add(new EnumList(list.get(i).getServer(), list.get(i).getServer()));
 			}
 			return relist;
 		} catch (Exception e) {
@@ -281,8 +291,7 @@ public class Config {
 			String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
 
 			String cmd = "dockerupdate.sh ";
-			cmd += regList.getInscureString() + "  --registry-mirror "
-					+ mirrorUrl;
+			cmd += regList.getInscureString() + "  --registry-mirror " + mirrorUrl;
 			runShell(cmd);
 		}
 
@@ -290,7 +299,8 @@ public class Config {
 
 	}
 
-	public static boolean deleteRegistry(String server) throws IOException, InstantiationException, IllegalAccessException {
+	public static boolean deleteRegistry(String server)
+			throws IOException, InstantiationException, IllegalAccessException {
 		RegistryList regList = Config.getRegistryList();
 		ArrayList<RegistryConfig> list = regList.getRegistries();
 		for (int i = 0; i < list.size(); i++) {
@@ -304,55 +314,70 @@ public class Config {
 
 	}
 
-	public static void saveMirrorConfig(RegistryMirrorConfig config)
-			throws IOException, InstantiationException, IllegalAccessException {
-		Config.saveConfig(config);
-		RegistryList regList = Config.getRegistryList();
-
-		String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
-
-		String cmd = "dockerupdate.sh ";
-		cmd += regList.getInscureString() + "  --registry-mirror " + mirrorUrl;
-		runShell(cmd);
-
-	}
+	// public static void saveMirrorConfig(RegistryMirrorConfig config)
+	// throws IOException, InstantiationException, IllegalAccessException {
+	// Config.saveConfig(config);
+	// RegistryList regList = Config.getRegistryList();
+	//
+	// String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
+	//
+	// String cmd = "dockerupdate.sh ";
+	// cmd += regList.getInscureString() + " --registry-mirror " + mirrorUrl;
+	// runShell(cmd);
+	//
+	// }
 
 	private static String runShell(String cmd) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 
 		Process proc = rt.exec(cmd);
 
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-				proc.getInputStream()));
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 
-		BufferedReader stdError = new BufferedReader(new InputStreamReader(
-				proc.getErrorStream()));
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
 		// read the output from the command
-		//System.out.println("Here is the standard output of the command:\n");
+		// System.out.println("Here is the standard output of the command:\n");
 		String s = "";
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		while ((s = stdInput.readLine()) != null) {
 			sb.append(s);
- 		}
+		}
 
 		// read any errors from the attempted command
-		//System.out
-		//		.println("Here is the standard error of the command (if any):\n");
+		// System.out
+		// .println("Here is the standard error of the command (if any):\n");
 		while ((s = stdError.readLine()) != null) {
 			sb.append(s);
 		}
-		log.debug(cmd+" return:"+sb.toString());
+		log.debug(cmd + " return:" + sb.toString());
 		return sb.toString();
 
 	}
 
- 
-	
-	public static JenkinsConfig getJenkinsConfig() throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static JenkinsConfig getJenkinsConfig() throws InstantiationException, IllegalAccessException, IOException {
 		return (JenkinsConfig) getConfig(JenkinsConfig.class);
 	}
-	
-	
-	
+
+	public static OpenLDAPConfig getOpenLDAPConfig()
+			throws InstantiationException, IllegalAccessException, IOException {
+		return (OpenLDAPConfig) getConfig(OpenLDAPConfig.class);
+	}
+
+	public static String getDockerDaemonfile() {
+		return DockerDaemonfile;
+	}
+
+	public static void setDockerDaemonfile(String dockerDaemonfile) {
+		DockerDaemonfile = dockerDaemonfile;
+	}
+
+	public static String getDockerConfigJson() {
+		return DockerConfigJson;
+	}
+
+	public static void setDockerConfigJson(String dockerConfigJson) {
+		DockerConfigJson = dockerConfigJson;
+	}
+
 }

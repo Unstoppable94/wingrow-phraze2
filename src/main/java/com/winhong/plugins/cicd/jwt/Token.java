@@ -1,17 +1,18 @@
 package com.winhong.plugins.cicd.jwt;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.gson.annotations.Expose;
+ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
-import java.util.Date;
-
+ 
 public class Token implements Serializable {
     private static final long serialVersionUID = -186954891348069462L;
     @Expose
     private String authorization;
     @Expose
     private long expires;
+    
+    @Expose
+    boolean mustChangePassword;
 
     public Token() { // for some reason the jackson engine needs a zero arg constructor.
     }
@@ -30,6 +31,14 @@ public class Token implements Serializable {
 
 	public void setExpires(long expires) {
 		this.expires = expires;
+	}
+
+	public boolean isMustChangePassword() {
+		return mustChangePassword;
+	}
+
+	public void setMustChangePassword(boolean mustChangePassword) {
+		this.mustChangePassword = mustChangePassword;
 	}
 
     

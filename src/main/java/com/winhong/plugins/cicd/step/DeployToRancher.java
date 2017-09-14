@@ -19,20 +19,20 @@ public class DeployToRancher extends Stage {
 	final private String environmentId = "environment";
 
 	private RancherEnvIdProperty environment = new RancherEnvIdProperty(environmentId, "",
-			"部署环境", "部署的 Service  NAME,采用remove 后run 模式部署️ ");
+			"部署环境ID", "部署的 Service 的环境ID");
 	
 	final private String serviceId = "service";
 
 	private commonString service = new commonString(serviceId, "", 10, 50,
-			"部署服务service", "部署的 Service  NAME,采用remove 后run 模式部署️，格式为stack/service ");
+			"部署服务service", "部署的 Service  NAME,格式为stack/service ,service存在就升级，不存在就创建");
 
 	final private String argId = "arg";
 	private commonString arg = new commonString(argId, "", 0, 250,
-			"启动参数", "服务启动参数如 -p8080:8080 ️");
+			"启动参数", "服务启动参数如 -p 8080:8080");
 
 	final private String cmdId = "cmd";
 	private commonString cmd = new commonString(cmdId, "", 0, 250, "容器启动命令",
-			"Docker容器启动命令,可以不输入️");
+			"Docker容器启动命令,可以不输");
 
 	/**
 	 * 生产一个新的对象
