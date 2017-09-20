@@ -6,15 +6,22 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.NoSuchFileException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
+ 
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.slf4j.LoggerFactory;
 
-import com.winhong.plugins.cicd.jwt.TokenUtil;
+import org.slf4j.Logger;
+ import com.winhong.plugins.cicd.jwt.TokenUtil;
 import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
@@ -30,6 +37,8 @@ import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.tool.Encryptor;
 
 public class App {
+	
+	private static final Logger log = LoggerFactory.getLogger(App.class);
 
 	public static void main(String[] args) {
 		InetSocketAddress bindAdress = new InetSocketAddress("0.0.0.0", 8100);
@@ -62,10 +71,16 @@ public class App {
 			return;
 		}
 		try {
+			String CLOSE_REQUEST_RECORD = System.getenv("CLOSE_REQUEST_RECORD");
+			if (!(CLOSE_REQUEST_RECORD != null && CLOSE_REQUEST_RECORD.equalsIgnoreCase("TRUE")))
+				recordRequest(server, context);
 			server.start();
+			
 			server.join();
+			
 		} catch (Exception ex) {
-			Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
+			log.error(ex.getMessage());
 		} finally {
 
 			server.destroy();
@@ -118,7 +133,7 @@ public class App {
 	}
 
 	public static void initDirs() throws IOException, InstantiationException, IllegalAccessException {
-		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects", "projectGroup" };
+		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects","logs", "projectGroup" };
 		String parent = InnerConfig.defaultConfig().getDataDir();
 		for (int i = 0; i < subdirs.length; i++) {
 			File dir = new File(parent + "/" + subdirs[i]);
@@ -348,4 +363,27 @@ public class App {
 		if (TEST_DOCKER_CONFIG != null && TEST_DOCKER_CONFIG.isEmpty() == false)
 			Config.setDockerConfigJson(TEST_DOCKER_CONFIG);
 	}
+	
+	
+	public static void recordRequest(Server server,ServletContextHandler handle ) throws IOException{
+		HandlerCollection handlers = new HandlerCollection();
+		ContextHandlerCollection contexts = new ContextHandlerCollection();
+		RequestLogHandler requestLogHandler = new RequestLogHandler();
+		handlers.setHandlers(new Handler[]{handle,contexts,new DefaultHandler(),requestLogHandler});
+		server.setHandler(handlers);
+		
+		String parent = InnerConfig.defaultConfig().getDataDir();
+		log.debug("recordRequest ogfile="+parent+"/logs/jetty-yyyy_mm_dd.request.log");
+		NCSARequestLog requestLog = new NCSARequestLog(parent+"/logs/jetty-yyyy_mm_dd.request.log");
+		
+		requestLog.setRetainDays(30);
+		requestLog.setAppend(true);
+		requestLog.setExtended(false);
+		requestLog.setLogCookies(true);
+ 		//requestLog.setLogTimeZone("GMT");
+		requestLogHandler.setRequestLog(requestLog);
+		server.setRequestLog(requestLog); // here will set global request log
+
+	}
+	
 }

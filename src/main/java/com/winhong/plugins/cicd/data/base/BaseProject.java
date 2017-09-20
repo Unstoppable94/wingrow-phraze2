@@ -16,11 +16,10 @@ import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
 
 public abstract class BaseProject {
-	private static final Logger log = LoggerFactory
-			.getLogger(BaseProject.class);
+	private static final Logger log = LoggerFactory.getLogger(BaseProject.class);
 	@Expose
 	private ProjectBaseInfo baseInfo = new ProjectBaseInfo();
-	
+
 	@Expose
 	private Workflow workflow;
 
@@ -36,19 +35,18 @@ public abstract class BaseProject {
 		this.baseInfo = baseInfo;
 	}
 
-	
 	public static String NewProject() throws InstantiationException, IllegalAccessException {
 		return NewProject(ProjectType.getDefaultType());
 	}
-	
+
 	public static String NewProject(String type) throws InstantiationException, IllegalAccessException {
-		Class<BaseProject> cls=ProjectType.getClass(type);
+		Class<BaseProject> cls = ProjectType.getClass(type);
 		return Tools.getJson(cls.newInstance().genJson());
 	}
-	
+
 	public static String getInitWorkflow(String type) throws InstantiationException, IllegalAccessException {
-		Class<BaseProject> cls=ProjectType.getClass(type);
-		BaseProject base=cls.newInstance();
+		Class<BaseProject> cls = ProjectType.getClass(type);
+		BaseProject base = cls.newInstance();
 		return Tools.getJson(base.workflow);
 	}
 
@@ -57,45 +55,44 @@ public abstract class BaseProject {
 	}
 
 	public void reInitWorkflow() throws InstantiationException, IllegalAccessException {
-		
-		Class<BaseProject> cls=ProjectType.getClass(this.getBaseInfo().getProjectType());
-		BaseProject base=cls.newInstance();
-		
+
+		Class<BaseProject> cls = ProjectType.getClass(this.getBaseInfo().getProjectType());
+		BaseProject base = cls.newInstance();
+
 		ArrayList<Stage> stages = base.getWorkflow().getStages();
 		ArrayList<Stage> oldStages = this.getWorkflow().getStages();
-
-		for (int i=0;i<stages.size();i++) {
-			//stages.
-			String stageid=stages.get(i).getId();
-			for (int j=0;j<oldStages.size();j++) {
-				Stage old = oldStages.get(j);
-				if (old.getId().equals(stageid)) {
-					stages.get(i).cloneValue(old);
+		if (oldStages != null) {
+			for (int i = 0; i < stages.size(); i++) {
+				// stages.
+				String stageid = stages.get(i).getId();
+				for (int j = 0; j < oldStages.size(); j++) {
+					Stage old = oldStages.get(j);
+					if (old.getId().equals(stageid)) {
+						stages.get(i).cloneValue(old);
+					}
 				}
+				// .cloneValue(this.get)
 			}
-			//.cloneValue(this.get)
 		}
 		this.getWorkflow().setStages(stages);
 	}
-	
-	
+
 	public void setWorkflow(Workflow workflow) {
 		this.workflow = workflow;
 	}
-	
+
 	public abstract String genJson();
-	
+
 	public static BaseProject createProjectFromJson(String json) {
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-				.serializeNulls().create();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 		JsonParser parser = new JsonParser();
- 
- 		JsonObject obj = parser.parse(json).getAsJsonObject();
- 		JsonObject el=(JsonObject)obj.get("baseInfo");
+
+		JsonObject obj = parser.parse(json).getAsJsonObject();
+		JsonObject el = (JsonObject) obj.get("baseInfo");
 		String projectType = el.get("projectType").getAsString();
-		log.debug("projectType:"+projectType);
+		log.debug("projectType:" + projectType);
 		return (BaseProject) gson.fromJson(json, ProjectType.getClass(projectType));
- 
+
 	}
-	
+
 }

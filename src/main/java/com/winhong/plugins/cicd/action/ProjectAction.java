@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -260,7 +261,11 @@ public class ProjectAction {
 		String LatestJsonfilename = dir.getAbsolutePath()
 				+ Latestjsonfile;
 		//log.debug("filename:"+LatestJsonfilename);
-		String json= Tools.readFile(new File(LatestJsonfilename)).toString();
+		File file=new File(LatestJsonfilename);
+		if (file.exists()==false){
+			throw new NoSuchFileException(LatestJsonfilename);
+		}
+		String json= Tools.readFile(file).toString();
 		// 初始化，更新enum
 		BaseProject project=BaseProject.createProjectFromJson(json);
 		project.reInitWorkflow();

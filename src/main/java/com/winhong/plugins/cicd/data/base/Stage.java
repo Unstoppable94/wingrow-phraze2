@@ -2,14 +2,19 @@ package com.winhong.plugins.cicd.data.base;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
 import com.winhong.plugins.cicd.property.Property;
 
 public    class  Stage {
-
+	private static final Logger log = LoggerFactory
+			.getLogger(Stage.class);
 	/**
 	 * 内部ID，
 	 */
@@ -143,7 +148,10 @@ public    class  Stage {
 			
 			Property s=source.getProperty(temp.getId());
 			//if (temp.getId().equals(id)){
-			elements.get(i).setValue(s.getValue());
+			if (s==null){
+				log.debug(source.getId()+","+temp.getId()+" not found in old data");
+			}else
+				elements.get(i).setValue(s.getValue());
  			//	return true;
 			//}			
 		}
