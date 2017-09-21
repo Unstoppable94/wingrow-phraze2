@@ -19,9 +19,10 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.LoggerFactory;
-
 import org.slf4j.Logger;
- import com.winhong.plugins.cicd.jwt.TokenUtil;
+
+import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
+import com.winhong.plugins.cicd.jwt.TokenUtil;
 import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
@@ -37,7 +38,6 @@ import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.tool.Encryptor;
 
 public class App {
-	
 	private static final Logger log = LoggerFactory.getLogger(App.class);
 
 	public static void main(String[] args) {
@@ -50,7 +50,7 @@ public class App {
 
 		ServletContextHandler context = new ServletContextHandler(server, "/");
 		// close for dev
-		// config.register(JWTSecurityFilter.class);
+		config.register(JWTSecurityFilter.class);
 		// config.register(UsePrivilegeFilter.class);
 
 		context.addServlet(jerseyServlet, "/webapi/*");
@@ -66,20 +66,15 @@ public class App {
 				defaultExpiryMins = Integer.parseInt(TOKEN_EXPIRY);
 			TokenUtil.setDefaultExpiryMins(defaultExpiryMins);
 		} catch (InstantiationException | IllegalAccessException | IOException e) {
+			log.error(e.getMessage());
 
 			e.printStackTrace();
 			return;
 		}
 		try {
-			String CLOSE_REQUEST_RECORD = System.getenv("CLOSE_REQUEST_RECORD");
-			if (!(CLOSE_REQUEST_RECORD != null && CLOSE_REQUEST_RECORD.equalsIgnoreCase("TRUE")))
-				recordRequest(server, context);
 			server.start();
-			
 			server.join();
-			
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			log.error(ex.getMessage());
 		} finally {
 
@@ -133,7 +128,7 @@ public class App {
 	}
 
 	public static void initDirs() throws IOException, InstantiationException, IllegalAccessException {
-		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects","logs", "projectGroup" };
+		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects", "projectGroup","logs" };
 		String parent = InnerConfig.defaultConfig().getDataDir();
 		for (int i = 0; i < subdirs.length; i++) {
 			File dir = new File(parent + "/" + subdirs[i]);
@@ -334,23 +329,24 @@ public class App {
 			Config.saveConfig(registries);
 
 		}
-
-		RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
-		String DOCKER_MIRROR = System.getenv("DOCKER_MIRROR");
-
-		if (DOCKER_MIRROR != null && DOCKER_MIRROR.isEmpty() == false) {
-			if (DOCKER_MIRROR.startsWith("http")) {
-				dockerMirror.setUrl(DOCKER_MIRROR);
-				Config.saveConfig(dockerMirror);
-
-			}
-		} else if (register != null) {
-			if (register.isSecure())
-				dockerMirror.setUrl("https://" + register.getServer());
-			else
-				dockerMirror.setUrl("http://" + register.getServer());
-			Config.saveConfig(dockerMirror);
-		}
+		
+		//Docker Mirror setting in jenkins slave ,wingrow don't need to set it 
+//		RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
+//		String DOCKER_MIRROR = System.getenv("DOCKER_MIRROR");
+//
+//		if (DOCKER_MIRROR != null && DOCKER_MIRROR.isEmpty() == false) {
+//			if (DOCKER_MIRROR.startsWith("http")) {
+//				dockerMirror.setUrl(DOCKER_MIRROR);
+//				Config.saveConfig(dockerMirror);
+//
+//			}
+//		} else if (register != null) {
+//			if (register.isSecure())
+//				dockerMirror.setUrl("https://" + register.getServer());
+//			else
+//				dockerMirror.setUrl("http://" + register.getServer());
+//			Config.saveConfig(dockerMirror);
+//		}
 
 	}
 
@@ -383,7 +379,6 @@ public class App {
  		//requestLog.setLogTimeZone("GMT");
 		requestLogHandler.setRequestLog(requestLog);
 		server.setRequestLog(requestLog); // here will set global request log
-
 	}
 	
 }
