@@ -44,7 +44,7 @@ public class UserViewTest {
 		 try {
 			 System.out.print(
 					 "Uselist="+
-					 UserView.getUserList("测试2222",0, -1));
+					 UserView.getUserList("测试2222",null,null,0, -1));
 			 
 		} catch (Exception e) {  
 			e.printStackTrace();
@@ -55,7 +55,7 @@ public class UserViewTest {
 	@Test
 	public void testGetUserListStringIntInt() {
 		 try {
-				System.out.print(UserView.getUserList("测试",0, -1));
+				System.out.print(UserView.getUserList("admin",User.operatorRole,User.LOCAL,0, -1));
 			} catch (Exception e) {  
 				e.printStackTrace();
 				fail();

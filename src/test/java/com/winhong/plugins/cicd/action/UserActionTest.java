@@ -87,15 +87,15 @@ public class UserActionTest extends UserAction {
 			user.setUsername("修改用户");
 			UserAction.addUser(user);
 			UserAction.modifyUser(user,false);
-			System.out.println(UserAction.getAllUser("修改").size());
-			ArrayList<User> t = UserAction.getAllUser("修改");
+			System.out.println(UserAction.searchUser("修改",null,null).size());
+			ArrayList<User> t = UserAction.searchUser("修改",null,null);
 			if (t.size()!=1)
 					fail();
 			else{
 				System.out.println(Tools.getJson(t));
 			}
 			
-			if (UserAction.getAllUser("修改2").size()!=0)
+			if (UserAction.searchUser("修改2","","").size()!=0)
 				fail();
 			
 			System.out.println(UserAction.getUserinfo(user.getUsername()));

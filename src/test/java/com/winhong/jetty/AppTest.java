@@ -49,7 +49,7 @@ public class AppTest extends App {
 		
 		HashMap<String, String> map = new HashMap();
 
-		map.put("JENKINS_MASTER", "http://192.168.101.6:8080/");
+		map.put("JENKINS_MASTER", "http://192.168.101.6:8080");
 		map.put("FORCE_INIT", "true");
 		
 		map.put("REGISTRY_AUTH", "eGllaHE6QWNkMTIzNDU=");

@@ -43,13 +43,13 @@ public class UserManage {
 
 	@GET
 	@Produces("application/json;charset=UTF-8")
-	public String listAllUser(@QueryParam("username") String username,
+	public String listAllUser(@QueryParam("username") String username,@QueryParam("role") String role,@QueryParam("userType") String type,
 			@QueryParam("firstResult") int firstResult,
 			@QueryParam("maxResult") int maxResult) {
 		try {
 
 			log.debug("firstResult:" + firstResult + "maxResult:" + maxResult);
-			String ret=Tools.ToUTF8(UserView.getUserList(username, firstResult,
+			String ret=Tools.ToUTF8(UserView.getUserList(username,role,type, firstResult,
 					maxResult));
 			log.debug("ret:"+ret);
 			

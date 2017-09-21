@@ -150,7 +150,8 @@ public class Login {
 			}
 
 			sessionUser.setPassword(inputPass.password);
-
+			 
+			sessionUser.setPasswordExpired(0);
 			User user = UserAction.modifyUser(sessionUser,true);
 			user.setPassword(UserAction.PasswordMask);
 			return Tools.getJson(user);

@@ -1,7 +1,7 @@
-curl -X GET -H "Content-Type:application/json" http://localhost:8100/webapi/project/  -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA0ODQ0NjE1LCJpYXQiOjE1MDQ4NDM3MTUsImp0aSI6IjEifQ.9SBz9dyd3vOE_HxXumaDSa_6_CdnZk2j9IqmDS13jZ8"
+curl  -X POST -H "Content-Type:application/json" http://localhost:8100/webapi/login --data-binary @user.json
 
 
-
+curl -X GET -H "Content-Type:application/json" "http://localhost:8100/webapi/project?projectName=docker&projectType=traditionalDocker"  -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MDQ5ODgxLCJpYXQiOjE1MDU5NjM0ODEsImp0aSI6IjEifQ.VArfzeQ_-i-egfYz5CdM3qdFmLFHBPiCd6iSgkt_s1M"
 newWorkflow
 curl -X GET -H "Content-Type:application/json" "http://localhost:8100/webapi/project?action=newWorkflow&projecttype=mavenProject"
 

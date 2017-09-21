@@ -31,21 +31,21 @@ public class UserView {
 	private static final int defaultMaxLine = 10;
 
 	public static String getUserList(int start, int maxLine) throws Exception {
-		return getUserList(null, start, maxLine);
+		return getUserList(null,null,null, start, maxLine);
 	}
 
-	public static String getUserList(String userName, int start, int maxLine)
+	public static String getUserList(String userName, String role,String type, int start, int maxLine)
 			throws Exception {
 		if (start < 0)
 			start = 0;
 
-		if (maxLine == 0)
+		if (maxLine <= 0)
 			maxLine = defaultMaxLine;
 
-		ArrayList<User> v = UserAction.getAllUser(userName);
+		ArrayList<User> v = UserAction.searchUser(userName, role, type);
 
 		userList ret = new UserView().new userList();
-		ret.total = v.size();
+		
 
 		for (int i = start; i < start + maxLine; i++) {
 			// 避免数组错误
@@ -57,7 +57,7 @@ public class UserView {
 			ret.users.add(user);
 
 		}
-
+		ret.total = ret.users.size();
 		// replace to results to reduce web modify job
 		return Tools.getJson(ret).replaceFirst("users", "results");
 

@@ -55,9 +55,10 @@ public class UserAction {
  		 
 
 }
- 	 
  	
-	public static ArrayList<User> getAllUser(String username) throws IOException {
+ 	
+ 	
+ 	public static ArrayList<User> searchUser(String username,String role,String type ) throws IOException {
 
 		File folder = new File(InnerConfig.defaultConfig().getDataDir()+userDir);
 		
@@ -77,6 +78,16 @@ public class UserAction {
 						}
 					User u = (User) Tools.objectFromJsonFile(
 							listOfFiles[i].getAbsolutePath(), User.class);
+					
+					if (role != null && role.isEmpty()==false)
+						if ( !u.getRole().equals(role)) {
+							continue;
+						}
+					if (type != null && type != "")
+						if ( !u.getUserType().equals(type)) {
+							continue;
+						}
+					
 					log.debug("adduser:"+u.getUsername());
 
 					users.add(u);
@@ -87,6 +98,39 @@ public class UserAction {
 
 		return users;
 	}
+ 	
+ 	 
+// 	
+//	public static ArrayList<User> getAllUser(String username) throws IOException {
+//
+//		File folder = new File(InnerConfig.defaultConfig().getDataDir()+userDir);
+//		
+//		File[] listOfFiles = folder.listFiles();
+//		ArrayList<User> users = new ArrayList<User>();
+//		log.debug("usename:"+username);	
+//
+//		for (int i = 0; i < listOfFiles.length; i++) {
+//			if (listOfFiles[i].isFile()) {
+//				String fileName = listOfFiles[i].getName();
+//				log.debug("filename:" + fileName);
+//				if (fileName.endsWith(".json")) {
+//					if (username != null && username != "")
+//						if (URLDecoder.decode(fileName, "UTF-8").indexOf(
+//								username) < 0) {
+//							continue;
+//						}
+//					User u = (User) Tools.objectFromJsonFile(
+//							listOfFiles[i].getAbsolutePath(), User.class);
+//					log.debug("adduser:"+u.getUsername());
+//
+//					users.add(u);
+//				}
+//
+//			}
+//		}
+//
+//		return users;
+//	}
 
 	public static User getUserinfo(String name) throws IOException {
 		return (User) Tools.objectFromJsonFile(getUserfilename(name),
@@ -97,12 +141,9 @@ public class UserAction {
 	private static String getUserfilename(String name)
 			throws IOException {
 
-		File dir = new File(InnerConfig.defaultConfig().getDataDir() + userDir);
+		String dir =  InnerConfig.defaultConfig().getDataDir() + userDir;
 
-		if (dir.exists() == false)
-			dir.mkdirs();
-
-		String temp = InnerConfig.defaultConfig().getDataDir() + userDir
+		String temp = dir
 				+ URLEncoder.encode(name, "UTF-8") + ".json";
 		return temp;
 	}
@@ -124,17 +165,20 @@ public class UserAction {
 	}
 
 	public static User modifyUser(User user,boolean modifyPassword) throws IOException {
-		if (!userExist(user.getUsername()))
+		User oldUser = getUserinfo(user.getUsername());
+		
+		if (oldUser==null )
 			throw new IOException("用户不存在");
 		//密码处理，判断是否用户本身
 
 		if (user.getPassword()==null || user.getPassword().equals(PasswordMask) || modifyPassword==false){
 		
 			
-			User oldUser = getUserinfo(user.getUsername());
 			user.setPassword(oldUser.getPassword());
 		}
- 
+		user.setCreateTime(oldUser.getCreateTime());
+		if (!user.getPassword().equals(oldUser.getPassword()))
+			user.setPasswordExpired(0);
 		long time = System.currentTimeMillis();
 		user.setLatestModifyTime(time);
 		File file = new File(getUserfilename(user.getUsername()));

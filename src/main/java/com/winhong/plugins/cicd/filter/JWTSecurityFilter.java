@@ -17,6 +17,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
@@ -28,8 +29,8 @@ import org.slf4j.LoggerFactory;
  * https://simplapi.wordpress.com/2013/01/24/jersey-jax-rs-implements-a-http-basic-auth-decoder/
  */
 //Todo open for production
-//@Provider
-//@Priority(Priorities.AUTHENTICATION)
+@Provider
+@Priority(Priorities.AUTHENTICATION)
 public class JWTSecurityFilter implements ContainerRequestFilter {
 
 	final static Logger logger =LoggerFactory.getLogger(JWTSecurityFilter.class);
@@ -47,7 +48,7 @@ public class JWTSecurityFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 
 		String method = requestContext.getMethod().toLowerCase();
-		String path = ((ContainerRequest) requestContext).getPath(true).toLowerCase();
+		String path = ((ContainerRequest) requestContext).getPath(true);
 		logger.debug("path="+path);
 		if ("POST".equalsIgnoreCase(method) && "login".equals(path) ) {
 			// pass through the filter.
@@ -76,13 +77,24 @@ public class JWTSecurityFilter implements ContainerRequestFilter {
 					throw new WebApplicationException(Response.Status.UNAUTHORIZED);
 
 				}
-				if (user != null && user.getRole().equals(roles[0])) {
+				if ( user.getPasswordExpired()>0 && exceptionPath(path,method)==false) {
+					//throw new WebApplicationException();
+					ResponseBuilder builder = null;
+			        String response = "{\"exception\":\"请先修改密码！\"}";
+			        builder = Response.status(Response.Status.OK).entity(response);
+			        throw new WebApplicationException(builder.build());
+			        
+					//requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, () -> name, roles));
+					//return;
+				} 
+				if ( user.getRole().equals(roles[0])) {
 
 					requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo, () -> name, roles));
 					return;
 				} else {
 					logger.info(" roles did not match the token");
 				}
+				
 			} else {
 				logger.info("User not found");
 			}
@@ -92,4 +104,16 @@ public class JWTSecurityFilter implements ContainerRequestFilter {
 		}
 		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
 	}
+	
+	
+	public  boolean exceptionPath(String path,String method) {
+		String[] allowPath= {"logout","selfInfo"};
+		//boolean allow=false;
+		for (int i=0; i<allowPath.length;i++ ) {
+			if (path.endsWith(allowPath[i]))
+				return true;
+		}
+		return false;
+	}
+	
 }

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.NoSuchFileException;
 import java.util.logging.Level;
- 
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -21,6 +21,9 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+import com.winhong.plugins.cicd.action.GroupAction;
+import com.winhong.plugins.cicd.action.UserAction;
+import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
 import com.winhong.plugins.cicd.jwt.TokenUtil;
 import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
@@ -35,6 +38,8 @@ import com.winhong.plugins.cicd.system.SMTPConfig;
 import com.winhong.plugins.cicd.system.SonarConfig;
 import com.winhong.plugins.cicd.tool.RandomString;
 import com.winhong.plugins.cicd.tool.Tools;
+import com.winhong.plugins.cicd.user.User;
+import com.winhong.plugins.cicd.view.ProjectGroup;
 import com.winhong.plugins.cicd.tool.Encryptor;
 
 public class App {
@@ -75,6 +80,7 @@ public class App {
 			server.start();
 			server.join();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			log.error(ex.getMessage());
 		} finally {
 
@@ -113,6 +119,7 @@ public class App {
 		RandomString.init(16);
 		// flowing env should only use in testing
 		initTestConfig();
+		createDefaultGroupAndUser();
 	}
 
 	public static boolean isInited() {
@@ -128,7 +135,7 @@ public class App {
 	}
 
 	public static void initDirs() throws IOException, InstantiationException, IllegalAccessException {
-		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects", "projectGroup","logs" };
+		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects", "projectGroup", "logs" };
 		String parent = InnerConfig.defaultConfig().getDataDir();
 		for (int i = 0; i < subdirs.length; i++) {
 			File dir = new File(parent + "/" + subdirs[i]);
@@ -329,24 +336,24 @@ public class App {
 			Config.saveConfig(registries);
 
 		}
-		
-		//Docker Mirror setting in jenkins slave ,wingrow don't need to set it 
-//		RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
-//		String DOCKER_MIRROR = System.getenv("DOCKER_MIRROR");
-//
-//		if (DOCKER_MIRROR != null && DOCKER_MIRROR.isEmpty() == false) {
-//			if (DOCKER_MIRROR.startsWith("http")) {
-//				dockerMirror.setUrl(DOCKER_MIRROR);
-//				Config.saveConfig(dockerMirror);
-//
-//			}
-//		} else if (register != null) {
-//			if (register.isSecure())
-//				dockerMirror.setUrl("https://" + register.getServer());
-//			else
-//				dockerMirror.setUrl("http://" + register.getServer());
-//			Config.saveConfig(dockerMirror);
-//		}
+
+		// Docker Mirror setting in jenkins slave ,wingrow don't need to set it
+		// RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
+		// String DOCKER_MIRROR = System.getenv("DOCKER_MIRROR");
+		//
+		// if (DOCKER_MIRROR != null && DOCKER_MIRROR.isEmpty() == false) {
+		// if (DOCKER_MIRROR.startsWith("http")) {
+		// dockerMirror.setUrl(DOCKER_MIRROR);
+		// Config.saveConfig(dockerMirror);
+		//
+		// }
+		// } else if (register != null) {
+		// if (register.isSecure())
+		// dockerMirror.setUrl("https://" + register.getServer());
+		// else
+		// dockerMirror.setUrl("http://" + register.getServer());
+		// Config.saveConfig(dockerMirror);
+		// }
 
 	}
 
@@ -359,26 +366,57 @@ public class App {
 		if (TEST_DOCKER_CONFIG != null && TEST_DOCKER_CONFIG.isEmpty() == false)
 			Config.setDockerConfigJson(TEST_DOCKER_CONFIG);
 	}
-	
-	
-	public static void recordRequest(Server server,ServletContextHandler handle ) throws IOException{
+
+	public static void recordRequest(Server server, ServletContextHandler handle) throws IOException {
 		HandlerCollection handlers = new HandlerCollection();
 		ContextHandlerCollection contexts = new ContextHandlerCollection();
 		RequestLogHandler requestLogHandler = new RequestLogHandler();
-		handlers.setHandlers(new Handler[]{handle,contexts,new DefaultHandler(),requestLogHandler});
+		handlers.setHandlers(new Handler[] { handle, contexts, new DefaultHandler(), requestLogHandler });
 		server.setHandler(handlers);
-		
+
 		String parent = InnerConfig.defaultConfig().getDataDir();
-		log.debug("recordRequest ogfile="+parent+"/logs/jetty-yyyy_mm_dd.request.log");
-		NCSARequestLog requestLog = new NCSARequestLog(parent+"/logs/jetty-yyyy_mm_dd.request.log");
-		
+		log.debug("recordRequest ogfile=" + parent + "/logs/jetty-yyyy_mm_dd.request.log");
+		NCSARequestLog requestLog = new NCSARequestLog(parent + "/logs/jetty-yyyy_mm_dd.request.log");
+
 		requestLog.setRetainDays(30);
 		requestLog.setAppend(true);
 		requestLog.setExtended(false);
 		requestLog.setLogCookies(true);
- 		//requestLog.setLogTimeZone("GMT");
+		// requestLog.setLogTimeZone("GMT");
 		requestLogHandler.setRequestLog(requestLog);
 		server.setRequestLog(requestLog); // here will set global request log
 	}
-	
+
+	public static void createDefaultGroupAndUser() {
+
+		try {
+			File file = new File(GroupAction.getProjectGroupJsonfilename(GroupAction.defaultGroup));
+
+			if (file.exists() == false) {
+				ProjectGroupJsonConfig def = new ProjectGroupJsonConfig();
+				def.setId(GroupAction.defaultGroup);
+				def.setName("default");
+				def.setDescription("default group,don't modify the group");
+				GroupAction.createGroup(def);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("创建默认组失败" + e.getLocalizedMessage());
+		}
+
+		try {
+			if (!UserAction.userExist(UserAction.defaultAdmin)) {
+				User defaultUser = new User();
+				defaultUser.setUsername(UserAction.defaultAdmin);
+				defaultUser.setRole(User.adminRole);
+				defaultUser.setUserType(User.LOCAL);
+				defaultUser.setPassword(UserAction.defaultPassword);
+				UserAction.addUser(defaultUser);
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.error("create default user failed!");
+		}
+	}
 }

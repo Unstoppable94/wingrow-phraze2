@@ -31,8 +31,8 @@ public class ProjectRest {
 
 	@GET
 	@Produces("application/json;charset=UTF8")
-	public String listAllProject(@QueryParam("projectname") String projectName,
-			@QueryParam("projecttype") String projectType, @QueryParam("firstResult") int firstResult,
+	public String listAllProject(@QueryParam("projectName") String projectName,
+			@QueryParam("projectType") String projectType, @QueryParam("firstResult") int firstResult,
 			@QueryParam("maxResult") int maxResult, @QueryParam("action") String action) {
 		try {
 			if (action != null && action.equalsIgnoreCase("new")) {
