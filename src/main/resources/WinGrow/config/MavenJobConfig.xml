@@ -54,10 +54,8 @@ DeployToRancher_environment=$deployToRancher_environment
 Findbugs_skip=$findbugs_skip
 Findbugs_continueOnfail=$findbugs_continueOnfail
 Findbugs_inFilterUrl=$findbugs_inFilterUrl
-Findbugs_inFilterContent=&quot;$findbugs_skip&quot;
 Findbugs_excludeFilterUrl=$findbugs_excludeFilterUrl
-Findbugs_excludeFilterContent=&quot;$findbugs_excludeFilterContent&quot;
-
+ 
 
 MavenTest_skip=$mavenTest_skip
 MavenTest_continueOnfail=$mavenTest_continueOnfail

@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -363,7 +364,7 @@ public class JenkinsClient {
 	
 	
 	
-	public  InputStream getFile(String path) throws IOException {
+	public InputStream getFile(String path) throws IOException {
 
 		if (crumbField == null)
 			if (!getCrumb()){
@@ -387,7 +388,16 @@ public class JenkinsClient {
 		if (code >= 200 && code < 300) {
 			
 			InputStream serverOut = connection.getInputStream();
-			 
+			
+			 String prefix = "foobar";
+			    String suffix = ".tmp";
+			    
+			    // this temporary file remains after the jvm exits
+			    File tempFile = File.createTempFile(prefix, suffix);
+			    
+			//String saveFilePath = saveDir + File.separator + fileName;
+            
+            
 			return serverOut;
 		} else {
 			log.debug(connection.getResponseMessage());

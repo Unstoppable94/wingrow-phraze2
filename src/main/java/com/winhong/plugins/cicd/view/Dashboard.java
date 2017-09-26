@@ -267,7 +267,7 @@ public class Dashboard {
 
 		String[] command = { config.getJenkinsDir() + statShellpath,
 				String.valueOf(beginTime.getTime()/1000), String.valueOf(endTime.getTime()/1000) };
-		log.debug("command=="+command.toString());
+		//log.debug("command=="+command.toString());
 		Process process = Runtime.getRuntime().exec(command);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));

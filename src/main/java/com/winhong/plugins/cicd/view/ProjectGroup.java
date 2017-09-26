@@ -102,7 +102,9 @@ public class ProjectGroup {
 		log.debug("groupName:" + groupName);
 
 		log.debug("groupName:" + folder.getAbsolutePath());
-
+		if (listOfFiles==null){
+			return Tools.getJson(new ProjectGroup().new projectGroupList());
+		}
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String fileName = listOfFiles[i].getName();
@@ -113,7 +115,7 @@ public class ProjectGroup {
 							.objectFromJsonFile(
 									listOfFiles[i].getAbsolutePath(),
 									ProjectGroupJsonConfig.class);
-					if (groupName != null && groupName != "")
+					if (groupName != null && !groupName.isEmpty())
 						if (u.getName().indexOf(
 								groupName) < 0) {
 							continue;
@@ -141,8 +143,8 @@ public class ProjectGroup {
 			group.results.add(groups.get(i));
 
 		}
-
-		group.total = groups.size();
+		
+		group.setTotal(group.getResults().size());
 
 		return Tools.getJson(group);
 
@@ -262,7 +264,7 @@ public class ProjectGroup {
 		// ProjectStatusStat
 		ProjectStatusStat stat = Dashboard
 				.getViewProjectStatusAndReturn(viewName);
-
+		
 		String file = GroupAction.getProjectGroupJsonfilename(viewName);
 
 		// getMavenProjectAsString(projectId)InnerConfig.defaultConfig().getDataDir()+projectGroupDir+viewName+".json";
@@ -275,9 +277,11 @@ public class ProjectGroup {
 		ProjectGroupInfo info = (ProjectGroupInfo) Tools.objectFromJsonFile(
 				file, ProjectGroupInfo.class);
 
+	//	stat.setTotal(list.size());
 		info.setStat(stat);
 		info.setTotal(stat.total); 
 		info.setResults(list); 
+		
 		//info.setJobList(joblist);
 		// 获取项目组信息
 

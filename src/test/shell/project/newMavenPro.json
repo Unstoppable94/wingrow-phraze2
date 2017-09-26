@@ -1,6 +1,6 @@
 {  
    "baseInfo":{  
-      "id":"pro1505351883570",
+      "id":"",
       "name":"maven-testing",
       "description":"description",
       "SCMUrl":"http://10.0.2.50:180/winhong/ciexample.git",
@@ -10,7 +10,7 @@
       "SCMTYPE":"git",
       "trigger":"manual",
       "triggerProperty":null,
-      "exraProperties":"MAVEN_OPTS\\u003d-Xms256m -Xmx1512m",
+      "exraProperties":"",
       "createTime":0,
       "lastModifyTime":0,
       "lastModifyer":null,
@@ -57,7 +57,7 @@
                   "readable":true,
                   "writable":true,
                   "required":true,
-                  "value":"Jdk1.8",
+                  "value":"jdk1.8",
                   "enumValues":[  
                      {  
                         "id":"jdk1.8",

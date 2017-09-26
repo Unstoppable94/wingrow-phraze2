@@ -169,7 +169,7 @@ public class GroupAction {
 			String oldGroup, String newGroup) throws IOException, InstantiationException, IllegalAccessException {
 		JenkinsClient c = JenkinsClient.defaultClient();
 		boolean ret = c.addJobToView(newGroup, projectId);
-		if (oldGroup != null && oldGroup != "")
+		if (oldGroup != null && oldGroup.isEmpty()==false)
 			return c.removeJobFromView(oldGroup, projectId);
 		return ret;
 	}

@@ -1,4 +1,4 @@
-package com.winhong.plugins.cicd.tool;
+package com.winhong.plugins.cicd.tools;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.winhong.plugins.cicd.tool.RandomString;
 
 public class RandomStringTest {
 

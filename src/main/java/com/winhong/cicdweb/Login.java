@@ -142,8 +142,8 @@ public class Login {
 			User sessionUser=UserAction.getUserinfo(name);
 			// session.removeAttribute(userAttr);
 			if (!sessionUser.getPassword().equals(inputPass.oldPassword)) {
-				log.debug("old=" + sessionUser.getPassword());
-				log.debug("input=" + inputPass.oldPassword);
+				//log.debug("old=" + sessionUser.getPassword());
+				//log.debug("input=" + inputPass.oldPassword);
 
 				return WebTools.Error("旧密码不对！");
 
@@ -151,7 +151,7 @@ public class Login {
 
 			sessionUser.setPassword(inputPass.password);
 			 
-			sessionUser.setPasswordExpired(0);
+			sessionUser.setPasswordExpired(-1);
 			User user = UserAction.modifyUser(sessionUser,true);
 			user.setPassword(UserAction.PasswordMask);
 			return Tools.getJson(user);

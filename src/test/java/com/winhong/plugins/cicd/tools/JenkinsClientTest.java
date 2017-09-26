@@ -301,4 +301,16 @@ public class JenkinsClientTest {
 			fail();
 		}
 	}
+
+	@Test 
+	public void testgetFile() { 
+		try {
+			System.out.println(client.getFile("/job/pro1505966862278/4/artifact/jenkins-pro1505966862278-4.zip"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	 
 }

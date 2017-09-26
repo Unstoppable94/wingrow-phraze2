@@ -13,5 +13,6 @@ curl  -X POST -H "Content-Type:application/json" http://localhost:8100/webapi/pr
 
 curl  -X DELETE -H "Content-Type:application/json" http://localhost:8100/webapi/projectgroup/test2 --data-binary @test2.json
 
-curl  -X POST -H "Content-Type:application/json" http://192.168.101.4:8100/webapi/projectgroup/default/info 
+curl  -X GET -H "Content-Type:application/json" http://192.168.101.4:8100/webapi/projectgroup/default/info -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MTQ4NTIxLCJpYXQiOjE1MDYwNjIxMjEsImp0aSI6IjEifQ.2xBEtPuR4ZTpIO-0HR4TeMIAfljHcg2NhLPlPUzSxJc"
+
 

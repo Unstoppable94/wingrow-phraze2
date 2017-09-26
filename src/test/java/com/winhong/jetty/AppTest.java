@@ -103,9 +103,9 @@ public class AppTest extends App {
 		Tools.setEnv(map);
 		System.out.println(System.getenv("JENKINS_USERNAME"));
 		
-		App app = new App();
+		 
 		try {
-			app.initConfig();
+			App.initConfig();
 			JenkinsConfig jenkinsConfig = new JenkinsConfig();
 
 			jenkinsConfig = Config.getJenkinsConfig();

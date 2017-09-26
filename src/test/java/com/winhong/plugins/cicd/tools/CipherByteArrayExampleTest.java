@@ -20,7 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.rometools.rome.io.impl.Base64;
 
-public class CipherByteArrayExample
+public class CipherByteArrayExampleTest
 {
 	public static void main(String[] argv) throws InvalidAlgorithmParameterException {
 

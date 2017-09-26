@@ -1,18 +1,14 @@
 package com.winhong.plugins.cicd.mavenStep;
 
-import java.util.ArrayList;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+ 
+ 
 import com.winhong.plugins.cicd.data.base.Stage;
 import com.winhong.plugins.cicd.exception.ConfigCheckException;
 import com.winhong.plugins.cicd.mavenProperty.ContinueOnFail;
-import com.winhong.plugins.cicd.mavenProperty.Url;
-import com.winhong.plugins.cicd.property.Property;
+ 
 import com.winhong.plugins.cicd.property.Skip;
-import com.winhong.plugins.cicd.property.commonTextArea;
-
-import java.lang.reflect.Modifier;
+import com.winhong.plugins.cicd.property.commonString;
+ 
  
 public class Findbugs extends Stage {
 
@@ -28,23 +24,23 @@ public class Findbugs extends Stage {
 	
 	final private String inFilterUrlId="inFilterUrl";
 	
-	private Url inFilterUrl=new Url(inFilterUrlId,"Findbugs infilterUrl","findbugs 规则文件，配置后infilter 内容设置不生效");
+	private  commonString inFilterUrl=new commonString(inFilterUrlId,"", 0,255 ,"Include Filter","findbugs 规则文件,includefilter");
+			//Url(inFilterUrlId,"Findbugs infilterUrl","findbugs 规则文件,includefilter");
 	
 	final private String excludefilerUrlId="excludeFilterUrl";
 
-	private Url excludeFilterUrl=new Url(excludefilerUrlId,"Findbugs exclude filter Url","findbugs 错误忽略文件，配置后exclude filter 内容设置不生效");
-	
+	private  commonString excludeFilterUrl=new commonString(excludefilerUrlId,"", 0,255 ,"Exclude Filter","findbugs 错误忽略文件,excludefilter");
 	private Skip skip=new Skip();
 	
 	//	public commonTextArea(String id,String value,int min,int max,String name,String description){
-	final private String  inFilterContentId="inFilterContent";
+	//final private String  inFilterContentId="inFilterContent";
 	
-	private commonTextArea inFilterContent=new commonTextArea(inFilterContentId, "", 0, 10240, "findbugs 规则", "配置infilter URL ，本项内容不起作用️",false);
+	//private commonTextArea inFilterContent=new commonTextArea(inFilterContentId, "", 0, 10240, "findbugs 规则", "配置infilter URL ，本项内容不起作用️",false);
 	
-	final private String  excludeFilterContentId="excludeFilterContent";
+//	final private String  excludeFilterContentId="excludeFilterContent";
 	
-	private commonTextArea excludeFilterContent=new commonTextArea(excludeFilterContentId, "", 
-			0, 10240, "findbugs 忽略错误内容", "配置infilter URL ，本项内容不起作用️",false);
+	//private commonTextArea excludeFilterContent=new commonTextArea(excludeFilterContentId, "", 
+	//		0, 10240, "findbugs 忽略错误内容", "配置infilter URL ，本项内容不起作用️",false);
 
 	
 	/**
@@ -55,9 +51,7 @@ public class Findbugs extends Stage {
  		this.setProperty(continueOnfail);
 		this.setProperty(skip);
 		this.setProperty(inFilterUrl);
-		this.setProperty(inFilterContent);
 		this.setProperty(excludeFilterUrl);
-		this.setProperty(excludeFilterContent);
  	}
 	
 	
@@ -69,18 +63,7 @@ public class Findbugs extends Stage {
 	 */
 	@Override
 	public boolean check() throws ConfigCheckException {
-	
-		inFilterUrl=new Url(this.getProperty(inFilterUrlId));
-		if (inFilterUrl.getValue().isEmpty()==false ){
-			inFilterUrl.check();
-		}
-		excludeFilterUrl=new Url(this.getProperty(excludefilerUrlId));
-		//(Url) this.getProperty(.getId());
-		
-		
-		if (excludeFilterUrl.getValue().isEmpty()==false ){
-			excludeFilterUrl.check();
-		}
+
 				
 		
 		return true;

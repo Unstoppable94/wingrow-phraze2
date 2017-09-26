@@ -68,7 +68,7 @@ public class UserManage {
 	@POST
 	@Produces("application/json;charset=UTF-8")
 	@Consumes("application/json")
-	public String modifyUser(String json) {
+	public String addUser(String json) {
 		try {
 			User inputUser = (User) Tools.objectFromJsonString(
 					json, User.class);
@@ -113,7 +113,7 @@ public class UserManage {
 	@Path("/{username}")
 	@Produces("application/json;charset=UTF-8")
 	@Consumes("application/json")
-	public String addUser(@PathParam("username") String username,@QueryParam("action") String action,
+	public String ModifyUser(@PathParam("username") String username,@QueryParam("action") String action,
 			String json,@Context HttpServletRequest req) {
 		try {
 			

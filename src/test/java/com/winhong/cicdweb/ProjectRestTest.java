@@ -2,6 +2,8 @@ package com.winhong.cicdweb;
 
 import static org.junit.Assert.*;
 
+import javax.ws.rs.PathParam;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -54,12 +56,12 @@ public class ProjectRestTest extends ProjectRest {
 
 	@Test
 	public void testGetProjectbuidinfo() {
-		fail("Not yet implemented");
+		System.out.println(rest.getProjectbuidinfo("pro1505966862278", 4, "", "", 0, 10));
 	}
 
 	@Test
 	public void testGetProjectSpecialBuild() {
-		fail("Not yet implemented");
+		System.out.println(rest.getProjectSpecialBuild("pro1505966862278", 4));
 	}
 
 }

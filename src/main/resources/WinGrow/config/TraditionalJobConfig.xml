@@ -64,10 +64,9 @@ DeployToRancher_environment=$deployToRancher_environment
 def extcode 
 
  node{
-    sh &quot;pwd&quot;
+ 	sh &quot;pwd&quot;
     extcode = load &apos;/jenkins-groovy/DockerFunc.groovy&apos;
-
-    extcode.extMain()
+	extcode.extMain()
  }
   </script>
     <sandbox>true</sandbox>

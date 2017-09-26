@@ -65,7 +65,9 @@ public class UserAction {
 		File[] listOfFiles = folder.listFiles();
 		ArrayList<User> users = new ArrayList<User>();
 		log.debug("usename:"+username);	
-
+		if (listOfFiles==null){
+			return users;
+		}
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String fileName = listOfFiles[i].getName();
@@ -83,7 +85,7 @@ public class UserAction {
 						if ( !u.getRole().equals(role)) {
 							continue;
 						}
-					if (type != null && type != "")
+					if (type != null && type.isEmpty()==false)
 						if ( !u.getUserType().equals(type)) {
 							continue;
 						}
@@ -172,13 +174,11 @@ public class UserAction {
 		//密码处理，判断是否用户本身
 
 		if (user.getPassword()==null || user.getPassword().equals(PasswordMask) || modifyPassword==false){
-		
-			
 			user.setPassword(oldUser.getPassword());
 		}
 		user.setCreateTime(oldUser.getCreateTime());
-		if (!user.getPassword().equals(oldUser.getPassword()))
-			user.setPasswordExpired(0);
+		if (!modifyPassword)
+			user.setPasswordExpired(oldUser.getPasswordExpired());
 		long time = System.currentTimeMillis();
 		user.setLatestModifyTime(time);
 		File file = new File(getUserfilename(user.getUsername()));

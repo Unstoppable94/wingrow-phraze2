@@ -1,8 +1,10 @@
 package com.winhong.cicdweb;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -24,31 +26,53 @@ import org.slf4j.LoggerFactory;
 
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 
- 
 @Path("/download")
 @Consumes("application/json;charset=UTF-8")
 public class DownService {
 	private static final Logger log = LoggerFactory.getLogger(DownService.class);
 
+	private static final int BUFFER_SIZE = 4096;
+
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM) // 返回方式为流
-	public byte[] getStudentJl(@QueryParam("name") String path, @Context HttpServletRequest request,
-			@Context HttpServletResponse response) throws FileNotFoundException {
+	public byte[] Download(@QueryParam("name") String path, @Context HttpServletResponse response)
+			throws FileNotFoundException {
 
-		log.debug("filename:"+path);
+		log.debug("filename:" + path);
 		try {
 			JenkinsClient client = JenkinsClient.defaultClient();
 
 			InputStream fis = client.getFile(path);
 			String filename = path.substring(path.lastIndexOf("/") + 1);
-			//byte[] b = new byte[fis.available()];
-			//log.debug("length="+b.length);
-			//fis.read(b);
-			String text = IOUtils.toString(fis, StandardCharsets.UTF_8.name());
-			
+			// byte[] b = new byte[fis.available()];
+			// log.debug("length="+b.length);
+			// fis.read(b);
+			// String text = IOUtils.toString(fis, StandardCharsets.UTF_8.name());
+
 			response.setHeader("Content-Disposition", "attachment;filename=" + filename);// 为文件命名
-			response.addHeader("content-type", "application/pdf");
-			return text.getBytes();
+			response.addHeader("Content-type", "application/octet-stream");
+			response.addHeader("Content-Transfer-Encoding", "binary");
+			response.setHeader("Pragma", "public");
+			response.setHeader("Expires", "0");
+			response.addHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+			response.addHeader("Content-Description", "File Transfer");
+
+			// opens an output stream to save into file
+			// FileOutputStream outputStream = new FileOutputStream(tempFile);
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			int bytesRead = -1;
+			byte[] buffer = new byte[BUFFER_SIZE];
+
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				output.write(buffer, 0, bytesRead);
+			}
+
+			byte[] targetArray = output.toByteArray();
+			output.close();
+			fis.close();
+			response.addHeader("Content-Length: ", String.valueOf(targetArray.length));
+
+			return targetArray;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;

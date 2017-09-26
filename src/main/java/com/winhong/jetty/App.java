@@ -324,12 +324,16 @@ public class App {
 
 		RegistryList registries = new RegistryList();
 
-		String DOCKER_REGISTRER_SERVER = System.getenv("DOCKER_REGISTRER_SERVER");
-		String DOCKER_REGISTRER_AUTH = System.getenv("DOCKER_REGISTRER_AUTH");
-		String DOCKER_REGISTRER_INSECURE = System.getenv("DOCKER_REGISTRER_INSECURE");
+		
+		String DOCKER_REGISTRER_SERVER = System.getenv("REGISTRY_IP");
+		String DOCKER_REGISTRER_AUTH = System.getenv("REGISTRY_AUTH");
+		String DOCKER_REGISTRER_INSECURE = System.getenv("REGISTRY_INSCURE");
 		RegistryConfig register = null;
 		if (DOCKER_REGISTRER_SERVER != null && DOCKER_REGISTRER_SERVER.isEmpty() == false) {
 			// String server, String auth, String email, boolean b
+			String REGISTRY_PORT = System.getenv("REGISTRY_PORT");
+			if (REGISTRY_PORT!=null && REGISTRY_PORT.equalsIgnoreCase("80")==false && REGISTRY_PORT.equalsIgnoreCase("443")==false )
+				DOCKER_REGISTRER_SERVER=DOCKER_REGISTRER_SERVER+":"+REGISTRY_PORT;
 			register = new RegistryConfig(DOCKER_REGISTRER_SERVER, DOCKER_REGISTRER_AUTH, "",
 					Boolean.parseBoolean(DOCKER_REGISTRER_INSECURE));
 			registries.getRegistries().add(register);
