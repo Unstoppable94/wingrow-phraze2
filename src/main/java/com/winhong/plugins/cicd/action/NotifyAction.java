@@ -49,61 +49,61 @@ public class NotifyAction {
 
 	private static boolean running = true;
 
-	public static void init() {
-		// Runtime.getRuntime().addShutdownHook(new Thread() {
-		// public void run() {
-		// // System.out.println("reached point of no return ...");
-		// }
-		// });
-
-		SignalHandler handler = new SignalHandler() {
-			public void handle(Signal sig) {
-				if (running) {
-					running = false;
-					System.out.println("Signal " + sig);
-					System.out.println("Shutting down ...");
-				} else {
-					// only on the second attempt do we exit
-					System.out.println("shutdown interrupted!");
-					System.exit(0);
-				}
-			}
-		};
-		Signal.handle(new Signal("INT"), handler);
-		Signal.handle(new Signal("TERM"), handler);
-	}
-
-	public static void main(String[] args) {
-
-		init();
-
-		int sleepminutes = 5;
-		if (args.length > 0) {
-			sleepminutes = Integer.parseInt(args[0]);
-
-		}
-
-		while (true) {
-			try {
-				checkProjectStatus();
-				for (int i = -0; i < sleepminutes; i++) {
-					if (running == false)
-						System.exit(0);
-					Thread.sleep(60 * 1000);
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				try {
-					Thread.sleep(60 * 1000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-
-	}
+//	public static void init() {
+//		// Runtime.getRuntime().addShutdownHook(new Thread() {
+//		// public void run() {
+//		// // System.out.println("reached point of no return ...");
+//		// }
+//		// });
+//
+//		SignalHandler handler = new SignalHandler() {
+//			public void handle(Signal sig) {
+//				if (running) {
+//					running = false;
+//					System.out.println("Signal " + sig);
+//					System.out.println("Shutting down ...");
+//				} else {
+//					// only on the second attempt do we exit
+//					System.out.println("shutdown interrupted!");
+//					System.exit(0);
+//				}
+//			}
+//		};
+//		Signal.handle(new Signal("INT"), handler);
+//		Signal.handle(new Signal("TERM"), handler);
+//	}
+//
+//	public static void main(String[] args) {
+//
+//		init();
+//
+//		int sleepminutes = 5;
+//		if (args.length > 0) {
+//			sleepminutes = Integer.parseInt(args[0]);
+//
+//		}
+//
+//		while (true) {
+//			try {
+//				checkProjectStatus();
+//				for (int i = -0; i < sleepminutes; i++) {
+//					if (running == false)
+//						System.exit(0);
+//					Thread.sleep(60 * 1000);
+//				}
+//
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				try {
+//					Thread.sleep(60 * 1000);
+//				} catch (InterruptedException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		}
+//
+//	}
 
 	public static void SendSmtpEmail(SMTPConfig smtpConfig, String to, String subject, String content)
 			throws MessagingException, GeneralSecurityException {

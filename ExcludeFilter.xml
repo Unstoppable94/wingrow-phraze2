@@ -1,5 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <FindBugsFilter>
-<Match>
-       <Class name="~.*\.*Test" />
-</Match>
+  <LastVersion value="-1" relOp="NEQ"/>
+ 
+  <Class name="~.*\.*Test"/>
+  <Or>
+    <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+    <Bug pattern="DM_DEFAULT_ENCODING"/>
+    <Bug pattern="NM_CLASS_NAMING_CONVENTION"/>
+    <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
+    <Bug pattern="NM_FIELD_NAMING_CONVENTION"/>
+  </Or>
+  <Class name="~.*\.*Test"/>
+  <And>
+    <Class name="com.winhong.plugins.cicd.tool.JenkinsClient"/>
+    <Method name="createCredential"/>
+    <Bug pattern="DE_MIGHT_IGNORE"/>
+  </And>
+  <And>
+    <Class name="com.winhong.plugins.cicd.tool.RandomString"/>
+    <Bug pattern="MS_PKGPROTECT"/>
+  </And>
+  <Class name="com.winhong.plugins.cicd.view.ProjectGroup.projectGroupList"/>
+  <And>
+    <Class name="com.winhong.plugins.cicd.view.Dashboard"/>
+    <Or>
+      <Method name="getTimeRangeDetailfromShell"/>
+      <Method name="getTimeRangeStatfromShell"/>
+    </Or>
+  </And>
+  <Or>
+    <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+    <Bug pattern="DM_DEFAULT_ENCODING"/>
+    <Bug pattern="NM_CLASS_NAMING_CONVENTION"/>
+    <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
+    <Bug pattern="NM_FIELD_NAMING_CONVENTION"/>
+    <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+    <Bug pattern="SBSC_USE_STRINGBUFFER_CONCATENATION"/>
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
+    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Or>
+  <Class name="~.*\.*Test"/>
+  <And>
+    <Class name="com.winhong.plugins.cicd.tool.JenkinsClient"/>
+    <Method name="createCredential"/>
+    <Or>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+    <Bug pattern="DE_MIGHT_IGNORE"/>
+</Or>
+  </And>
+  <And>
+    <Class name="com.winhong.plugins.cicd.tool.RandomString"/>
+    <Bug pattern="MS_PKGPROTECT"/>
+  </And>
+  <Or>
+    <Class name="com.winhong.plugins.cicd.view.ProjectGroup.projectGroupList"/>
+    <Class name="com.winhong.plugins.cicd.view.innerData.RunsStatusStat"/>
+    <Class name="com.winhong.plugins.cicd.view.ProjectView$jobList"/>
+  </Or>
+  <And>
+    <Class name="com.winhong.plugins.cicd.view.Dashboard"/>
+    <Or>
+      <Method name="getTimeRangeDetailfromShell"/>
+      <Method name="getTimeRangeStatfromShell"/>
+    </Or>
+  </And>
+  <Or>
+    <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+    <Bug pattern="DM_DEFAULT_ENCODING"/>
+    <Bug pattern="NM_CLASS_NAMING_CONVENTION"/>
+    <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
+    <Bug pattern="NM_FIELD_NAMING_CONVENTION"/>
+    <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+    <Bug pattern="SBSC_USE_STRINGBUFFER_CONCATENATION"/>
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
+    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Or>
+  <Class name="com.winhong.plugins.cicd.view.ProjectView$buildList"/>
 </FindBugsFilter>

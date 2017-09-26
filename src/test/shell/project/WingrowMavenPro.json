@@ -3,7 +3,7 @@
       "id":"",
       "name":"wingrow-backend-jetty",
       "description":"description",
-      "SCMUrl":"http://10.0.2.50:180/wingrow-backend-jetty.git",
+      "SCMUrl":"http://10.0.2.50:180/wingrow/wingrow-backend-jetty.git",
       "SCMUser":"xiehq",
       "SCMPassword":"acd12345",
       "SCMBranch":"master",
@@ -307,7 +307,7 @@
                   "readable":true,
                   "writable":true,
                   "required":true,
-                  "value":"true",
+                  "value":"false",
                   "enumValues":[  
 
                   ],
@@ -466,7 +466,7 @@
                   "readable":true,
                   "writable":true,
                   "required":false,
-                  "value":"test/ciexample-maven",
+                  "value":"test/wingrow",
                   "enumValues":[  
 
                   ],
@@ -482,7 +482,7 @@
                   "readable":true,
                   "writable":true,
                   "required":false,
-                  "value":"-p 1880:8080",
+                  "value":"-p 18100:8100",
                   "enumValues":[  
 
                   ],

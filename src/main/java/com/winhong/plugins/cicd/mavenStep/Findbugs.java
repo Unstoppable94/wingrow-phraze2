@@ -22,12 +22,12 @@ public class Findbugs extends Stage {
 	
 	private ContinueOnFail continueOnfail=new ContinueOnFail();
 	
-	final private String inFilterUrlId="inFilterUrl";
+	final static private String inFilterUrlId="inFilterUrl";
 	
 	private  commonString inFilterUrl=new commonString(inFilterUrlId,"", 0,255 ,"Include Filter","findbugs 规则文件,includefilter");
 			//Url(inFilterUrlId,"Findbugs infilterUrl","findbugs 规则文件,includefilter");
 	
-	final private String excludefilerUrlId="excludeFilterUrl";
+	final static private String excludefilerUrlId="excludeFilterUrl";
 
 	private  commonString excludeFilterUrl=new commonString(excludefilerUrlId,"", 0,255 ,"Exclude Filter","findbugs 错误忽略文件,excludefilter");
 	private Skip skip=new Skip();

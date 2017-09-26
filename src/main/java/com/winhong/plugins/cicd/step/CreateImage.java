@@ -27,11 +27,11 @@ public class CreateImage extends Stage {
 
 	private Skip skip = new Skip();
 
-	final private  String  registryId = "registry";
+	final static private  String  registryId = "registry";
 
 	private RegistryProperty registry=new  RegistryProperty(registryId, "", "Registry", "Image 存放的Registry");
 
-	final private String tagId = "tag";
+	final static private String tagId = "tag";
 
 	private commonString tag = new commonString(tagId, "", 1, 30,
 			"Docker tag", "docker tag, 格式为dir/image,系统生成的时候会默认在TAG后面加上编译执行序号");

@@ -15,7 +15,7 @@ public class Compile extends Stage{
 	
 	
  	
-	final private String srcMap="srcMap";
+	final static private String srcMap="srcMap";
 	
 	private commonString sourceDirMap=new commonString(srcMap,"/src",5, 200, "代码在容器内Mapping目录","代码目录在编译容器内的mapping设置");
 	

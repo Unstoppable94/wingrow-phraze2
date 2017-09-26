@@ -1,4 +1,4 @@
-package com.winhong.cicdweb;
+package com.winhong.jetty;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import com.winhong.plugins.cicd.action.NotifyAction;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
-public class Notify {
+public class SystenSingalNotifyTest {
 	private static final Logger log = LoggerFactory.getLogger(NotifyAction.class);
 
 	private static boolean running = true;

@@ -25,8 +25,9 @@ public class Config {
 
 	private final static String configDir = "/config";
 	private static final Logger log = LoggerFactory.getLogger(Config.class);
-	private static String DockerDaemonfile="/etc/docker/daemon.json";
-	private static String DockerConfigJson="/.docker/config.json";
+	private static String DockerDaemonfile = "/etc/docker/daemon.json";
+	private static String DockerConfigJson = "/.docker/config.json";
+
 	public Config() {
 		super();
 	}
@@ -101,60 +102,61 @@ public class Config {
 			return client.createCredential("sonar", c.getUser(), c.getPassword(), "credential");
 
 		}
-//racnher/docker setting in jenkins-slave wingrow don't need to set they
-		
-//		if (config.getClass().equals(RancherConfig.class)) {
-//			// 生成Rancher json 文件
-//			log.debug(" class=RancherConfig");
-//			String home = System.getProperty("user.home");
-//			File dir = new File(home + "/.rancher");
-//			if (dir.exists() == false)
-//				dir.mkdirs();
-//			String clijson = home + "/.rancher/cli.json";
-//			log.debug(" clijson=" + clijson);
-//			RancherConfig c = (RancherConfig) config;
-//			File file = new File(clijson);
-//			if (file.exists()) {
-//				file.renameTo(new File(clijson + "@" + System.currentTimeMillis()));
-//			}
-//			Tools.saveStringToFile(c.genCLiJson(), clijson, false);
-//			return true;
-//		}
+		// racnher/docker setting in jenkins-slave wingrow don't need to set they
 
-//		if (config.getClass().equals(RegistryList.class)) {
-//
-//			log.debug(" class=RegistryList");
-//
-//			// c.getConfigJson();
-//			String home = System.getProperty("user.home");
-//			File dir = new File(home + "/.docker");
-//			if (dir.exists() == false)
-//				dir.mkdirs();
-//			String dockerjson = home + DockerConfigJson;
-//			log.debug("home" + dockerjson);
-//			RegistryList c = (RegistryList) config;
-//			File file = new File(dockerjson);
-//			if (file.exists()) {
-//				file.renameTo(new File(dockerjson + "@" + System.currentTimeMillis()));
-//			}
-//			Tools.saveStringToFile(c.getConfigJson(), dockerjson, false);
-//			return true;
-//		}
+		// if (config.getClass().equals(RancherConfig.class)) {
+		// // 生成Rancher json 文件
+		// log.debug(" class=RancherConfig");
+		// String home = System.getProperty("user.home");
+		// File dir = new File(home + "/.rancher");
+		// if (dir.exists() == false)
+		// dir.mkdirs();
+		// String clijson = home + "/.rancher/cli.json";
+		// log.debug(" clijson=" + clijson);
+		// RancherConfig c = (RancherConfig) config;
+		// File file = new File(clijson);
+		// if (file.exists()) {
+		// file.renameTo(new File(clijson + "@" + System.currentTimeMillis()));
+		// }
+		// Tools.saveStringToFile(c.genCLiJson(), clijson, false);
+		// return true;
+		// }
 
-//		if (config.getClass().equals(RegistryMirrorConfig.class)) {
-//			String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
-//			RegistryList regList = Config.getRegistryList();
-//			String daemon=Tools.readResource("WinGrow/config/daemon.json", false);
-//			//String cmd = "dockerupdate.sh ";
-// 			daemon=Tools.strRep(daemon,"$mirror", mirrorUrl);
-//			daemon=Tools.strRep(daemon,"$insecure-registries", regList.getInscureString());
-//			
-//			 
-//			//runShell(cmd);
-//			Tools.saveStringToFile(daemon, DockerDaemonfile , false);
-//			return true;
-//		}
-		return false;
+		// if (config.getClass().equals(RegistryList.class)) {
+		//
+		// log.debug(" class=RegistryList");
+		//
+		// // c.getConfigJson();
+		// String home = System.getProperty("user.home");
+		// File dir = new File(home + "/.docker");
+		// if (dir.exists() == false)
+		// dir.mkdirs();
+		// String dockerjson = home + DockerConfigJson;
+		// log.debug("home" + dockerjson);
+		// RegistryList c = (RegistryList) config;
+		// File file = new File(dockerjson);
+		// if (file.exists()) {
+		// file.renameTo(new File(dockerjson + "@" + System.currentTimeMillis()));
+		// }
+		// Tools.saveStringToFile(c.getConfigJson(), dockerjson, false);
+		// return true;
+		// }
+
+		// if (config.getClass().equals(RegistryMirrorConfig.class)) {
+		// String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
+		// RegistryList regList = Config.getRegistryList();
+		// String daemon=Tools.readResource("WinGrow/config/daemon.json", false);
+		// //String cmd = "dockerupdate.sh ";
+		// daemon=Tools.strRep(daemon,"$mirror", mirrorUrl);
+		// daemon=Tools.strRep(daemon,"$insecure-registries",
+		// regList.getInscureString());
+		//
+		//
+		// //runShell(cmd);
+		// Tools.saveStringToFile(daemon, DockerDaemonfile , false);
+		// return true;
+		// }
+		return true;
 	}
 
 	//
@@ -352,6 +354,17 @@ public class Config {
 			sb.append(s);
 		}
 		log.debug(cmd + " return:" + sb.toString());
+
+		try {
+			stdInput.close();
+		} catch (IOException e) {
+
+		}
+		try {
+			stdError.close();
+		} catch (IOException e) {
+
+		}
 		return sb.toString();
 
 	}

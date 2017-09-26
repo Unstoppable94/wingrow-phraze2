@@ -73,7 +73,7 @@ public class UserAction {
 				String fileName = listOfFiles[i].getName();
 				log.debug("filename:" + fileName);
 				if (fileName.endsWith(".json")) {
-					if (username != null && username != "")
+					if (username != null && username.isEmpty()==false)
 						if (URLDecoder.decode(fileName, "UTF-8").indexOf(
 								username) < 0) {
 							continue;
@@ -231,7 +231,7 @@ public class UserAction {
 		 String password=RandomString.nextString();
 		 user.setPassword(password);
 		 
-		 long expired=System.currentTimeMillis()+InnerConfig.defaultConfig().getPasswordExprired()*60*1000;
+		 long expired=System.currentTimeMillis()+InnerConfig.defaultConfig().getPasswordExprired()*60*1000L;
 		 user.setPasswordExpired(expired);
 		 log.debug("RandomString:"+password);
 		 modifyUser(user,true);

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter>
+  <LastVersion value="-1" relOp="NEQ"/>
+  <And>
+    <Bug category="BAD_PRACTICE"/>
+    <Bug code="Nm"/>
+    <Bug pattern="NM_CLASS_NAMING_CONVENTION"/>
+  </And>
+  <And>
+    <Bug category="BAD_PRACTICE"/>
+    <Bug code="Nm"/>
+    <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
+  </And>
+  <And>
+    <Bug category="BAD_PRACTICE"/>
+    <Bug code="Nm"/>
+    <Bug pattern="NM_FIELD_NAMING_CONVENTION"/>
+  </And>
+</FindBugsFilter>

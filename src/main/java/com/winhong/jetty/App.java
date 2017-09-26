@@ -102,8 +102,8 @@ public class App {
 
 		if (forceStr != null && forceStr.equalsIgnoreCase("true"))
 			force = true;
-
-		if (!isInited() || force) {
+		boolean inited = isInited();
+		if (!inited || force) {
 			initJenkinsConfig();
 			// avoid reinit after restart
 			initRancherConfig();
@@ -112,7 +112,6 @@ public class App {
 			initSonarConfig();
 			initOpenLDAPConfig();
 			// init password reset random
-			// TODO DOCKER CONFIG
 			initRegisterConfig();
 
 		}
@@ -148,7 +147,7 @@ public class App {
 
 	public static void initJenkinsConfig() throws IOException, InstantiationException, IllegalAccessException {
 
-		JenkinsConfig jenkinsConfig = new JenkinsConfig();
+		JenkinsConfig jenkinsConfig = null;
 		try {
 			jenkinsConfig = Config.getJenkinsConfig();
 		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
@@ -177,7 +176,7 @@ public class App {
 
 	public static void initRancherConfig() throws IOException, InstantiationException, IllegalAccessException {
 
-		RancherConfig rancherConfig = new RancherConfig();
+		RancherConfig rancherConfig = null;
 		try {
 			rancherConfig = Config.getRancherConfig();
 		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
@@ -210,7 +209,7 @@ public class App {
 
 	public static void initSmtpConfig() throws IOException, InstantiationException, IllegalAccessException {
 
-		SMTPConfig SMTPConfig = new SMTPConfig();
+		SMTPConfig SMTPConfig = null;
 		try {
 			SMTPConfig = Config.getSMTPConfig();
 		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
@@ -248,7 +247,7 @@ public class App {
 
 	public static void initSonarConfig() throws IOException, InstantiationException, IllegalAccessException {
 
-		SonarConfig sonarConfig = new SonarConfig();
+		SonarConfig sonarConfig = null;
 		try {
 			sonarConfig = Config.getSonarConfig();
 		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {
@@ -280,7 +279,7 @@ public class App {
 
 	public static void initOpenLDAPConfig() throws IOException, InstantiationException, IllegalAccessException {
 
-		OpenLDAPConfig openLDAPConfig = new OpenLDAPConfig();
+		OpenLDAPConfig openLDAPConfig = null;
 		try {
 			openLDAPConfig = Config.getOpenLDAPConfig();
 		} catch (FileNotFoundException | NoSuchFileException | InstantiationException | IllegalAccessException e) {

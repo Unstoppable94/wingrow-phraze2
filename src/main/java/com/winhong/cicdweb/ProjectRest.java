@@ -41,8 +41,7 @@ public class ProjectRest {
 				if (projectType != null && projectType.isEmpty() == false)
 					type = projectType;
 				BaseProject project = (BaseProject) ProjectType.getClass(type).newInstance();
-				String s = Tools.getJson(project);
-				// log.debug(s);
+ 				// log.debug(s);
 				// log.debug(tools.ToGBK(s));
 				// log.debug(Tools.ToUTF8(s));
 

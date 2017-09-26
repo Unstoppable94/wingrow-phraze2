@@ -143,7 +143,7 @@ public class ProjectView {
 						MavenProject.class);
 				log.debug("get maven" + maven.getBaseInfo().getName());
 				boolean namefilter=false;
-				if (projectName != null && projectName != "") {
+				if (projectName != null && projectName.isEmpty()==false) {
 					if (maven.getBaseInfo().getName().indexOf(projectName) >= 0)
 						namefilter=true;
 				} else {

@@ -37,34 +37,31 @@ public class JenkinsClient {
 	private static JenkinsClient client;
 	private String crumb;
 	private String crumbField;
-	private static final Logger log = LoggerFactory
-			.getLogger(JenkinsClient.class);
+	private static final Logger log = LoggerFactory.getLogger(JenkinsClient.class);
 	private static final int BUFFER_SIZE = 4096;
 
 	// private JenkinsServer server;
 
 	public JenkinsClient(String url, String name, String password) {
 		super();
-		
-		
+
 		this.url = url;
-		
+
 		this.name = name;
 		this.password = password;
 
 	}
 
 	public static JenkinsClient defaultClient() throws InstantiationException, IllegalAccessException, IOException {
- 		if (client == null) {
- 			JenkinsConfig con = Config.getJenkinsConfig();
+		if (client == null) {
+			JenkinsConfig con = Config.getJenkinsConfig();
 			client = new JenkinsClient(con.getUrl(), con.getUser(), con.getPassword());
- 		}
+		}
 		return client;
 
 	}
 
-	public boolean triggerBuild(String jobName) throws MalformedURLException,
-			IOException {
+	public boolean triggerBuild(String jobName) throws MalformedURLException, IOException {
 		// job/test2/build
 		String buidlurl = url + "/job/" + URLEncoder.encode(jobName) + "/build";
 
@@ -87,62 +84,42 @@ public class JenkinsClient {
 	 * @throws IOException
 	 * @throws MalformedURLException
 	 */
-	public boolean createCredential(String projectName, String username,
-			String password, String usage) throws MalformedURLException,
-			IOException {
-		
+	public boolean createCredential(String projectName, String username, String password, String usage)
+			throws MalformedURLException, IOException {
+
 		// curl -H "$CRUMB" -H "Content-Type:application/json" -X POST
 		// 'http://xiehq:acd12345@10.211.55.6:8080/credentials/store/system/domain/_/credential/test22-test/doDelete'
 		try {
-			String deleteUrl = url+"/credentials/store/system/domain/_/credential/"
-					+ projectName + "-" + usage	+ "/doDelete";
+			String deleteUrl = url + "/credentials/store/system/domain/_/credential/" + projectName + "-" + usage
+					+ "/doDelete";
 			httpJobModify(new URL(deleteUrl), "", "");
 		} catch (Exception e) {
-			//e.printStackTrace();
-			
-			
+
 		}
 		// 没有设置用户
 		if (username == null) {
 			return true;
 		}
-		String content = "{ \"\": \"0\",  "
-				+ " \"credentials\": {  "
-				+ "   \"scope\": \"GLOBAL\","
-				+ "   \"id\": \""
-				+ projectName
-				+ "-"
-				+ usage
-				+ "\","
-				+ "   \"username\": \""
-				+ username
-				+ "\","
-				+ "   \"password\": \""
-				+ password
-				+ "\","
-				+ "   \"description\": \""
-				+ usage
-				+ "\","
+		String content = "{ \"\": \"0\",  " + " \"credentials\": {  " + "   \"scope\": \"GLOBAL\"," + "   \"id\": \""
+				+ projectName + "-" + usage + "\"," + "   \"username\": \"" + username + "\"," + "   \"password\": \""
+				+ password + "\"," + "   \"description\": \"" + usage + "\","
 				+ "   \"stapler-class\": \"com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl\" "
 				+ "  }}";
 
 		// URLEncodedUtils.parse(content, "UTF-8");
 		String S = URLEncoder.encode(content, "UTF-8");
-		String serverUrl = url
-				+ "/credentials/store/system/domain/_/createCredentials?json="
-				+ S;
-		log.debug("serverUrl:"+serverUrl);
-		//return httpSimpleModifyWithoutContentType(new URL(serverUrl));
-		
-		int code=httpModifyWithReturnCode(new URL(serverUrl), "", "application/json");
-		if (code ==403 ||(code >= 200 && code < 300))
+		String serverUrl = url + "/credentials/store/system/domain/_/createCredentials?json=" + S;
+		log.debug("serverUrl:" + serverUrl);
+		// return httpSimpleModifyWithoutContentType(new URL(serverUrl));
+
+		int code = httpModifyWithReturnCode(new URL(serverUrl), "", "application/json");
+		if (code == 403 || (code >= 200 && code < 300))
 			return true;
 		return false;
 
 	}
 
-	public boolean addOrModifyJob(String jobId, String content)
-			throws IOException {
+	public boolean addOrModifyJob(String jobId, String content) throws IOException {
 		if (jobExist(jobId)) {
 			return modifyJob(jobId, content);
 		} else {
@@ -151,22 +128,20 @@ public class JenkinsClient {
 	}
 
 	public boolean deleteJob(String jobId) throws IOException {
-		URL serverUrl = new URL(url + "/job/" + URLEncoder.encode(jobId)
-				+ "/doDelete"); // Jenkins
+		URL serverUrl = new URL(url + "/job/" + URLEncoder.encode(jobId) + "/doDelete"); // Jenkins
 		// URL
 		// localhost:8080,
 		// job
 		// named
 		// 'test'
-		int code = httpModifyWithReturnCode(serverUrl,null,null);
-		if (code==403 || (code >= 200 && code < 300))
+		int code = httpModifyWithReturnCode(serverUrl, null, null);
+		if (code == 403 || (code >= 200 && code < 300))
 			return true;
 		return false;
 	}
 
 	public boolean modifyJob(String jobId, String content) throws IOException {
-		URL serverUrl = new URL(url + "/job/" + URLEncoder.encode(jobId)
-				+ "/config.xml"); // Jenkins
+		URL serverUrl = new URL(url + "/job/" + URLEncoder.encode(jobId) + "/config.xml"); // Jenkins
 		// URL
 		// localhost:8080,
 		// job
@@ -176,8 +151,7 @@ public class JenkinsClient {
 	}
 
 	public boolean addJob(String jobId, String content) throws IOException {
-		URL serverUrl = new URL(url + "/createItem?name="
-				+ URLEncoder.encode(jobId));
+		URL serverUrl = new URL(url + "/createItem?name=" + URLEncoder.encode(jobId));
 		if (jobExist(jobId))
 			throw new IOException("项目：" + jobId + " 已经存在！");
 		// URL serverUrl = new URL(
@@ -205,9 +179,8 @@ public class JenkinsClient {
 			/*
 			 * InputStream inputStream = connection.getInputStream();
 			 * 
-			 * byte[] buffer = new byte[BUFFER_SIZE]; int bytesRead; while
-			 * ((bytesRead = inputStream.read(buffer)) != -1) {
-			 * System.out.println(new String(buffer)); }
+			 * byte[] buffer = new byte[BUFFER_SIZE]; int bytesRead; while ((bytesRead =
+			 * inputStream.read(buffer)) != -1) { System.out.println(new String(buffer)); }
 			 */
 			return true;
 		}
@@ -216,14 +189,11 @@ public class JenkinsClient {
 
 	}
 
-	private HttpURLConnection getConnection(URL serverUrl, String method)
-			throws IOException {
+	private HttpURLConnection getConnection(URL serverUrl, String method) throws IOException {
 		String authStr = name + ":" + password;
-		String encoding = DatatypeConverter.printBase64Binary(authStr
-				.getBytes("utf-8"));
+		String encoding = DatatypeConverter.printBase64Binary(authStr.getBytes("utf-8"));
 
-		HttpURLConnection connection = (HttpURLConnection) serverUrl
-				.openConnection();
+		HttpURLConnection connection = (HttpURLConnection) serverUrl.openConnection();
 
 		connection.setRequestProperty("Authorization", "Basic " + encoding);
 
@@ -241,10 +211,8 @@ public class JenkinsClient {
 	// http://xiehq:acd12345@10.211.55.6:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)
 
 	public boolean getCrumb() throws IOException {
-		//String authStr = name + ":" + password;
-		URL serverUrl = new URL(
-				url
-						+ "/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"); // Jenkins
+		// String authStr = name + ":" + password;
+		URL serverUrl = new URL(url + "/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"); // Jenkins
 		HttpURLConnection connection = getConnection(serverUrl, "GET");
 
 		connection.connect();
@@ -272,18 +240,16 @@ public class JenkinsClient {
 
 			return true;
 		} else {
-			throw new IOException("Get crumb failed! code=" + code+"url="+url);
+			throw new IOException("Get crumb failed! code=" + code + "url=" + url);
 		}
 		// return false;
 	}
 
-	private boolean httpJobModify(URL serverUrl, String content)
-			throws IOException {
+	private boolean httpJobModify(URL serverUrl, String content) throws IOException {
 		return httpJobModify(serverUrl, content, null);
 	}
 
-	private boolean httpJobModify(URL serverUrl, String content,
-			String contentType) throws IOException {
+	private boolean httpJobModify(URL serverUrl, String content, String contentType) throws IOException {
 
 		if (crumbField == null)
 			if (!getCrumb())
@@ -293,7 +259,7 @@ public class JenkinsClient {
 		log.debug("serverUrl:" + serverUrl.toString());
 		log.debug("content:" + content);
 		log.debug("contentType:" + contentType);
-		
+
 		HttpURLConnection connection = getConnection(serverUrl, "POST");
 		connection.setRequestProperty(crumbField, crumb);
 		if (contentType == null)
@@ -311,9 +277,8 @@ public class JenkinsClient {
 		// FileInputStream inputStream = new FileInputStream(file);
 
 		// content = new String(content.getBytes("GBK"), "UTF-8");
-		if (content != null && content != ""){
-			try (DataOutputStream wr = new DataOutputStream(
-					connection.getOutputStream())) {
+		if (content != null && content.isEmpty() == false) {
+			try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
 
 				// byte b[] = (content).getBytes();
 				byte b[] = Tools.ToUTF8(content).getBytes();
@@ -324,32 +289,27 @@ public class JenkinsClient {
 			log.debug("SEND content:" + content);
 
 		}
-		
+
 		// connection.connect();
 		// log.debug("resp:"+connection.getResponseMessage());
 
 		// 测试代码
 		/*
-		 * InputStream content = connection.getInputStream(); BufferedReader in
-		 * = new BufferedReader(new InputStreamReader(content)); String line;
-		 * while ((line = in.readLine()) != null) { System.out.println(line); }
+		 * InputStream content = connection.getInputStream(); BufferedReader in = new
+		 * BufferedReader(new InputStreamReader(content)); String line; while ((line =
+		 * in.readLine()) != null) { System.out.println(line); }
 		 */
 		// 以上为测试代码
 		int code = connection.getResponseCode();
 
-		
-
 		log.debug(serverUrl.toString() + " return code:" + code);
 		log.debug(connection.getResponseMessage());
-		
-		
-		if (code >= 200 && code < 300 ) {
+
+		if (code >= 200 && code < 300) {
 			return true;
-		} 
-		else {
+		} else {
 			InputStream serverOut = connection.getInputStream();
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					serverOut));
+			BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
 			String line = "";
 			String out = "";
 			while ((line = in.readLine()) != null) {
@@ -360,44 +320,32 @@ public class JenkinsClient {
 
 	}
 
-	
-	
-	
-	
 	public InputStream getFile(String path) throws IOException {
 
 		if (crumbField == null)
-			if (!getCrumb()){
+			if (!getCrumb()) {
 				throw new IOException("get file fail,can't get Crumb ");
 			}
-				 
 
 		// log.debug(crumbField + ":" + crumb);
 		// log.debug("serverUrl:" + serverUrl.toString());
 		// log.debug("content:" + content);
 
-		URL serverUrl = new URL(url+path);
-		
+		URL serverUrl = new URL(url + path);
+
 		HttpURLConnection connection = getConnection(serverUrl, "POST");
 		connection.setRequestProperty(crumbField, crumb);
-		 
+
 		int code = connection.getResponseCode();
 
 		log.debug(serverUrl.toString() + " return code:" + code);
 
 		if (code >= 200 && code < 300) {
-			
+
 			InputStream serverOut = connection.getInputStream();
-			
-			 String prefix = "foobar";
-			    String suffix = ".tmp";
-			    
-			    // this temporary file remains after the jvm exits
-			    File tempFile = File.createTempFile(prefix, suffix);
-			    
-			//String saveFilePath = saveDir + File.separator + fileName;
-            
-            
+
+		 
+
 			return serverOut;
 		} else {
 			log.debug(connection.getResponseMessage());
@@ -406,9 +354,7 @@ public class JenkinsClient {
 
 	}
 
-	
-	public boolean addOrModifyView(String viewId, String description)
-			throws IOException {
+	public boolean addOrModifyView(String viewId, String description) throws IOException {
 		if (viewExist(viewId)) {
 			return modifyView(viewId, description);
 		} else {
@@ -417,8 +363,7 @@ public class JenkinsClient {
 	}
 
 	public boolean deleteview(String viewId) throws IOException {
-		URL serverUrl = new URL(url + "/view/" + URLEncoder.encode(viewId)
-				+ "/doDelete"); // Jenkins
+		URL serverUrl = new URL(url + "/view/" + URLEncoder.encode(viewId) + "/doDelete"); // Jenkins
 		// URL
 		// localhost:8080,
 		// view
@@ -427,10 +372,8 @@ public class JenkinsClient {
 		return httpViewModify(serverUrl, null, null);
 	}
 
-	public boolean modifyView(String viewId, String description)
-			throws IOException {
-		URL serverUrl = new URL(url + "/view/" + URLEncoder.encode(viewId)
-				+ "/config.xml"); // Jenkins
+	public boolean modifyView(String viewId, String description) throws IOException {
+		URL serverUrl = new URL(url + "/view/" + URLEncoder.encode(viewId) + "/config.xml"); // Jenkins
 		// URL
 		// localhost:8080,
 		// view
@@ -439,10 +382,8 @@ public class JenkinsClient {
 		return httpViewModify(serverUrl, viewId, description);
 	}
 
-	public boolean addView(String viewId, String description)
-			throws IOException {
-		URL serverUrl = new URL(url + "/createView?name="
-				+ URLEncoder.encode(viewId));
+	public boolean addView(String viewId, String description) throws IOException {
+		URL serverUrl = new URL(url + "/createView?name=" + URLEncoder.encode(viewId));
 
 		// URL serverUrl = new URL(
 		// "http://xiehq:acd12345@10.211.55.6:8080/createItem?name="
@@ -470,9 +411,8 @@ public class JenkinsClient {
 			/*
 			 * InputStream inputStream = connection.getInputStream();
 			 * 
-			 * byte[] buffer = new byte[BUFFER_SIZE]; int bytesRead; while
-			 * ((bytesRead = inputStream.read(buffer)) != -1) {
-			 * System.out.println(new String(buffer)); }
+			 * byte[] buffer = new byte[BUFFER_SIZE]; int bytesRead; while ((bytesRead =
+			 * inputStream.read(buffer)) != -1) { System.out.println(new String(buffer)); }
 			 */
 			return true;
 		}
@@ -490,20 +430,36 @@ public class JenkinsClient {
 
 		int code = connection.getResponseCode();
 		log.debug(serverUrl.toString() + " return code:" + code);
-		InputStream serverOut = connection.getInputStream();
-		BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
 		String line = "";
 		String out = "";
-		while ((line = in.readLine()) != null) {
-			out += line;
-		}
+		InputStream serverOut = null;
+		BufferedReader in =null;
+		try {
+			serverOut = connection.getInputStream();
+			 in=new BufferedReader(new InputStreamReader(serverOut));
 
-		if (code >= 200 && code < 300) {
-			return out;
-		} else {
+			while ((line = in.readLine()) != null) {
+				out += line;
+			}
 
-			log.debug(connection.getResponseMessage());
-			throw new IOException("Server out:" + out);
+			if (code >= 200 && code < 300) {
+				return out;
+			} else {
+
+				log.debug(connection.getResponseMessage());
+				throw new IOException("Server out:" + out);
+			}
+		} finally {
+			try {
+				in.close();
+			} catch (Exception e) {
+
+			}
+			try {
+				serverOut.close();
+			} catch (Exception e) {
+
+			}
 		}
 
 	}
@@ -517,8 +473,7 @@ public class JenkinsClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean httpViewModify(URL serverUrl, String name, String description)
-			throws IOException {
+	public boolean httpViewModify(URL serverUrl, String name, String description) throws IOException {
 
 		if (crumbField == null)
 			if (!getCrumb())
@@ -545,7 +500,7 @@ public class JenkinsClient {
 		@SuppressWarnings("resource")
 		// File file = new File(re.getFile());
 		//
-		String content = Tools.readResource(viewConfigFile,false);
+		String content = Tools.readResource(viewConfigFile, false);
 
 		// description = new String(description.getBytes("GBK"), "ASCII");
 
@@ -566,8 +521,7 @@ public class JenkinsClient {
 		log.debug("content=" + content);
 		log.debug("serverUrl=" + serverUrl);
 
-		try (DataOutputStream wr = new DataOutputStream(
-				connection.getOutputStream())) {
+		try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
 			byte b[] = content.getBytes();
 			wr.write(b, 0, b.length);
 
@@ -585,10 +539,9 @@ public class JenkinsClient {
 
 		if (code >= 200 && code < 300) {
 			return true;
-		} else if (code!=403) {
+		} else if (code != 403) {
 			InputStream serverOut = connection.getInputStream();
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					serverOut));
+			BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
 			String line = "";
 			String out = "";
 			while ((line = in.readLine()) != null) {
@@ -597,8 +550,7 @@ public class JenkinsClient {
 
 			log.debug(connection.getResponseMessage());
 			throw new IOException("Server out:" + out);
-		}
-		else
+		} else
 			return true;
 
 	}
@@ -607,16 +559,13 @@ public class JenkinsClient {
 	// http://xiehq:acd12345@10.211.55.6:8080/view/test22/addJobToView?name=maskio
 
 	public boolean addJobToView(String viewId, String jobId) throws IOException {
-		URL serverUrl = new URL(url + "/view/" + viewId + "/addJobToView?name="
-				+ jobId); // Jenkins URL
+		URL serverUrl = new URL(url + "/view/" + viewId + "/addJobToView?name=" + jobId); // Jenkins URL
 		return httpSimpleModify(serverUrl);
 
 	}
 
-	public boolean removeJobFromView(String viewId, String jobId)
-			throws IOException {
-		URL serverUrl = new URL(url + "/view/" + viewId
-				+ "/removeJobFromView?name=" + jobId); // Jenkins URL
+	public boolean removeJobFromView(String viewId, String jobId) throws IOException {
+		URL serverUrl = new URL(url + "/view/" + viewId + "/removeJobFromView?name=" + jobId); // Jenkins URL
 		return httpSimpleModify(serverUrl);
 
 	}
@@ -646,34 +595,19 @@ public class JenkinsClient {
 
 		connection.setRequestProperty(crumbField, crumb);
 		connection.setRequestProperty("Content-Type", "text/xml");
-
-		int code = connection.getResponseCode();
-
-		log.debug(serverUrl.toString() + " return code:" + code);
-
-		InputStream serverOut = connection.getInputStream();
-		BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
-		String line = "";
-		String out = "";
-		while ((line = in.readLine()) != null) {
-			out += line;
-		}
-
-		if (code >= 200 && code < 300) {
-			return true;
-		} else {
-
-			log.debug(connection.getResponseMessage());
-			throw new IOException("Server out:" + out);
-		}
+		log.debug(serverUrl.toString() );
+		Tools.getHttpResult( connection);
+		return true;
 	}
 
+	
+	
 	
 	public String httpSimpleGet(String a_url) throws IOException {
-		URL serverUrl = new URL(url  + a_url);
+		URL serverUrl = new URL(url + a_url);
 		return httpSimpleGet(serverUrl);
 	}
-	
+
 	public String httpSimpleGet(URL serverUrl) throws IOException {
 
 		if (crumbField == null)
@@ -689,29 +623,10 @@ public class JenkinsClient {
 		HttpURLConnection connection = getConnection(serverUrl, "GET");
 
 		connection.setRequestProperty(crumbField, crumb);
- 
-		int code = connection.getResponseCode();
 
-		log.debug(serverUrl.toString() + " return code:" + code);
-
-		InputStream serverOut = connection.getInputStream();
-		BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
-		String line = "";
-		String out = "";
-		while ((line = in.readLine()) != null) {
-			out += line;
-		}
-
-		if (code >= 200 && code < 300) {
-			return out;
-		} else {
-
-			log.debug(connection.getResponseMessage());
-			throw new IOException("Server out:" + out);
-		}
+		return Tools.getHttpResult( connection); 
 	}
 
-	
 	public String httpSimpleModifyWithResult(URL serverUrl) throws IOException {
 
 		if (crumbField == null)
@@ -729,31 +644,11 @@ public class JenkinsClient {
 		connection.setRequestProperty(crumbField, crumb);
 		connection.setRequestProperty("Content-Type", "text/xml");
 
-		int code = connection.getResponseCode();
-
-		log.debug(serverUrl.toString() + " return code:" + code);
-
-		InputStream serverOut = connection.getInputStream();
-		BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
-		String line = "";
-		String out = "";
-		while ((line = in.readLine()) != null) {
-			out += line;
-		}
-
-		if (code >= 200 && code < 300) {
-			return out;
-		} else {
-
-			log.debug(connection.getResponseMessage());
-			throw new IOException("Server out:" + out);
-		}
+		return Tools.getHttpResult( connection);
+ 
 	}
-	
-	
-	
-	private int httpModifyWithReturnCode(URL serverUrl, String content,
-			String contentType) throws IOException {
+
+	private int httpModifyWithReturnCode(URL serverUrl, String content, String contentType) throws IOException {
 
 		if (crumbField == null)
 			if (!getCrumb())
@@ -763,7 +658,7 @@ public class JenkinsClient {
 		log.debug("serverUrl:" + serverUrl.toString());
 		log.debug("content:" + content);
 		log.debug("contentType:" + contentType);
-		
+
 		HttpURLConnection connection = getConnection(serverUrl, "POST");
 		connection.setRequestProperty(crumbField, crumb);
 		if (contentType == null)
@@ -781,25 +676,22 @@ public class JenkinsClient {
 		// FileInputStream inputStream = new FileInputStream(file);
 
 		// content = new String(content.getBytes("GBK"), "UTF-8");
-		if (content != null && content != ""){
-			try (DataOutputStream wr = new DataOutputStream(
-					connection.getOutputStream())) {
+//		if (content != null && content.isEmpty() == false) {
+//			try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+//
+//				// byte b[] = (content).getBytes();
+//				byte b[] = Tools.ToUTF8(content).getBytes();
+//
+//				wr.write(b, 0, b.length);
+//
+//			}
+//			log.debug("SEND content:" + content);
+//
+//		}
 
-				// byte b[] = (content).getBytes();
-				byte b[] = Tools.ToUTF8(content).getBytes();
-
-				wr.write(b, 0, b.length);
-
-			}
-			log.debug("SEND content:" + content);
-
-		}
-		 
 		int code = connection.getResponseCode();
-		 
-		
-		 return code;
+
+		return code;
 	}
 
-	 
 }

@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,12 +20,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import com.winhong.plugins.cicd.view.ProjectView;
 
 public class Tools {
+	private static final Logger log = LoggerFactory.getLogger(Tools.class);
 
 	public Tools() {
 	}
@@ -516,5 +521,43 @@ public static Object objectFromJsonResource(String resourcename, Class<?> cla,bo
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    } 
+	}
+	
+	
+	public static String getHttpResult(HttpURLConnection connection) throws IOException {
+		int code = connection.getResponseCode();
+
+
+		InputStream serverOut = null;
+		BufferedReader in = null;
+		try {
+			serverOut = connection.getInputStream();
+			in=new BufferedReader(new InputStreamReader(serverOut));
+			String line = "";
+			String out = "";
+			while ((line = in.readLine()) != null) {
+				out += line;
+			}
+
+			if (code >= 200 && code < 300) {
+				return out;
+			} else {
+
+				log.debug(connection.getResponseMessage());
+				throw new IOException("Server out:" + out);
+			}
+		} finally {
+			try {
+				in.close();
+			} catch (Exception e) {
+
+			}
+			
+			try {
+				serverOut.close();
+			} catch (Exception e) {
+
+			}
+		}
 	}
 }
