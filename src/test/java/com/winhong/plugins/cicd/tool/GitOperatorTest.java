@@ -1,4 +1,4 @@
-package com.winhong.plugins.cicd.tools;
+package com.winhong.plugins.cicd.tool;
 
 import static org.junit.Assert.*;
 
@@ -9,8 +9,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.winhong.plugins.cicd.tool.GitOperator;
 
 public class GitOperatorTest {
 
@@ -32,7 +30,7 @@ public class GitOperatorTest {
 
 	@Test
 	public void testGitInit() {
-		GitOperator git=new GitOperator();
+		GitOperatorForTest git=new GitOperatorForTest();
 		try {
 			git.gitInit("/Users/xiehuiqiang/git/cicdcore/.git","","xiehq","acd12345");
 		} catch (Exception e) {
@@ -47,7 +45,7 @@ public class GitOperatorTest {
 	@Test
 	public void testGitAddAndPush() {
 		
-		GitOperator git=new GitOperator();
+		GitOperatorForTest git=new GitOperatorForTest();
 		try {
 			git.gitInit("/Users/xiehuiqiang/git/cicdcore/.git","","xiehq","acd12345");
 			git.gitAddAndPush();

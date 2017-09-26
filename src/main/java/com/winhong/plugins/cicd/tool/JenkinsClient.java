@@ -308,13 +308,7 @@ public class JenkinsClient {
 		if (code >= 200 && code < 300) {
 			return true;
 		} else {
-			InputStream serverOut = connection.getInputStream();
-			BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
-			String line = "";
-			String out = "";
-			while ((line = in.readLine()) != null) {
-				out += line;
-			}
+			String out = Tools.getHttpResult(connection);
 			throw new IOException("Server out:" + out);
 		}
 
@@ -521,11 +515,11 @@ public class JenkinsClient {
 		log.debug("content=" + content);
 		log.debug("serverUrl=" + serverUrl);
 
-		try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-			byte b[] = content.getBytes();
-			wr.write(b, 0, b.length);
-
-		}
+//		try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+//			byte b[] = content.getBytes();
+//			wr.write(b, 0, b.length);
+//
+//		}
 
 		// connection.connect();
 		// log.debug("resp:"+connection.getResponseMessage());
@@ -540,15 +534,7 @@ public class JenkinsClient {
 		if (code >= 200 && code < 300) {
 			return true;
 		} else if (code != 403) {
-			InputStream serverOut = connection.getInputStream();
-			BufferedReader in = new BufferedReader(new InputStreamReader(serverOut));
-			String line = "";
-			String out = "";
-			while ((line = in.readLine()) != null) {
-				out += line;
-			}
-
-			log.debug(connection.getResponseMessage());
+			String out = Tools.getHttpResult(connection);
 			throw new IOException("Server out:" + out);
 		} else
 			return true;

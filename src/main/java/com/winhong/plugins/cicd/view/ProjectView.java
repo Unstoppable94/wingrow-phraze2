@@ -155,7 +155,7 @@ public class ProjectView {
 						continue;
 				boolean typefilter=false;
 				log.debug("maven.getBaseInfo():"+maven.getBaseInfo().getId());
-				if (projectType != null && projectType != "" && maven.getBaseInfo().getProjectType()!=null) {
+				if (projectType != null && projectType.isEmpty()==false && maven.getBaseInfo().getProjectType()!=null) {
 					if (maven.getBaseInfo().getProjectType().equals(projectType))
 						typefilter=true;
 				} else if (maven.getBaseInfo().getProjectType()!=null) {

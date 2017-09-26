@@ -1,4 +1,4 @@
-package com.winhong.plugins.cicd.tools;
+package com.winhong.plugins.cicd.tool;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

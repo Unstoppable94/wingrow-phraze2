@@ -75,10 +75,12 @@ public class DownService {
 			return targetArray;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return null;
+			log.error(e.getLocalizedMessage());
+			return new byte[0];
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			log.error(e.getLocalizedMessage());
+			return new byte[0];
 		}
 	}
 }

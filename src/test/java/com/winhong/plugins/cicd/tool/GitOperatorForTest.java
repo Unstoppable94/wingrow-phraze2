@@ -30,7 +30,7 @@ import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.util.FS;
 
-public class GitOperator {
+public class GitOperatorForTest {
 
 	private Repository repo;
 	private Config config;

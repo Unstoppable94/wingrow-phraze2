@@ -390,9 +390,9 @@ public class App {
 		server.setRequestLog(requestLog); // here will set global request log
 	}
 
-	public static void createDefaultGroupAndUser() {
+	public static void createDefaultGroupAndUser() throws InstantiationException, IllegalAccessException, IOException {
 
-		try {
+		 
 			File file = new File(GroupAction.getProjectGroupJsonfilename(GroupAction.defaultGroup));
 
 			if (file.exists() == false) {
@@ -402,12 +402,9 @@ public class App {
 				def.setDescription("default group,don't modify the group");
 				GroupAction.createGroup(def);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("创建默认组失败" + e.getLocalizedMessage());
-		}
+		 
 
-		try {
+		 
 			if (!UserAction.userExist(UserAction.defaultAdmin)) {
 				User defaultUser = new User();
 				defaultUser.setUsername(UserAction.defaultAdmin);
@@ -417,9 +414,6 @@ public class App {
 				UserAction.addUser(defaultUser);
 
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			log.error("create default user failed!");
-		}
+		 
 	}
 }

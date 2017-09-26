@@ -75,7 +75,7 @@ public class JenkinsRss {
 		 for(int i=0;i<list.size();i++){
 			 SyndEntry entry = list.get(i);
 			 String title = entry.getTitle();
-			 Date publish = entry.getPublishedDate();
+			 //Date publish = entry.getPublishedDate();
 			 String s[]=title.substring(0,title.indexOf('(')).split("#");
 			 
  			 RssBuild rss = new RssBuild(s[0].trim(),Integer.parseInt(s[1].trim()),

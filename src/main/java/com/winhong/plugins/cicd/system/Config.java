@@ -334,38 +334,43 @@ public class Config {
 		Runtime rt = Runtime.getRuntime();
 
 		Process proc = rt.exec(cmd);
-
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-
-		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-		// read the output from the command
-		// System.out.println("Here is the standard output of the command:\n");
-		String s = "";
-		StringBuffer sb = new StringBuffer();
-		while ((s = stdInput.readLine()) != null) {
-			sb.append(s);
-		}
-
-		// read any errors from the attempted command
-		// System.out
-		// .println("Here is the standard error of the command (if any):\n");
-		while ((s = stdError.readLine()) != null) {
-			sb.append(s);
-		}
-		log.debug(cmd + " return:" + sb.toString());
-
+		BufferedReader stdInput = null;
+		BufferedReader stdError = null;
 		try {
-			stdInput.close();
-		} catch (IOException e) {
+			stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 
-		}
-		try {
-			stdError.close();
-		} catch (IOException e) {
+			stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
+			// read the output from the command
+			// System.out.println("Here is the standard output of the command:\n");
+			String s = "";
+			StringBuffer sb = new StringBuffer();
+			while ((s = stdInput.readLine()) != null) {
+				sb.append(s);
+			}
+
+			// read any errors from the attempted command
+			// System.out
+			// .println("Here is the standard error of the command (if any):\n");
+			while ((s = stdError.readLine()) != null) {
+				sb.append(s);
+			}
+			log.debug(cmd + " return:" + sb.toString());
+
+			return sb.toString();
+		} finally {
+
+			try {
+ 				stdInput.close();
+			} catch (Exception e) {
+
+			}
+			try {
+				stdError.close();
+			} catch (Exception e) {
+
+			}
 		}
-		return sb.toString();
 
 	}
 

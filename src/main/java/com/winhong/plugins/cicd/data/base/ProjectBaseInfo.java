@@ -11,7 +11,7 @@ public class ProjectBaseInfo {
 	 */
 	@Expose
 	private String id;
-	
+
 	/**
 	 * 显示名称，用于web显示，可以修改
 	 */
@@ -20,83 +20,78 @@ public class ProjectBaseInfo {
 
 	@Expose
 	private String description;
-	
+
 	@Expose
 	private String SCMUrl;
-	
+
 	@Expose
 	private String SCMUser;
 	@Expose
 	private String SCMPassword;
-	
+
 	@Expose
-	private String SCMBranch="master";
-	
+	private String SCMBranch = "master";
+
 	@Expose
-	private String SCMTYPE="git"; //git or svn
-	
+	private String SCMTYPE = "git"; // git or svn
+
 	@Expose
-	private String trigger="manual";
-	
+	private String trigger = "manual";
+
 	@Expose
 	private String triggerProperty;
-	
-	
+
 	@Expose
 	private String exraProperties;
-	
- 
+
 	@Expose
 	private long createTime;
-	
+
 	@Expose
 	private long lastModifyTime;
-	
+
 	/**
 	 * 最后修改者，从session获取？
 	 */
-	@Expose String lastModifyer;
-	
+	@Expose
+	String lastModifyer;
+
 	/**
 	 * 构建失败后发送的邮件地址
 	 */
 	@Expose
 	private String mailOnfail;
-	
-	
+
 	/**
 	 * 构建成功后发送的邮件地址
 	 */
 	@Expose
 	private String mailOnSuccess;
-	
+
 	/**
 	 * 构建失败后，首次成功后发送的邮件地址
 	 */
 	@Expose
 	private String mailOnReovery;
-	
-	
-	
+
 	/**
 	 * 归属项目组
 	 */
 	@Expose
-	private String groupId="default";
-	
-	
+	private String groupId = "default";
+
 	/**
 	 * 项目类型
 	 */
 	@Expose
 	private String projectType;
-	
+
 	/**
 	 * 默认最大执行时间，默认30分钟
 	 */
 	@Expose
-	private int maxExcutiontime=30;
-	
+	private int maxExcutiontime = 30;
+
 	public String getGroupId() {
 		return groupId;
 	}
@@ -137,8 +132,6 @@ public class ProjectBaseInfo {
 		SCMUser = sCMUser;
 	}
 
-	 
-
 	public String getSCMPassword() {
 		return SCMPassword;
 	}
@@ -155,7 +148,6 @@ public class ProjectBaseInfo {
 		SCMBranch = sCMBranch;
 	}
 
-	 
 	public String getName() {
 		return name;
 	}
@@ -169,7 +161,6 @@ public class ProjectBaseInfo {
 	}
 
 	public void setTrigger(String trigger) {
-		//TODO CHECK
 		this.trigger = trigger;
 	}
 
@@ -180,11 +171,6 @@ public class ProjectBaseInfo {
 	public void setExraProperties(String exraProperties) {
 		this.exraProperties = exraProperties;
 	}
-
-	 
- 
-
-	 
 
 	public long getCreateTime() {
 		return createTime;
@@ -252,13 +238,14 @@ public class ProjectBaseInfo {
 
 	public ProjectBaseInfo() {
 		super();
-		if (id==null)
-		id=genProjectid();
- 	}
-
-	public static String genProjectid(){
-		return "pro"+System.currentTimeMillis();
+		//if (id == null)
+			id = genProjectid();
 	}
+
+	public static String genProjectid() {
+		return "pro" + System.currentTimeMillis();
+	}
+
 	public String getTriggerProperty() {
 		return triggerProperty;
 	}
@@ -275,10 +262,4 @@ public class ProjectBaseInfo {
 		this.projectType = projectType;
 	}
 
-	 
-
-	 
-	 
-
-	
 }

@@ -225,7 +225,7 @@ public class Dashboard {
 	 		
 		 
 			
-			PipelineRun run = (PipelineRun) Tools.objectFromJsonString(url,
+			PipelineRun run = (PipelineRun) Tools.objectFromJsonString(output,
 					PipelineRun.class);
 			// 为了显示需求，修改name为项目名称，默认为#112 112为build number
 			BaseProject pro=ProjectAction.getProject(build.getProject());

@@ -22,6 +22,22 @@
     <Method name="initEnum"/>
     <Bug pattern="REC_CATCH_EXCEPTION"/>
   </And>
+<And>
+    <Package name="com.winhong.plugins.cicd.data.base"/>
+    <Bug pattern="NM_CONFUSING"/>
+  </And>
+
+<And>
+    <Class name="com.winhong.plugins.cicd.system.ProjectType"/>
+    <Bug pattern="DM_EXIT"/>
+  </And>
+
+
+<And>
+    <Class name="com.winhong.plugins.cicd.action.NotifyAction"/>
+    <Bug pattern="ISC_INSTANTIATE_STATIC_CLASS"/>
+  </And>
+
 
   <And>
     <Class name="com.winhong.plugins.cicd.tool.RandomString"/>
@@ -35,18 +51,22 @@
       <Method name="getTimeRangeStatfromShell"/>
     </Or>
   </And>
-  <Or>
-    <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
-    <Bug pattern="DM_DEFAULT_ENCODING"/>
-    <Bug pattern="NM_CLASS_NAMING_CONVENTION"/>
-    <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
-    <Bug pattern="NM_FIELD_NAMING_CONVENTION"/>
-    <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
-    <Bug pattern="SBSC_USE_STRINGBUFFER_CONCATENATION"/>
-    <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
-    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC"/>
-    <Bug pattern="EI_EXPOSE_REP2"/>
-  </Or>
+
+ 
+
+   <And>
+    <Class name="com.winhong.plugins.cicd.tool.JenkinsClient"/>
+    <Method name="defaultClient"/>
+    <Bug pattern="LI_LAZY_INIT_STATIC"/>
+  </And>
+
+
+    <And>
+    <Class name="com.winhong.plugins.cicd.tool.JenkinsClient"/>
+    <Method name="getLatestBuild"/>
+    <Bug pattern="DE_MIGHT_IGNORE"/>
+  </And>
+  
   <Class name="~.*\.*Test"/>
   <And>
     <Class name="com.winhong.plugins.cicd.tool.JenkinsClient"/>
@@ -65,6 +85,14 @@
     <Class name="com.winhong.plugins.cicd.view.innerData.RunsStatusStat"/>
     <Class name="com.winhong.plugins.cicd.view.ProjectView$jobList"/>
   </Or>
+
+   <And>
+    <Class name="com.winhong.plugins.cicd.tool.Tools"/>
+    <Method name="setEnv"/>
+    <Bug pattern="DP_DO_INSIDE_DO_PRIVILEGED"/>
+  </And>
+  
+
   <And>
     <Class name="com.winhong.plugins.cicd.view.Dashboard"/>
     <Or>
@@ -84,6 +112,23 @@
     <Bug pattern="SIC_INNER_SHOULD_BE_STATIC"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
     <Bug pattern="EI_EXPOSE_REP"/>
+    <Bug pattern="REC_CATCH_EXCEPTION" />
+        <Bug pattern="ISC_INSTANTIATE_STATIC_CLASS" />
+     <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+    <Bug pattern="DM_DEFAULT_ENCODING"/>
+    <Bug pattern="NM_CLASS_NAMING_CONVENTION"/>
+    <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
+    <Bug pattern="NM_FIELD_NAMING_CONVENTION"/>
+    <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+    <Bug pattern="SBSC_USE_STRINGBUFFER_CONCATENATION"/>
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
+    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC"/>
+    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+    <Bug pattern="ICAST_INTEGER_MULTIPLY_CAST_TO_LONG"/>
+    
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Bug pattern="DM_CONVERT_CASE"/>
+    
   </Or>
   <Class name="com.winhong.plugins.cicd.view.ProjectView$buildList"/>
 </FindBugsFilter>

@@ -56,30 +56,33 @@ public class Tools {
 		return gson.toJson(o);
 	}
 
-	
-	
 	/**
 	 * By default ,all file save with encrypting
+	 * 
 	 * @param str
 	 * @param filename
 	 * @throws IOException
 	 */
 	public static void saveStringToFile(String str, String filename) throws IOException {
-		 
-		saveStringToFile(  str,   filename,true) ;
+
+		saveStringToFile(str, filename, true);
 	}
-	
-	
-	public static void saveStringToFile(String str, String filename,boolean encrypt) throws IOException {
+
+	public static void saveStringToFile(String str, String filename, boolean encrypt) throws IOException {
 		File file = new File(filename);
 		if (!file.exists())
 			file.createNewFile();
-		FileWriter fileWrite = new FileWriter(file);
-		if (encrypt)
-			fileWrite.write(Encryptor.encrypt(str));
-		else
-			fileWrite.write(str);
-		fileWrite.close();
+		FileWriter fileWrite = null;
+		try {
+			fileWrite = new FileWriter(file);
+			if (encrypt)
+				fileWrite.write(Encryptor.encrypt(str));
+			else
+				fileWrite.write(str);
+		} finally {
+			if (fileWrite != null)
+					fileWrite.close();
+		}
 
 	}
 
@@ -92,7 +95,7 @@ public class Tools {
 	 * @throws IOException
 	 *             exception
 	 */
-	public static String readResource(String resourcename,boolean isEncrypt) throws IOException {
+	public static String readResource(String resourcename, boolean isEncrypt) throws IOException {
 		ClassLoader classLoader = Tools.class.getClassLoader();
 
 		InputStream fis = classLoader.getResourceAsStream(resourcename);
@@ -102,9 +105,6 @@ public class Tools {
 			return (IOUtils.toString(fis));
 	}
 
-	
-	
-	
 	/**
 	 * 从json格式的资源文件中生成对象
 	 * 
@@ -113,25 +113,23 @@ public class Tools {
 	 * @param cla
 	 *            类名称
 	 * @return 对象
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static Object objectFromJsonResource(String resourcename, Class<?> cla) throws IOException {
-		
-		return objectFromJsonResource(  resourcename, cla, true);
-		 
-	}
-	
-	
-public static Object objectFromJsonResource(String resourcename, Class<?> cla,boolean isEncrypt) throws IOException {
-		
 
-		String input=readResource(resourcename,isEncrypt);
+		return objectFromJsonResource(resourcename, cla, true);
+
+	}
+
+	public static Object objectFromJsonResource(String resourcename, Class<?> cla, boolean isEncrypt)
+			throws IOException {
+
+		String input = readResource(resourcename, isEncrypt);
 
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
 		return gson.fromJson(input, cla);
 	}
-
 
 	/**
 	 * 从json格式的资源文件中生成对象
@@ -141,12 +139,12 @@ public static Object objectFromJsonResource(String resourcename, Class<?> cla,bo
 	 * @param cla
 	 *            类名称
 	 * @return 对象
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static Object objectFromJsonFile(String filename, Class cla) throws IOException {
 
-		String str=readFile(new File(filename)).toString(); 
- 
+		String str = readFile(new File(filename)).toString();
+
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
 		return gson.fromJson(str, cla);
@@ -165,7 +163,6 @@ public static Object objectFromJsonResource(String resourcename, Class<?> cla,bo
 	 * @throws IOException
 	 *             IO //
 	 */
-	 
 
 	public static Object objectFromJsonString(String content, Type type) throws MalformedURLException, IOException {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
@@ -194,13 +191,15 @@ public static Object objectFromJsonResource(String resourcename, Class<?> cla,bo
 	 *             异常
 	 */
 	@SuppressWarnings("unchecked")
-//	public static Object objectFromJsonUrl(String url, Class cla) throws MalformedURLException, IOException {
-//		String json = IOUtils.toString(new URL(url));
-//
-//		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
-//
-//		return gson.fromJson(json, cla);
-//	}
+	// public static Object objectFromJsonUrl(String url, Class cla) throws
+	// MalformedURLException, IOException {
+	// String json = IOUtils.toString(new URL(url));
+	//
+	// Gson gson = new
+	// GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
+	//
+	// return gson.fromJson(json, cla);
+	// }
 
 	// Gson gson = new
 	// GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
@@ -389,37 +388,37 @@ public static Object objectFromJsonResource(String resourcename, Class<?> cla,bo
 
 	/**
 	 * by defaul ,all file will save with encrypting
+	 * 
 	 * @param file
 	 * @return
 	 * @throws IOException
 	 */
 	public static StringBuffer readFile(File file) throws IOException {
-		//String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+		// String buffer = new
+		// String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 
-		return  readFileWithDecrypt(file);
+		return readFileWithDecrypt(file);
 	}
 
-	
-	public static StringBuffer readFile(File file,boolean isEncrypted) throws IOException {
-		//String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+	public static StringBuffer readFile(File file, boolean isEncrypted) throws IOException {
+		// String buffer = new
+		// String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 		if (isEncrypted)
-			return  readFileWithDecrypt(file);
+			return readFileWithDecrypt(file);
 		else {
 			String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 			return new StringBuffer(buffer);
 		}
-				
+
 	}
-	
+
 	public static StringBuffer readFileWithDecrypt(File file) throws IOException {
-		
+
 		String buffer = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
-		
+
 		return new StringBuffer(Encryptor.decrypt(buffer));
 	}
-	
-	
-	
+
 	public static StringBuffer readFileAndRemoveEmptyLine(File file) throws IOException {
 		// FileReader input = new FileReader(file);
 		// BufferedReader in = new BufferedReader(input);
@@ -484,55 +483,49 @@ public static Object objectFromJsonResource(String resourcename, Class<?> cla,bo
 		return returnStr;
 
 	}
-	
-	
-	public static void setEnv(Map<String, String> newenv)
-	{
-	  try
-	    {
-	        Class<?> processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment");
-	        Field theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment");
-	        theEnvironmentField.setAccessible(true);
-	        Map<String, String> env = (Map<String, String>) theEnvironmentField.get(null);
-	        env.putAll(newenv);
-	        Field theCaseInsensitiveEnvironmentField = processEnvironmentClass.getDeclaredField("theCaseInsensitiveEnvironment");
-	        theCaseInsensitiveEnvironmentField.setAccessible(true);
-	        Map<String, String> cienv = (Map<String, String>)     theCaseInsensitiveEnvironmentField.get(null);
-	        cienv.putAll(newenv);
-	    }
-	    catch (NoSuchFieldException e)
-	    {
-	      try {
-	        Class[] classes = Collections.class.getDeclaredClasses();
-	        Map<String, String> env = System.getenv();
-	        for(Class cl : classes) {
-	            if("java.util.Collections$UnmodifiableMap".equals(cl.getName())) {
-	                Field field = cl.getDeclaredField("m");
-	                field.setAccessible(true);
-	                Object obj = field.get(env);
-	                Map<String, String> map = (Map<String, String>) obj;
-	                map.clear();
-	                map.putAll(newenv);
-	            }
-	        }
-	      } catch (Exception e2) {
-	        e2.printStackTrace();
-	      }
-	    } catch (Exception e1) {
-	        e1.printStackTrace();
-	    } 
+
+	public static void setEnv(Map<String, String> newenv) {
+		try {
+			Class<?> processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment");
+			Field theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment");
+			theEnvironmentField.setAccessible(true);
+			Map<String, String> env = (Map<String, String>) theEnvironmentField.get(null);
+			env.putAll(newenv);
+			Field theCaseInsensitiveEnvironmentField = processEnvironmentClass
+					.getDeclaredField("theCaseInsensitiveEnvironment");
+			theCaseInsensitiveEnvironmentField.setAccessible(true);
+			Map<String, String> cienv = (Map<String, String>) theCaseInsensitiveEnvironmentField.get(null);
+			cienv.putAll(newenv);
+		} catch (NoSuchFieldException e) {
+			try {
+				Class[] classes = Collections.class.getDeclaredClasses();
+				Map<String, String> env = System.getenv();
+				for (Class cl : classes) {
+					if ("java.util.Collections$UnmodifiableMap".equals(cl.getName())) {
+						Field field = cl.getDeclaredField("m");
+						field.setAccessible(true);
+						Object obj = field.get(env);
+						Map<String, String> map = (Map<String, String>) obj;
+						map.clear();
+						map.putAll(newenv);
+					}
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
-	
-	
+
 	public static String getHttpResult(HttpURLConnection connection) throws IOException {
 		int code = connection.getResponseCode();
-
 
 		InputStream serverOut = null;
 		BufferedReader in = null;
 		try {
 			serverOut = connection.getInputStream();
-			in=new BufferedReader(new InputStreamReader(serverOut));
+			in = new BufferedReader(new InputStreamReader(serverOut));
 			String line = "";
 			String out = "";
 			while ((line = in.readLine()) != null) {
@@ -552,7 +545,7 @@ public static Object objectFromJsonResource(String resourcename, Class<?> cla,bo
 			} catch (Exception e) {
 
 			}
-			
+
 			try {
 				serverOut.close();
 			} catch (Exception e) {
