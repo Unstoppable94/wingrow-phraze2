@@ -37,9 +37,13 @@ public class ProjectType {
 		types.put(TraditionalDocker, new ProjectTypeDefine("传统Docker",TranditionalDockerProject.class,"WinGrow/config/TraditionalJobConfig.xml"));
 		types.put(MultistageDocker, new ProjectTypeDefine("多Stage Docker",MultiStageDockerProject.class,"WinGrow/config/MultiStageDocker.xml"));
 
-		initEnum();
-		//types.put("mavenProject", MavenProject.class);
-		
+		try {
+			initEnum();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+ 		
 	}
 	
 	public static Class getClass(String type) {
@@ -55,11 +59,9 @@ public class ProjectType {
 		return MultistageDocker;
 	}
 	
-	public static void initEnum() {
+	public static void initEnum() throws InstantiationException, IllegalAccessException {
 		
-		// if (registryList.size()==0){
-		try {
-
+ 
 			Iterator<String> keys = types.keySet().iterator();
 			 while(keys.hasNext()) { 
 				String k=keys.next();
@@ -91,10 +93,7 @@ public class ProjectType {
 			 
 			
 			 
-		} catch (Exception e) {
- 			e.printStackTrace();
- 		}
-
+		 
 	}
 	
 	

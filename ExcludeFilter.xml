@@ -18,6 +18,12 @@
     <Bug pattern="DE_MIGHT_IGNORE"/>
   </And>
   <And>
+    <Class name="com.winhong.plugins.cicd.system.ProjectType"/>
+    <Method name="initEnum"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+  </And>
+
+  <And>
     <Class name="com.winhong.plugins.cicd.tool.RandomString"/>
     <Bug pattern="MS_PKGPROTECT"/>
   </And>
