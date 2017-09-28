@@ -491,7 +491,7 @@ public class JenkinsClient {
 		// throw new IOException("view config file not exist!");
 		// }
 
-		@SuppressWarnings("resource")
+		//@SuppressWarnings("resource")
 		// File file = new File(re.getFile());
 		//
 		String content = Tools.readResource(viewConfigFile, false);
@@ -514,12 +514,12 @@ public class JenkinsClient {
 		// tools.readFile(file).toString();
 		log.debug("content=" + content);
 		log.debug("serverUrl=" + serverUrl);
+		//write content to server
+		try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+			byte b[] = content.getBytes();
+			wr.write(b, 0, b.length);
 
-//		try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-//			byte b[] = content.getBytes();
-//			wr.write(b, 0, b.length);
-//
-//		}
+		}
 
 		// connection.connect();
 		// log.debug("resp:"+connection.getResponseMessage());
@@ -662,18 +662,18 @@ public class JenkinsClient {
 		// FileInputStream inputStream = new FileInputStream(file);
 
 		// content = new String(content.getBytes("GBK"), "UTF-8");
-//		if (content != null && content.isEmpty() == false) {
-//			try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-//
-//				// byte b[] = (content).getBytes();
-//				byte b[] = Tools.ToUTF8(content).getBytes();
-//
-//				wr.write(b, 0, b.length);
-//
-//			}
-//			log.debug("SEND content:" + content);
-//
-//		}
+		if (content != null && content.isEmpty() == false) {
+			try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+
+				// byte b[] = (content).getBytes();
+				byte b[] = Tools.ToUTF8(content).getBytes();
+
+				wr.write(b, 0, b.length);
+
+			}
+			log.debug("SEND content:" + content);
+
+		}
 
 		int code = connection.getResponseCode();
 

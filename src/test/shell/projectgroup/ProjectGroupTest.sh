@@ -15,4 +15,4 @@ curl  -X DELETE -H "Content-Type:application/json" http://localhost:8100/webapi/
 
 curl  -X GET -H "Content-Type:application/json" http://192.168.101.4:8100/webapi/projectgroup/default/info -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MTQ4NTIxLCJpYXQiOjE1MDYwNjIxMjEsImp0aSI6IjEifQ.2xBEtPuR4ZTpIO-0HR4TeMIAfljHcg2NhLPlPUzSxJc"
 
-
+curl -X POST -H "Jenkins-Crumb:daa2c9218caddc754f79750e4bde1ce6" -H "Content-Type:text/xml" -H "charset:UTF-8" http://jenkins:w12sedwiokd@192.168.101.6:8080/createView?name=default --data-binary @default.xml   

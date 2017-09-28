@@ -117,7 +117,7 @@ public class App {
 		}
 		RandomString.init(16);
 		// flowing env should only use in testing
-		initTestConfig();
+	//initTestConfig();
 		createDefaultGroupAndUser();
 	}
 
@@ -360,15 +360,15 @@ public class App {
 
 	}
 
-	public static void initTestConfig() throws IOException, InstantiationException, IllegalAccessException {
-
-		String TEST_DOCKER_DAEMON = System.getenv("TEST_DOCKER_DAEMON");
-		if (TEST_DOCKER_DAEMON != null && TEST_DOCKER_DAEMON.isEmpty() == false)
-			Config.setDockerDaemonfile(TEST_DOCKER_DAEMON);
-		String TEST_DOCKER_CONFIG = System.getenv("TEST_DOCKER_CONFIG");
-		if (TEST_DOCKER_CONFIG != null && TEST_DOCKER_CONFIG.isEmpty() == false)
-			Config.setDockerConfigJson(TEST_DOCKER_CONFIG);
-	}
+//	public static void initTestConfig() throws IOException, InstantiationException, IllegalAccessException {
+//
+//		String TEST_DOCKER_DAEMON = System.getenv("TEST_DOCKER_DAEMON");
+//		if (TEST_DOCKER_DAEMON != null && TEST_DOCKER_DAEMON.isEmpty() == false)
+//			Config.setDockerDaemonfile(TEST_DOCKER_DAEMON);
+//		String TEST_DOCKER_CONFIG = System.getenv("TEST_DOCKER_CONFIG");
+//		if (TEST_DOCKER_CONFIG != null && TEST_DOCKER_CONFIG.isEmpty() == false)
+//			Config.setDockerConfigJson(TEST_DOCKER_CONFIG);
+//	}
 
 	public static void recordRequest(Server server, ServletContextHandler handle) throws IOException {
 		HandlerCollection handlers = new HandlerCollection();

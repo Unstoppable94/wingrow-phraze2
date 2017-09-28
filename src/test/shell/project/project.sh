@@ -5,7 +5,11 @@ curl -X GET -H "Content-Type:application/json" "http://localhost:8100/webapi/dow
 
 
 
-curl -X GET -H "Content-Type:application/json" "http://192.168.101.6:8100/webapi/project?action=new" -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MDY3NzQ0LCJpYXQiOjE1MDU5ODEzNDQsImp0aSI6IjEifQ.2tRFYLVVDSVeibWX9WLUbDjx7m2OuD4ZXDH_TkCkooU"
+curl -X GET -H "Content-Type:application/json" "http://localhost:8100/webapi/project?action=new" -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2NTYyMDU5LCJpYXQiOjE1MDY0NzU2NjAsImp0aSI6IjEifQ.h_VWJncNhRHA2c3yyFiGWECXD1L1dxxfk0vx9kFlUXs"
+
+
+curl -X GET -H "Content-Type:application/json" "http://localhost:8100/webapi/projectgroup" -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2NTYyMDU5LCJpYXQiOjE1MDY0NzU2NjAsImp0aSI6IjEifQ.h_VWJncNhRHA2c3yyFiGWECXD1L1dxxfk0vx9kFlUXs"
+
 
 curl  -X POST -H "Content-Type:application/json" http://192.168.101.4:8100/webapi/login --data-binary @user.json
 
@@ -65,6 +69,6 @@ curl -X POST  -H "Content-Type:application/json" http://localhost:8100/webapi/pr
 curl -X POST  -H "Content-Type:application/json" http://localhost:8100/webapi/project --data-binary @multiDockerPro.json -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MDUyMDE3LCJpYXQiOjE1MDU5NjU2MTcsImp0aSI6IjEifQ.wCHNAZR_HzXAkZDudZVM7pX86OMebEy704C_DWKTH9c"
 
 curl  -X POST -H "Content-Type:application/json" http://192.168.101.8:8100/webapi/login --data-binary @user.json
-curl -X POST  -H "Content-Type:application/json" http://192.168.101.8:8100/webapi/project --data-binary @WingrowMavenPro.json  -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2Mzk5NDk4LCJpYXQiOjE1MDYzOTc2OTksImp0aSI6IjEifQ.j7L0935PkKwCKOB-5clfz2GtxGx3qxiM0ecXxo2bqpk"
+curl -X POST  -H "Content-Type:application/json" http://192.168.101.8:8100/webapi/project --data-binary @WingrowMavenPro.json  -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2NTgyOTg1LCJpYXQiOjE1MDY0OTY1ODYsImp0aSI6IjEifQ.mwqNsyKrQGlTQO26BtnMgawBznaKfCMv_G4nszWhKj8"
 curl  -X GET -H "Content-Type:application/json" http://192.168.101.8:8100/webapi/projectgroup -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2Mzk5NDk4LCJpYXQiOjE1MDYzOTc2OTksImp0aSI6IjEifQ.j7L0935PkKwCKOB-5clfz2GtxGx3qxiM0ecXxo2bqpk"
 
