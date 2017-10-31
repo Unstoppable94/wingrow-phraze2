@@ -679,5 +679,74 @@ public class JenkinsClient {
 
 		return code;
 	}
+	public String httpShowStatistics(URL serverUrl, String content, String contentType) throws IOException{
+		if(crumbField == null){
+			if(!getCrumb()){
+				throw new IOException("crumb is faild!");
+			}
+		}
+		log.debug("serverUrl :"+ serverUrl.toString());
+		log.debug("content : " + content);
+		log.debug("ContenType:" + contentType);
+		HttpURLConnection connection = getConnection(serverUrl, "POST");
+		connection.setRequestProperty(crumbField, crumb);
+		if(contentType != null && contentType.trim() != ""){
+			connection.setRequestProperty("Content-Type", contentType);
+		}else{
+			connection.setRequestProperty("Content-Type", "application/json");
+		}
+		connection.setRequestProperty("charset", "UTF-8");
+		DataOutputStream wr = null;
+		if(content != null && content.isEmpty() == false){
+			wr = new DataOutputStream(connection.getOutputStream());
+			byte b[] = Tools.ToUTF8(content).getBytes();
+			wr.write(b, 0, b.length);
+		}
+		log.debug("SEND CONTENT" + content);
+		int code = connection.getResponseCode();
+		log.debug(serverUrl.toString() + " return code:" + code);
+		String line = "";
+		String out = "";
+		InputStream serverOut = null;
+		BufferedReader in =null;
+		try {
+			serverOut = connection.getInputStream();
+			 in=new BufferedReader(new InputStreamReader(serverOut));
 
+			while ((line = in.readLine()) != null) {
+				out += line;
+			}
+			log.debug("out--------:" + out);
+			if (code >= 200 && code < 300) {
+				return out;
+			} else {
+
+				log.debug(connection.getResponseMessage());
+				throw new IOException("Server out:" + out);
+			}
+		} finally {
+			try {
+				in.close();
+			} catch (Exception e) {
+
+			}
+			try {
+				serverOut.close();
+			} catch (Exception e) {
+
+			}
+		}
+		
+	}
+	//url:baseurl+/statistics/projectStat
+	public String projectStatShow(String content) throws IOException{
+		URL serverUrl = new URL(url + "/statistics/projectstat");
+		return httpShowStatistics(serverUrl, content, null);
+	}
+	//url:baseurl+/statistics/buildStat
+	public String projectBuildStat(String content) throws IOException{
+		URL serverUrl = new URL(url + "/statistics/buildstat");
+		
+		return httpShowStatistics(serverUrl, content, null);
+	}
 }

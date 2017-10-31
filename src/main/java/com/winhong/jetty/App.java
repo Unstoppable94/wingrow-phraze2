@@ -65,7 +65,7 @@ public class App {
 			initDirs();
 			initConfig();
 			// SET login token expire time
-			int defaultExpiryMins = 15;
+			int defaultExpiryMins = 1500;
 			String TOKEN_EXPIRY = System.getenv("TOKEN_EXPIRY");
 			if (TOKEN_EXPIRY != null && TOKEN_EXPIRY.isEmpty() == false)
 				defaultExpiryMins = Integer.parseInt(TOKEN_EXPIRY);

@@ -56,7 +56,10 @@ public class JWTSecurityFilter implements ContainerRequestFilter {
 			 () -> "anonymous", new String[]{"anonymous"}));
 			return;
 		}
-
+		if ("POST".equalsIgnoreCase(method) && "user".equals(path) ) {
+			// pass through the filter.
+			return;
+		}
 		String authorizationHeader = ((ContainerRequest) requestContext).getHeaderString(AuthHeader);
 		if (authorizationHeader == null) {
 			throw new WebApplicationException(Response.Status.UNAUTHORIZED);
