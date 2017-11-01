@@ -10,12 +10,12 @@ import com.winhong.plugins.cicd.tool.JenkinsClient;
 public class StatisticsAction {
 	
 	public static Logger log = LoggerFactory.getLogger(StatisticsAction.class);
-	public static String showprojectStat(String json){
+	public static String showprojectStat(String content){
 		JenkinsClient jks = null;
 		String result = null;
 		try {
 			jks = JenkinsClient.defaultClient();
-			result = jks.projectStatShow(json);
+			result = jks.projectStatShow(content);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			log.error(e.getMessage());

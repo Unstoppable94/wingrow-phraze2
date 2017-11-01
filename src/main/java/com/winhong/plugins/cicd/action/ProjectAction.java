@@ -385,7 +385,7 @@ public class ProjectAction {
 
 	 
 	
-	public static boolean      triggerBuild(String projectName) throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
+	public static boolean triggerBuild(String projectName) throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		JenkinsClient client = JenkinsClient.defaultClient();
 		return (client.triggerBuild(projectName));
 		 

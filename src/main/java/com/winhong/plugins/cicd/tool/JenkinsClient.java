@@ -609,6 +609,8 @@ public class JenkinsClient {
 		HttpURLConnection connection = getConnection(serverUrl, "GET");
 
 		connection.setRequestProperty(crumbField, crumb);
+ 		connection.setRequestProperty("Content-Type", "text/xml");
+		connection.setRequestProperty("charset", "UTF-8");
 
 		return Tools.getHttpResult( connection); 
 	}
