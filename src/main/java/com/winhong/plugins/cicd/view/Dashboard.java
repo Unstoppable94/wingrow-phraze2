@@ -4,22 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import org.apache.commons.io.IOUtils;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.annotations.Expose;
-import com.rometools.rome.io.FeedException;
 import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.data.base.BaseProject;
-import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.Tools;
@@ -217,8 +206,13 @@ public class Dashboard {
 				break;
 			}
 			RssBuild build = failbuilds.get(i);
+			String buildLink = build.getBuildLink();
+			String[] urls = buildLink.split("/");
+			int length = urls.length;
+			log.debug("the project id: "+urls[length-2]);
 			//http://jenkins:w12sedwiokd@192.168.101.98:8080//rssAll
-			String url =  runUrl.replace("jobname", build.getProject()).replace(
+			//curl http://jenkins:jenkins@localhost:8080/jenkins/job/pro1509520239094/15/wfapi/describe
+			String url =  runUrl.replace("jobname", urls[length-2]).replace(
 					"number", "" + build.getNumber());
 			try {
 			
@@ -230,8 +224,8 @@ public class Dashboard {
 			PipelineRun run = (PipelineRun) Tools.objectFromJsonString(output,
 					PipelineRun.class);
 			// 为了显示需求，修改name为项目名称，默认为#112 112为build number
-			BaseProject pro=ProjectAction.getProject(build.getProject());
-			
+			//BaseProject pro=ProjectAction.getProject(build.getProject());
+			BaseProject pro=ProjectAction.getProject(urls[length-2]);
 			run.setName(pro.getBaseInfo().getName());
 			list.add(run);
 			}catch(Exception e) {
