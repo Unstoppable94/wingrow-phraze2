@@ -217,9 +217,11 @@ public class Dashboard {
 				break;
 			}
 			RssBuild build = failbuilds.get(i);
-			String url = Config.getJenkinsConfig().getUrl()
-					+ runUrl.replace("jobname", build.getProject()).replace(
-							"number", "" + build.getNumber());
+			//http://jenkins:w12sedwiokd@192.168.101.98:8080//rssAll
+			String url =  runUrl.replace("jobname", build.getProject()).replace(
+					"number", "" + build.getNumber());
+			try {
+			
 			String output=JenkinsClient.defaultClient().httpSimpleGet(url);
 
 	 		
@@ -232,6 +234,10 @@ public class Dashboard {
 			
 			run.setName(pro.getBaseInfo().getName());
 			list.add(run);
+			}catch(Exception e) {
+				log.warn("get url:"+url+" failed by :"+e.getLocalizedMessage());
+
+			}
 		}
 
 		return Tools.getJson(list);
