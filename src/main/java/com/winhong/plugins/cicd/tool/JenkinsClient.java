@@ -612,7 +612,7 @@ public class JenkinsClient {
 		connection.setRequestProperty("Content-Type", "text/xml");
 		connection.setRequestProperty("charset", "UTF-8");
 
-		return Tools.getHttpResult( connection); 
+		return Tools.getHttpResult(connection); 
 	}
 
 	public String httpSimpleModifyWithResult(URL serverUrl) throws IOException {
@@ -748,7 +748,25 @@ public class JenkinsClient {
 	//url:baseurl+/statistics/buildStat
 	public String projectBuildStat(String content) throws IOException{
 		URL serverUrl = new URL(url + "/statistics/buildstat");
-		
 		return httpShowStatistics(serverUrl, content, null);
+	}
+	//url:${JENKINS_PATH}/buildDetail/all?groupId=wwe&start=1510734599733&end=1520734599733
+	public String buildDetialAll(String groupId, String start, String end) throws IOException{
+		String url = this.url + "/buildDetail/all?groupId="+groupId+"&start="+start+"&end="+end;
+		URL serverurl = new URL(url);
+		log.debug("SEND URL:  "+url);
+		String result = httpSimpleGet(serverurl);
+		
+		return result;
+	}
+	//url:${JENKINS_PATH}/buildDetail/all?groupId=wwe&start=1510734599733&end=1520734599733
+	public String groupByStatus(String groupId, String start, String end) throws IOException{
+
+		String url = this.url + "/buildDetail/groupByStatus?groupId="+groupId+"&start="+start+"&end="+end;
+		URL serverurl = new URL(url);
+		log.debug("SEND URL:  "+url);
+		String result = httpSimpleGet(serverurl);
+		
+		return result;
 	}
 }

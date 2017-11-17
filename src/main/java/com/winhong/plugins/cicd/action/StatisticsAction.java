@@ -34,4 +34,27 @@ public class StatisticsAction {
 		}
 		return result;
 	}
+	
+	public static String getBuildDetial(String groupId, String start, String end){
+		JenkinsClient jks = null;
+		String result =null;
+		try {
+			jks = JenkinsClient.defaultClient();
+			result = jks.buildDetialAll(groupId, start, end);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return result;
+	}
+	public static String groupByStatus(String groupId, String start, String end){
+		JenkinsClient jks = null;
+		String result =null;
+		try {
+			jks = JenkinsClient.defaultClient();
+			result = jks.groupByStatus(groupId, start, end);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return result;
+	}
 }

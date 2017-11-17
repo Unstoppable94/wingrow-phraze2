@@ -59,4 +59,31 @@ public class Statistics {
 		String json = gson.toJson(bs, BuildStatPraram.class);
 		return StatisticsAction.showBuildStat(json);
 	}
+	
+	@GET
+	@Path("buildDetail")
+	@Produces("application/json;charset=UTF-8")
+	@Consumes("application/json")
+	public String showbuildDetail(@QueryParam("start") String start,
+			@QueryParam("end") String end,
+			@QueryParam("groupId") String groupId){
+		if(groupId == null || groupId.trim() == ""){
+			groupId = "default";
+		}
+		return StatisticsAction.getBuildDetial(groupId, start, end);
+
+	}
+	@GET
+	@Path("groupByStatus")
+	@Produces("application/json;charset=UTF-8")
+	@Consumes("application/json")
+	public String groupByStatus(@QueryParam("start") String start,
+			@QueryParam("end") String end,
+			@QueryParam("groupId") String groupId){
+		if(groupId == null || groupId.trim() == ""){
+			groupId = "default";
+		}
+		return StatisticsAction.groupByStatus(groupId, start, end);
+
+	}
 }

@@ -1,4 +1,4 @@
-curl  -X POST -H "Content-Type:application/json" http://localhost:8100/webapi/login --data-binary @user.json
+curl  -X POST -H "Content-Type:application/json" http://192.168.101.98:8100/webapi/login --data-binary @user.json
 
 curl  -X GET -H "Content-Type:application/json" "http://localhost:8100/webapi/download?name=/job/pro1505966862278/4/artifact/jenkins-pro1505966862278-4.zip"  -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MTM3MDkyLCJpYXQiOjE1MDYwNTA2OTIsImp0aSI6IjEifQ.2arQVGHhOkBznE1GhvanRa8tqbTahbBU6tW2o3_zbBE"  -o test.zip
 curl -X GET -H "Content-Type:application/json" "http://localhost:8100/webapi/download?name=/job/pro1505966862278/4/artifact/jenkins-pro1505966862278-4.zip" -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MDcyMjA2LCJpYXQiOjE1MDU5ODU4MDYsImp0aSI6IjEifQ.bLCpBJBkdomVbgzU5zXyGXoZZl3Lem7A0O3mjq5X_3Q" -o test.zip
@@ -15,7 +15,7 @@ curl  -X POST -H "Content-Type:application/json" http://192.168.101.4:8100/webap
 
 curl  -X POST -H "Content-Type:application/json" http://192.168.101.6:8100/webapi/login --data-binary @user.json
 
-curl -X GET -H "Content-Type:application/json" "http://192.168.101.4:8100/webapi/project?projectType=traditionalDocker" -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MDY4MjIwLCJpYXQiOjE1MDU5ODE4MjAsImp0aSI6IjEifQ.qDkEK_xPoBgMvq-FkyP8-TgVrJKKEmeDM919bPFS6k0"
+curl -X GET -H "Content-Type:application/json" "http://192.168.101.98:8100/webapi/project?projectType=traditionalDocker" -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MDY4MjIwLCJpYXQiOjE1MDU5ODE4MjAsImp0aSI6IjEifQ.qDkEK_xPoBgMvq-FkyP8-TgVrJKKEmeDM919bPFS6k0"
 
 
 curl -X GET -H "Content-Type:application/json" "http://192.168.101.6:8100/webapi/project?projectName=docker&projectType=traditionalDocker"  -H "authorization:eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKZXJzZXktU2VjdXJpdHktQmFzaWMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImFkbWluIiwiZXhwIjoxNTA2MDY3NzQ0LCJpYXQiOjE1MDU5ODEzNDQsImp0aSI6IjEifQ.2tRFYLVVDSVeibWX9WLUbDjx7m2OuD4ZXDH_TkCkooU"
