@@ -1,8 +1,12 @@
 package com.winhong.plugins.cicd.view;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +18,7 @@ import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
+import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.view.innerData.RssBuild;
 
 public class JenkinsRss {
@@ -40,14 +45,34 @@ public class JenkinsRss {
 	}
 
 	
+	
+	 
+	
 	public  static List<SyndEntry> getRss(String url) throws IllegalArgumentException, MalformedURLException, FeedException, IOException{
 		
+ 
+		
 		SyndFeedInput input = new SyndFeedInput();
-		//TODO  add user and password
- 		SyndFeed feed = input.build(new XmlReader(new URL(url)));
+ 		URL serverUrl = new URL(url); // Jenkins
+		String str;
+		try {
+			str = JenkinsClient.defaultClient().httpSimpleGet(serverUrl);
+			InputStream stream = new ByteArrayInputStream(str.getBytes());
+
+			
+	 		SyndFeed feed = input.build(new XmlReader(stream));
+	 		return feed.getEntries();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 		
 		
-		return feed.getEntries();
+		
 
 //		private static Document loadTestDocument(String url) throws Exception {
 //	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
