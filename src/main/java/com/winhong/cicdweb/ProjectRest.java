@@ -127,7 +127,7 @@ public class ProjectRest {
 	@Consumes("application/json")
 	public String modifyProject(@PathParam("projectName") String projectId, String json) {
 		try {
-			BaseProject project = (BaseProject) Tools.objectFromJsonString(json, BaseProject.class);
+			BaseProject project = BaseProject.createProjectFromJson(json);
 
 			if (ProjectAction.ModifyProject(project))
 				return Tools.ToUTF8(ProjectAction.getProjectAsString(projectId));

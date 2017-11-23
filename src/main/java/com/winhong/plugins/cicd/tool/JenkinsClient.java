@@ -51,7 +51,12 @@ public class JenkinsClient {
 		this.password = password;
 
 	}
-
+	public String getCrumbField() {
+		return crumbField;
+	}
+	public String getCrumbValue(){
+		return crumb;
+	}
 	public static JenkinsClient defaultClient() throws InstantiationException, IllegalAccessException, IOException {
 		if (client == null) {
 			JenkinsConfig con = Config.getJenkinsConfig();

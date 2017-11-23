@@ -48,7 +48,11 @@ public class DownService {
 			// log.debug("length="+b.length);
 			// fis.read(b);
 			// String text = IOUtils.toString(fis, StandardCharsets.UTF_8.name());
-
+			if (client.getCrumbField() == null)
+				if (!client.getCrumb())
+					throw new IOException("get crumb fail");
+			log.debug(client.getCrumbField() + ":" + client.getCrumbValue());
+			response.setHeader(client.getCrumbField(), client.getCrumbValue());
 			response.setHeader("Content-Disposition", "attachment;filename=" + filename);// 为文件命名
 			response.addHeader("Content-type", "application/octet-stream");
 			response.addHeader("Content-Transfer-Encoding", "binary");

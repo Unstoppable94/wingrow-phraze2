@@ -25,6 +25,7 @@ import com.winhong.plugins.cicd.action.GroupAction;
 import com.winhong.plugins.cicd.action.UserAction;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
+import com.winhong.plugins.cicd.filter.UsePrivilegeFilter;
 import com.winhong.plugins.cicd.jwt.TokenUtil;
 import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
 import com.winhong.plugins.cicd.system.Config;
@@ -56,7 +57,7 @@ public class App {
 		ServletContextHandler context = new ServletContextHandler(server, "/");
 		// close for dev
 		config.register(JWTSecurityFilter.class);
-		// config.register(UsePrivilegeFilter.class);
+		config.register(UsePrivilegeFilter.class);
 
 		context.addServlet(jerseyServlet, "/webapi/*");
 
