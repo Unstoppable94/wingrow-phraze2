@@ -11,8 +11,9 @@ import com.winhong.plugins.cicd.property.Skip;
 public class PushImage extends Stage {
 
 	private final static String id="pushImage";
-	private final static String name="保存Image";
+	private final static String name="镜像保存信息配置";
 	private final static String description="保存Image到仓库";
+	//private final static String description=null;
 	
 	
 	

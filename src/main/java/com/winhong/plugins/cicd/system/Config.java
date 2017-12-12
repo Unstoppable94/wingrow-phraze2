@@ -317,18 +317,18 @@ public class Config {
 
 	}
 
-	// public static void saveMirrorConfig(RegistryMirrorConfig config)
-	// throws IOException, InstantiationException, IllegalAccessException {
-	// Config.saveConfig(config);
-	// RegistryList regList = Config.getRegistryList();
-	//
-	// String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
-	//
-	// String cmd = "dockerupdate.sh ";
-	// cmd += regList.getInscureString() + " --registry-mirror " + mirrorUrl;
-	// runShell(cmd);
-	//
-	// }
+	 public static void saveMirrorConfig(RegistryMirrorConfig config)
+	 throws IOException, InstantiationException, IllegalAccessException {
+	 Config.saveConfig(config);
+	 RegistryList regList = Config.getRegistryList();
+	
+	 String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
+	
+	 String cmd = "dockerupdate.sh ";
+	 cmd += regList.getInscureString() + " --registry-mirror " + mirrorUrl;
+	 runShell(cmd);
+	
+	 }
 
 	private static String runShell(String cmd) throws IOException {
 		Runtime rt = Runtime.getRuntime();

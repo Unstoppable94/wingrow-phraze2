@@ -26,7 +26,7 @@ public class ContinueOnFail extends Property{
 				0,
 				0,
 				"失败后是否继续",
-				"失败后默认不继续。"
+				"失败后默认不继续"
 				);
 	}
 	
@@ -44,7 +44,7 @@ public class ContinueOnFail extends Property{
 				0,
 				0,
 				"失败后是否继续",
-				"失败后默认不继续。"
+				"失败后默认不继续"
 				);
 	}
 	 

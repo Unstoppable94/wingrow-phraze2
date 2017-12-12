@@ -11,9 +11,9 @@ import com.winhong.plugins.cicd.property.commonString;
 public class DeployToRancher extends Stage {
 
 	private final static String id = "deployToRancher";
-	private final static String name = "部署应用";
+	private final static String name = "持续部署信息配置";
 	private final static String description = "部署应用到指定环境";
-
+	//private final static String description = null;
 	private Skip skip = new Skip();
 
 	final private static String environmentId = "environment";
@@ -28,19 +28,20 @@ public class DeployToRancher extends Stage {
 
 	final private static String argId = "arg";
 	private commonString arg = new commonString(argId, "", 0, 250,
-			"启动参数", "服务启动参数如 -p 8080:8080");
+			"启动参数", "服务启动参数如 -p 8080:8080，参数需要遵循docker的cli命令");
 
 	final private static String cmdId = "cmd";
 	private commonString cmd = new commonString(cmdId, "", 0, 250, "容器启动命令",
-			"Docker容器启动命令,可以不输");
+			"Docker容器启动命令,可以不输，不输入时使用容器的默认启动命令");
 
 	/**
 	 * 生产一个新的对象
 	 */
 	public DeployToRancher() {
 		super(id, name, description);
-		this.setProperty(environment);
 		this.setProperty(skip);
+		this.setProperty(environment);
+		//this.setProperty(skip);
 		this.setProperty(service);
 		this.setProperty(arg);
 		this.setProperty(cmd);

@@ -21,6 +21,8 @@ public class EnumList {
 	@Expose
 	String name;
 	
+	@Expose
+	String description;
 	
 	public EnumList() {
  	}
@@ -46,12 +48,17 @@ public class EnumList {
 	}
 
 
+	public EnumList(String id, String name, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+	}
+	
 	public EnumList(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
-	
-	
 
 }

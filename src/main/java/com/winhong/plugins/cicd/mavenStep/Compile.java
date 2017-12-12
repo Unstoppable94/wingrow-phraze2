@@ -12,7 +12,7 @@ import com.winhong.plugins.cicd.mavenProperty.MavenProperty;
 public class Compile extends Stage {
 
 	private final static String id="compile";
-	private final static String name="编译";
+	private final static String name="Maven编译信息配置";
 	private final static String description="调用Maven进行编译";
 	
 	
@@ -23,9 +23,9 @@ public class Compile extends Stage {
 	//InnerConfig.defaultConfig().getJdk()
 	
 	private JdkProperty jdk = new JdkProperty("jdk", "",
-			"JDK版本", "编译时候使用的JDK版本️ ");
+			"JDK版本", "选择编译时候使用的JDK版本️ ");
 	private MavenProperty maven = new MavenProperty("maven", "",
-			"Maven版本", "编译时候使用的Maven版本️ ");
+			"Maven版本", "选择编译时候使用的Maven版本️ ");
 	/**
 	 * 生产一个新的默认goal的complie对象
 	 */

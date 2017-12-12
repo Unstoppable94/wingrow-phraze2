@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
 public class MavenTest extends Stage {
 
 	private final static String id="mavenTest";
-	private final static String name="执行测试";
+	private final static String name="白箱测试信息配置";
 	private final static String description="调用Maven test 测试";
 	
 	
@@ -38,8 +38,9 @@ public class MavenTest extends Stage {
 	 */
 	public MavenTest() {
 		super(id, name, description);
- 		this.setProperty(continueOnfail);
 		this.setProperty(skip);
+ 		this.setProperty(continueOnfail);
+		//this.setProperty(skip);
 		this.setProperty(goal);
  	}
 	

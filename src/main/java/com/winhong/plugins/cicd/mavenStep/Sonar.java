@@ -19,7 +19,7 @@ import java.lang.reflect.Modifier;
 public class Sonar extends Stage {
 
 	private final static String id = "sonar";
-	private final static String name = "执行Sonar";
+	private final static String name = "Sonar扫描信息配置";
 	private final static String description = "调用Sonar server进行代码检查";
 
 	private ContinueOnFail continueOnfail = new ContinueOnFail();
@@ -32,8 +32,9 @@ public class Sonar extends Stage {
 	 */
 	public Sonar() {
 		super(id, name, description);
-		this.setProperty(continueOnfail);
 		this.setProperty(skip);
+		this.setProperty(continueOnfail);
+		//this.setProperty(skip);
 		
 	}
 

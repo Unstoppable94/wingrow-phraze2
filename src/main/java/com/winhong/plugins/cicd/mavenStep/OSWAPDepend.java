@@ -11,7 +11,7 @@ import com.winhong.plugins.cicd.property.Skip;
 public class OSWAPDepend extends Stage {
 
 	private final static String id="OSWAPDepend";
-	private final static String name="依赖库安全检查";
+	private final static String name="依赖库安全检查信息配置";
 	private final static String description="调用oswap dependancy 对依赖库执行安全检查";
 	
 	

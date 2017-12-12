@@ -13,7 +13,7 @@ import com.winhong.plugins.cicd.property.commonString;
 public class Findbugs extends Stage {
 
 	private final static String id="findbugs";
-	private final static String name="执行findbugs";
+	private final static String name="findbugs代码检查配置";
 	private final static String description="调用findbugs进行代码检查";
 	
 	
@@ -48,8 +48,9 @@ public class Findbugs extends Stage {
 	 */
 	public Findbugs() {
 		super(id, name, description);
- 		this.setProperty(continueOnfail);
 		this.setProperty(skip);
+ 		this.setProperty(continueOnfail);
+		//this.setProperty(skip);
 		this.setProperty(inFilterUrl);
 		this.setProperty(excludeFilterUrl);
  	}

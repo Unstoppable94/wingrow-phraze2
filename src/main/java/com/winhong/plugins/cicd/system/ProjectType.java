@@ -32,10 +32,10 @@ public class ProjectType {
 	static ArrayList<EnumList> stageDisplaylist = new ArrayList<EnumList>();
 	
 	static {
-		types.put(MavenProject, new ProjectTypeDefine("Maven",MavenProject.class,"WinGrow/config/MavenJobConfig.xml"));
+		types.put(MavenProject, new ProjectTypeDefine("Maven项目",MavenProject.class,"WinGrow/config/MavenJobConfig.xml"));
 		 
-		types.put(TraditionalDocker, new ProjectTypeDefine("传统Docker",TranditionalDockerProject.class,"WinGrow/config/TraditionalJobConfig.xml"));
-		types.put(MultistageDocker, new ProjectTypeDefine("多Stage Docker",MultiStageDockerProject.class,"WinGrow/config/MultiStageDocker.xml"));
+		types.put(TraditionalDocker, new ProjectTypeDefine("传统Docker项目",TranditionalDockerProject.class,"WinGrow/config/TraditionalJobConfig.xml"));
+		types.put(MultistageDocker, new ProjectTypeDefine("多Stage Docker项目",MultiStageDockerProject.class,"WinGrow/config/MultiStageDocker.xml"));
 
 		try {
 			initEnum();
@@ -65,7 +65,21 @@ public class ProjectType {
 			Iterator<String> keys = types.keySet().iterator();
 			 while(keys.hasNext()) { 
 				String k=keys.next();
-				relist.add(new EnumList(k,types.get(k).getDisplayName() ));
+				if(k == MavenProject){
+					String mavendes = "Maven项目：Maven 提供了标准的软件生命周期模型和构建模型，通过配置就能对项目进行全面的管理。";
+					relist.add(new EnumList(k,types.get(k).getDisplayName(), mavendes));
+				}
+				if(k == TraditionalDocker){
+					
+					String mulitstagedes = "传统docker项目的编译镜像和部署镜像分为俩个镜像，编译使用的镜像使用系统默认镜像，"
+							+ "不需要配置，用来发布的镜像需要制定dockerfile文件利用编译生成的程序包进行构建。";
+					relist.add(new EnumList(k,types.get(k).getDisplayName(), mulitstagedes));
+				}
+				if(k == MultistageDocker){
+					String traditonaldes = "使用多stage docker构建，您可以在Dockerfile中使用多个FROM语句。每个FROM指令可以使用不同的基础，并且每个指令都开始构建的新阶段。"
+							+ "您可以选择性地将文物从一个阶段复制到另一个阶段，在最终图像中留下您不需要的任何内容。";
+					relist.add(new EnumList(k,types.get(k).getDisplayName(), traditonaldes));
+				}
 				ProjectTypeDefine type=types.get(k);
 				Class<BaseProject> cls=type.getCls();
 				Workflow workflow = cls.newInstance().getWorkflow();
@@ -85,7 +99,7 @@ public class ProjectType {
 							
 					}
 					if (notfound) {
-						stageDisplaylist.add(new EnumList(id,name));
+						stageDisplaylist.add(new EnumList(id,name ));
 					}
 				}
 				 

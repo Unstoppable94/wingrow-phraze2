@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
 public class Artifact extends Stage {
 
 	private final static String id="artifact";
-	private final static String name="执行打包";
+	private final static String name="Maven打包信息配置";
 	private final static String description="打包输出物";
 	
 	
@@ -37,8 +37,9 @@ public class Artifact extends Stage {
 	 */
 	public Artifact() {
 		super(id, name, description);
- 		this.setProperty(continueOnfail);
 		this.setProperty(skip);
+ 		this.setProperty(continueOnfail);
+		//this.setProperty(skip);
   	}
 	
 	

@@ -20,7 +20,7 @@ import java.lang.reflect.Modifier;
 public class CreateImage extends Stage {
 
 	private final static String id = "createImage";
-	private final static String name = "创建Image";
+	private final static String name = "镜像打包信息配置";
 	private final static String description = "生成docker images";
 
 	//private ContinueOnFail continueOnfail = new ContinueOnFail();
@@ -36,7 +36,7 @@ public class CreateImage extends Stage {
 	private commonString tag = new commonString(tagId, "", 1, 30,
 			"Docker tag", "docker tag, 格式为dir/image,系统生成的时候会默认在TAG后面加上编译执行序号");
 
-	private commonString dockerfile=new commonString("dockerfile","./Dockerfile",2,100, "Dockerfile","默认为代码根目录下的Dockerfile " );
+	private commonString dockerfile=new commonString("dockerfile","./Dockerfile",2,100, "Dockerfile","默认为代码根目录下的Dockerfile文件 " );
 
 
 	 
