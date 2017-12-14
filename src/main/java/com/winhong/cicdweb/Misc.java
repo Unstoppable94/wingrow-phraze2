@@ -18,6 +18,7 @@ import javax.ws.rs.Produces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
 import com.winhong.plugins.cicd.system.ProjectType;
@@ -382,5 +383,44 @@ public class Misc {
 			return WebTools.Error(e);
 		}
 	}
+	
+	//ldapConfig
+	@POST
+	@Path("/ldap")
+	@Produces("application/json;charset=utf-8")
+	@Consumes("application/json")
+	public String saveLdap(String json) {
+		try {
 
+			OpenLDAPConfig config = (OpenLDAPConfig) Tools.objectFromJsonString(json,
+					OpenLDAPConfig.class);
+			Config.saveConfig(config);
+			return json;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.debug(e.getLocalizedMessage());
+			return WebTools.Error(e);
+		}
+	}
+	@GET
+	@Path("/ldap")
+	@Produces("application/json;charset=utf-8")
+	public String getLdap() {
+		try {
+			return Tools.getJson(Config.getOpenLDAPConfig());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.debug(e.getLocalizedMessage());
+			return WebTools.Error(e);
+		}
+	}
+	@PUT
+	@Path("/ldap")
+	@Produces("application/json;charset=utf-8")
+	@Consumes("application/json")
+	public String PUTsaveLdap(String json) {
+		return saveLdap(json);
+	}
 }
