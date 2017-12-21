@@ -241,6 +241,15 @@ public class ProjectView {
 
 			// filter
 			if (buildStatus != null && !buildStatus.equals("") && !buildStatus.equalsIgnoreCase("ALL")) {
+				if(buildStatus.equals("failed")) {
+					buildStatus = "FAILURE";
+				}
+				if(buildStatus.equals("success")) {
+					buildStatus = "SUCCESS";
+				}
+				if(buildStatus.equals("stop")) {
+					buildStatus = "ABORTED";
+				}
 				if (!build.getResult().equals(buildStatus)) {
 					continue;
 				}
@@ -296,10 +305,11 @@ public class ProjectView {
 				b.setLastStage(stage.getName());
 				b.setLastStageStatus(stage.getStatus());
 
-				list.add(b);
+				//list.add(b);
 			}
 			// if (list.size()>(start+maxLine))
 			// break;
+			list.add(b);
 		}
 
 		// int start,int maxLine
@@ -311,7 +321,9 @@ public class ProjectView {
 		int end = start + maxLine;
 		if (end >= listsize)
 			end = listsize - 1;
-
+		if(end <= 0){
+			end = listsize;
+		}
 		if (end < start)
 			end = start;
 

@@ -13,7 +13,9 @@ public class Token implements Serializable {
     
     @Expose
     boolean mustChangePassword;
-
+    
+    @Expose
+    private String role;
     public Token() { // for some reason the jackson engine needs a zero arg constructor.
     }
 
@@ -41,5 +43,10 @@ public class Token implements Serializable {
 		this.mustChangePassword = mustChangePassword;
 	}
 
-    
+    public String getRole() {
+		return role;
+	}
+    public void setRole(String role) {
+		this.role = role;
+	}
 }

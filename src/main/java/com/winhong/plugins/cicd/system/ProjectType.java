@@ -66,18 +66,20 @@ public class ProjectType {
 			 while(keys.hasNext()) { 
 				String k=keys.next();
 				if(k == MavenProject){
-					String mavendes = "Maven项目：Maven 提供了标准的软件生命周期模型和构建模型，通过配置就能对项目进行全面的管理。";
+					String mavendes = "Maven项目提供了标准的软件生命周期模型和构建模型，通过配置就能对项目进行全面的管理，"
+							+ "Maven将构建的过程抽象成一个个的生命周期过程，在不同的阶段使用不同的已实现插件来完成相应的实际工作，这种设计方法极大的避免了设计和脚本编码的重复，极大的实现了复用。";
 					relist.add(new EnumList(k,types.get(k).getDisplayName(), mavendes));
 				}
 				if(k == TraditionalDocker){
 					
-					String mulitstagedes = "传统docker项目的编译镜像和部署镜像分为俩个镜像，编译使用的镜像使用系统默认镜像，"
-							+ "不需要配置，用来发布的镜像需要制定dockerfile文件利用编译生成的程序包进行构建。";
+					String mulitstagedes = "传统docker项目的编译镜像和部署镜像分为两个镜像，编译和发布使用同一个镜像，"
+							+ "需要在流水线中设置用来编译和发布的镜像参数。";
 					relist.add(new EnumList(k,types.get(k).getDisplayName(), mulitstagedes));
 				}
 				if(k == MultistageDocker){
-					String traditonaldes = "使用多stage docker构建，您可以在Dockerfile中使用多个FROM语句。每个FROM指令可以使用不同的基础，并且每个指令都开始构建的新阶段。"
-							+ "您可以选择性地将文物从一个阶段复制到另一个阶段，在最终图像中留下您不需要的任何内容。";
+					String traditonaldes = "多stage docker构建需要Docker引擎的版本为17.05或更高版本，"
+							+ "使用多stage docker构建，您可以在Dockerfile中使用多个FROM语句。每个FROM指令可以使用不同的基础镜像，并且每个指令都开始新的构建阶段，"
+							+ "您可以选择性地将构建物从一个阶段复制到另一个阶段，在最终发布的镜像中只留下需要部署的代码包";
 					relist.add(new EnumList(k,types.get(k).getDisplayName(), traditonaldes));
 				}
 				ProjectTypeDefine type=types.get(k);

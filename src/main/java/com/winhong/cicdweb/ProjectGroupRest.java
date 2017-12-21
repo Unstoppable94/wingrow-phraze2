@@ -37,7 +37,7 @@ public class ProjectGroupRest {
 	@Produces("application/json;charset=UTF-8")
 	@Consumes("application/json;charset=UTF-8")
 	public String listAllGroup(@QueryParam("firstResult")int firstResult,
-			@QueryParam("maxResult")int maxResult,@QueryParam("groupName")String name){
+			@QueryParam("maxResult")int maxResult,@QueryParam("name")String name){
 		try {
 			log.debug("firstResult:"+firstResult+"maxResult:"+maxResult);
 			//TODO group name
@@ -95,8 +95,12 @@ public class ProjectGroupRest {
 			
 			pg.setId("Group"+System.currentTimeMillis());
 			String groupId = pg.getId();
-			GroupAction.createGroup(pg);
-			return Tools.ToUTF8(getProjectGroup(groupId));
+			if(ProjectGroup.listAllGroupTo(pg.getName()).size()<0){
+				GroupAction.createGroup(pg);
+				return Tools.ToUTF8(getProjectGroup(groupId));
+			}
+			//return "{\"result\":\"项目已存在\"}";
+			return WebTools.Error("创建失败，项目已经存在");
 						
 		} catch (Exception e) {
  			e.printStackTrace();

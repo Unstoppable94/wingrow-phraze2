@@ -65,7 +65,7 @@ public class Login {
 			Token token = new Token();
 			token.setAuthorization(jwtString);
 			token.setExpires(TokenUtil.getExpiryDate().getTime());
-			
+			token.setRole(role);
 			if (user.getUserType().equals(User.LOCAL) && user.getPasswordExpired()>0) {
 				token.setMustChangePassword(true);
 			}

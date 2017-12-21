@@ -288,6 +288,52 @@ public class ProjectGroup {
 		return Tools.getJson(info);
 
 	}
+	
+	//用于项目同名判断
+	public static List<ProjectGroupJsonConfig> listAllGroupTo(String groupName)
+			throws MalformedURLException, IOException {
+
+		InnerConfig config = InnerConfig.defaultConfig();
+		File folder = new File(config.getDataDir() + projectGroupDir);
+
+		File[] listOfFiles = folder.listFiles();
+		ArrayList<ProjectGroupJsonConfig> groups = new ArrayList<ProjectGroupJsonConfig>();
+		log.debug("groupName:" + groupName);
+
+		log.debug("groupName:" + folder.getAbsolutePath());
+		if (listOfFiles==null){
+			new ProjectGroup().new projectGroupList();
+		}
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				String fileName = listOfFiles[i].getName();
+				log.debug("filename:" + fileName);
+				if (fileName.endsWith(".json")) {
+					
+					ProjectGroupJsonConfig u = (ProjectGroupJsonConfig) Tools
+							.objectFromJsonFile(
+									listOfFiles[i].getAbsolutePath(),
+									ProjectGroupJsonConfig.class);
+					if (groupName != null && !groupName.isEmpty())
+						if (u.getName().indexOf(
+								groupName) < 0) {
+							continue;
+						}
+					log.debug("add group:" + u.getName());
+
+					groups.add(u);
+				}
+
+			}
+		}
+
+		//projectGroupList group = new ProjectGroup().new projectGroupList();
+		//group.setResults(groups);
+		//group.setTotal(group.getResults().size());
+
+		return groups;
+
+	}
 
 	
 	

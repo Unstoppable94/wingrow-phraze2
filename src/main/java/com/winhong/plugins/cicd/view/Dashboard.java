@@ -196,10 +196,11 @@ public class Dashboard {
 	 */
 	protected static String getRssBuids(String rss,int maxNumber)
 			throws Exception {
-		if (maxNumber<=0)
-			maxNumber=MaxNumberOfList;
- 
+		//if (maxNumber<=0)
+			//maxNumber=MaxNumberOfList;
+			
 		ArrayList<RssBuild> failbuilds = JenkinsRss.getInfo(rss);
+		maxNumber = failbuilds.size();
 		ArrayList<PipelineRun> list = new ArrayList<PipelineRun>();
 		for (int i = 0; i < failbuilds.size(); i++) {
 			if (i == maxNumber) {

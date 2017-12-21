@@ -21,6 +21,7 @@ public class Stage {
 	@Expose
 	private long durationMillis;
 	@Expose
+	
 	private long pauseDurationMillis;
 
 	@Expose

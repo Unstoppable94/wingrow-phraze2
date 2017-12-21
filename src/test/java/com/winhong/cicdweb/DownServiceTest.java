@@ -34,8 +34,9 @@ public class DownServiceTest {
 		     //       .thenReturn(new PrintWriter(new StringWriter()));
 			
 			OngoingStubbing<ServletOutputStream> out = Mockito.when( response.getOutputStream() ).thenReturn(outputStream );
-			d.Download("/job/pro1505966862278/4/artifact/jenkins-pro1505966862278-4.zip", response);
- 
+			//d.Download("/job/pro1505966862278/4/artifact/jenkins-pro1505966862278-4.zip", response);
+
+			d.Download("/job/pro1509613746515/2/consoleText", response);
 
 			
  		} catch ( IOException e) {

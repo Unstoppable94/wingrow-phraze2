@@ -2,6 +2,7 @@ package com.winhong.cicdweb;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.rometools.rome.io.FeedException;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.view.Dashboard;
@@ -89,6 +91,25 @@ public class DashboardRest {
 	}
 	
 	
+//	@GET
+//	@Path("recentruns")
+//	@Produces("application/json;charset=utf-8")
+//	public String getbuidls(@QueryParam("status")String status,@QueryParam("maxNumber")int maxNumber){
+//		try {
+//			log.debug("status:"+status);
+//			if (maxNumber<=0)
+//				maxNumber=5;
+//			if (status!=null && status.equals("failed"))
+//					return  Tools.ToUTF8(Dashboard.getFailedBuids(maxNumber));
+//			else
+//				return Tools.ToUTF8(Dashboard.getLatestExecutedBuid(maxNumber));
+//			
+//		} catch (Exception e) {
+// 			e.printStackTrace();
+//			log.debug(e.getLocalizedMessage());
+// 			return WebTools.Error(e);
+//		}
+//	}
 	@GET
 	@Path("recentruns")
 	@Produces("application/json;charset=utf-8")
@@ -98,7 +119,7 @@ public class DashboardRest {
 			if (maxNumber<=0)
 				maxNumber=5;
 			if (status!=null && status.equals("failed"))
-					return  Tools.ToUTF8(Dashboard.getFailedBuids(maxNumber));
+				return  Tools.ToUTF8(Dashboard.getFailedBuids(maxNumber));
 			else
 				return Tools.ToUTF8(Dashboard.getLatestExecutedBuid(maxNumber));
 			
@@ -108,5 +129,4 @@ public class DashboardRest {
  			return WebTools.Error(e);
 		}
 	}
-
 }
