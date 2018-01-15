@@ -83,7 +83,10 @@ public class UsePrivilegeFilter implements ContainerRequestFilter {
 					|| path.equalsIgnoreCase("SelfInfo")  ){
  				return;
 			}
-			
+			if ("GET".equalsIgnoreCase(method) && "download".equals(path) ) {
+				// pass through the filter.
+				return;
+			}
 			String authorizationHeader = ((ContainerRequest) requestContext).getHeaderString(JWTSecurityFilter.AuthHeader);
 			if (authorizationHeader == null) {
 				throw new WebApplicationException(Response.Status.UNAUTHORIZED);

@@ -37,7 +37,7 @@ public class DownService {
 	@Produces(MediaType.APPLICATION_OCTET_STREAM) // 返回方式为流
 	public byte[] Download(@QueryParam("name") String path, @Context HttpServletResponse response)
 			throws FileNotFoundException {
-
+		path = path.replaceAll("%2F", "/");
 		log.debug("filename:" + path);
 		try {
 			JenkinsClient client = JenkinsClient.defaultClient();

@@ -60,6 +60,10 @@ public class JWTSecurityFilter implements ContainerRequestFilter {
 			// pass through the filter.
 			return;
 		}
+		if ("GET".equalsIgnoreCase(method) && "download".equals(path) ) {
+			// pass through the filter.
+			return;
+		}
 		String authorizationHeader = ((ContainerRequest) requestContext).getHeaderString(AuthHeader);
 		if (authorizationHeader == null) {
 			throw new WebApplicationException(Response.Status.UNAUTHORIZED);

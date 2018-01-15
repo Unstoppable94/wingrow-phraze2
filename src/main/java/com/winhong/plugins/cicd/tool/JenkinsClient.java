@@ -162,7 +162,7 @@ public class JenkinsClient {
 		// URL serverUrl = new URL(
 		// "http://xiehq:acd12345@10.211.55.6:8080/createItem?name="
 		// + jobId);
-
+		//http://jenkins:jenkins@10.10.112.89:8080/jenkins/createItem
 		// Jenkins URL localhost:8080, job named 'test'
 		return httpJobModify(serverUrl, content);
 

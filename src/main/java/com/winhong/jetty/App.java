@@ -322,43 +322,46 @@ public class App {
 
 	public static void initRegisterConfig() throws IOException, InstantiationException, IllegalAccessException {
 
+//		RegistryList registries = new RegistryList();
+//		String DOCKER_REGISTRER_SERVER = System.getenv("REGISTRY_IP");
+//		String DOCKER_REGISTRER_AUTH = System.getenv("REGISTRY_AUTH");
+//		String DOCKER_REGISTRER_INSECURE = System.getenv("REGISTRY_INSCURE");
+//		RegistryConfig register = null;
+//		if (DOCKER_REGISTRER_SERVER != null && DOCKER_REGISTRER_SERVER.isEmpty() == false) {
+//			// String server, String auth, String email, boolean b
+//			String REGISTRY_PORT = System.getenv("REGISTRY_PORT");
+//			if (REGISTRY_PORT!=null && REGISTRY_PORT.equalsIgnoreCase("80")==false && REGISTRY_PORT.equalsIgnoreCase("443")==false )
+//				DOCKER_REGISTRER_SERVER=DOCKER_REGISTRER_SERVER+":"+REGISTRY_PORT;
+//			register = new RegistryConfig(DOCKER_REGISTRER_SERVER, DOCKER_REGISTRER_AUTH, "",
+//					Boolean.parseBoolean(DOCKER_REGISTRER_INSECURE));
+//			registries.getRegistries().add(register);
+//			Config.saveConfig(registries);
+//
+//		}
+//
+//		 //Docker Mirror setting in jenkins slave ,wingrow don't need to set it
+//		 RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
+//		 String DOCKER_MIRROR = System.getenv("DOCKER_MIRROR");
+//		
+//		 if (DOCKER_MIRROR != null && DOCKER_MIRROR.isEmpty() == false) {
+//		 if (DOCKER_MIRROR.startsWith("http")) {
+//		 dockerMirror.setUrl(DOCKER_MIRROR);
+//		 Config.saveConfig(dockerMirror);
+//		
+//		 }
+//		 } else if (register != null) {
+//		 if (register.isSecure())
+//		 dockerMirror.setUrl("https://" + register.getServer());
+//		 else
+//		 dockerMirror.setUrl("http://" + register.getServer());
+//		 Config.saveConfig(dockerMirror);
+//		 }
 		RegistryList registries = new RegistryList();
-
-		
-		String DOCKER_REGISTRER_SERVER = System.getenv("REGISTRY_IP");
-		String DOCKER_REGISTRER_AUTH = System.getenv("REGISTRY_AUTH");
-		String DOCKER_REGISTRER_INSECURE = System.getenv("REGISTRY_INSCURE");
-		RegistryConfig register = null;
-		if (DOCKER_REGISTRER_SERVER != null && DOCKER_REGISTRER_SERVER.isEmpty() == false) {
-			// String server, String auth, String email, boolean b
-			String REGISTRY_PORT = System.getenv("REGISTRY_PORT");
-			if (REGISTRY_PORT!=null && REGISTRY_PORT.equalsIgnoreCase("80")==false && REGISTRY_PORT.equalsIgnoreCase("443")==false )
-				DOCKER_REGISTRER_SERVER=DOCKER_REGISTRER_SERVER+":"+REGISTRY_PORT;
-			register = new RegistryConfig(DOCKER_REGISTRER_SERVER, DOCKER_REGISTRER_AUTH, "",
-					Boolean.parseBoolean(DOCKER_REGISTRER_INSECURE));
-			registries.getRegistries().add(register);
-			Config.saveConfig(registries);
-
-		}
-
-		// Docker Mirror setting in jenkins slave ,wingrow don't need to set it
-		// RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
-		// String DOCKER_MIRROR = System.getenv("DOCKER_MIRROR");
-		//
-		// if (DOCKER_MIRROR != null && DOCKER_MIRROR.isEmpty() == false) {
-		// if (DOCKER_MIRROR.startsWith("http")) {
-		// dockerMirror.setUrl(DOCKER_MIRROR);
-		// Config.saveConfig(dockerMirror);
-		//
-		// }
-		// } else if (register != null) {
-		// if (register.isSecure())
-		// dockerMirror.setUrl("https://" + register.getServer());
-		// else
-		// dockerMirror.setUrl("http://" + register.getServer());
-		// Config.saveConfig(dockerMirror);
-		// }
-
+		Config.saveConfig(registries);
+		RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();
+		Config.saveConfig(dockerMirror);
+		RegistryConfig registrie = new RegistryConfig();
+		Config.saveConfig(registrie);
 	}
 
 //	public static void initTestConfig() throws IOException, InstantiationException, IllegalAccessException {

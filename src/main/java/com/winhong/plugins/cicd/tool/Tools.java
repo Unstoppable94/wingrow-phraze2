@@ -75,10 +75,13 @@ public class Tools {
 		FileWriter fileWrite = null;
 		try {
 			fileWrite = new FileWriter(file);
-			if (encrypt)
-				fileWrite.write(Encryptor.encrypt(str));
-			else
-				fileWrite.write(str);
+			if(str != null){
+				if (encrypt)
+					fileWrite.write(Encryptor.encrypt(str));
+				else
+					fileWrite.write(str);
+			}
+
 		} finally {
 			if (fileWrite != null)
 					fileWrite.close();

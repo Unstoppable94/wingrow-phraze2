@@ -95,7 +95,9 @@ public class ProjectGroupRest {
 			
 			pg.setId("Group"+System.currentTimeMillis());
 			String groupId = pg.getId();
-			if(ProjectGroup.listAllGroupTo(pg.getName()).size()<0){
+			//判断是否项目同名
+			int size = ProjectGroup.listAllGroupTo(pg.getName()).size();
+			if(size <= 0){
 				GroupAction.createGroup(pg);
 				return Tools.ToUTF8(getProjectGroup(groupId));
 			}
