@@ -112,7 +112,7 @@ public class Config {
 		 if (dir.exists() == false)
 		 dir.mkdirs();
 		 String clijson = home + "/.rancher/cli.json";
-		 log.debug(" clijson=" + clijson);
+		 log.debug("clijson=" + clijson);
 		 RancherConfig c = (RancherConfig) config;
 		 File file = new File(clijson);
 		 if (file.exists()) {

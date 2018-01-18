@@ -14,6 +14,9 @@ public class JobView {
 	
 	@Expose String name;
 	
+	//项目类型ID判断，流水线搜索
+	@Expose
+	private String typeId;
 
 	@Expose
 	private String projectUrl;
@@ -113,5 +116,10 @@ public class JobView {
 	public void setImageCmd(String imageCmd) {
 		this.imageCmd = imageCmd;
 	}
-
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
+	public String getTypeId() {
+		return typeId;
+	}
 }

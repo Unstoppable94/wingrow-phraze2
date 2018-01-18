@@ -18,6 +18,7 @@ public class NotifyActionTest {
 			fail();
 		}
 		}
+	//邮箱TEST
 	@Test
 	public void testSendSmtpEmail_() throws Exception {
 		SMTPConfig smtpConfig = new SMTPConfig();

@@ -20,7 +20,19 @@ import com.winhong.plugins.cicd.user.User;
 public class UserActionTest extends UserAction {
 	
 	static User user=new User();
+	
+	//批量增加用户test
+	@Test
+	public void adduserBatch() throws Exception{
 
+		for(int i=1; i<=12; i++){
+			User user = new User();
+			user.setUserType("local");
+			user.setRole("admin");
+			user.setUsername("admin"+i);
+			UserAction.addUser(user);
+		}
+	}
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		

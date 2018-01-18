@@ -144,8 +144,8 @@ public class ProjectGroup {
 
 		}
 		
-		group.setTotal(group.getResults().size());
-
+		//group.setTotal(group.getResults().size());
+		group.setTotal(groups.size());
 		return Tools.getJson(group);
 
 	}
@@ -229,7 +229,19 @@ public class ProjectGroup {
 				continue;
 			}
 			//set display name 
-			j.setProjectType(ProjectType.getDisplayName(pro.getBaseInfo().getProjectType()));
+			String projectType = ProjectType.getDisplayName(pro.getBaseInfo().getProjectType());
+			j.setProjectType(projectType);
+			
+			//增加TypeId判断
+			if("Maven项目".equals(projectType)) {
+				j.setTypeId("mavenProject");
+			}
+			if("传统Docker项目".equals(projectType)) {
+				j.setTypeId("traditionalDocker");
+			}
+			if("多Stage Docker项目".equals(projectType)) {
+				j.setTypeId("multistageDocker");
+			}
 			if (build == null) {
 				j.setStatus(Tools.NOTBUILD);
 			} else {

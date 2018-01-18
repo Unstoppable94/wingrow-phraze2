@@ -57,7 +57,8 @@ public class UserView {
 			ret.users.add(user);
 
 		}
-		ret.total = ret.users.size();
+		//ret.total = ret.users.size();
+		ret.total = v.size();
 		// replace to results to reduce web modify job
 		return Tools.getJson(ret).replaceFirst("users", "results");
 
