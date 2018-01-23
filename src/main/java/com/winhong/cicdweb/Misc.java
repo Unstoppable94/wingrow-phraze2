@@ -18,6 +18,9 @@ import javax.ws.rs.Produces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.winhong.plugins.cicd.action.ConfigServerAction;
+import com.winhong.plugins.cicd.data.base.RegistryOuth;
 import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
 import com.winhong.plugins.cicd.system.Config;
 import com.winhong.plugins.cicd.system.InnerConfig;
@@ -249,6 +252,10 @@ public class Misc {
 
 			RegistryMirrorConfig config = (RegistryMirrorConfig) Tools
 					.objectFromJsonString(json, RegistryMirrorConfig.class);
+			
+			//jenkins slave config
+			String response = ConfigServerAction.httpTest("daemon", json);
+			log.debug("jenkins slave mirror post: " + response);
 			Config.saveMirrorConfig(config);
 			return json;
 
@@ -264,7 +271,19 @@ public class Misc {
 	@Produces("application/json;charset=utf-8")
 	@Consumes("application/json")
 	public String PUTMirror(String json) {
-		return saveMirror(json);
+		try {
+			
+			//jenkins slave config
+			String response = ConfigServerAction.httpTest("daemon", json);
+			log.debug("jenkins slave mirror post: " + response);
+			return saveMirror(json);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.debug(e.getLocalizedMessage());
+			return WebTools.Error(e);
+		}
+		
 	}
 
 	@GET
@@ -308,6 +327,8 @@ public class Misc {
 				return WebTools.Error("ServerName 不能修改！");
 
 			}
+			//slave
+			ConfigServerAction.configRegistryServer(config);
 			Config.saveRegistry(config);
 			return json;
 
@@ -340,6 +361,8 @@ public class Misc {
 					return WebTools.Error("仓库配置已经存在！");
 				}
 			}
+			//slave
+			ConfigServerAction.configRegistryServer(config);
 			Config.saveRegistry(config);
 			return json;
 

@@ -289,13 +289,13 @@ public class Config {
 		log.debug("add/modify" + registry.getServer());
 		Config.saveConfig(regList);
 
-		if (registry.isReboot() && registry.isSecure() == false) {
-			String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
-
-			String cmd = "dockerupdate.sh ";
-			cmd += regList.getInscureString() + "  --registry-mirror " + mirrorUrl;
-			runShell(cmd);
-		}
+//		if (registry.isReboot() && registry.isSecure() == false) {
+//			String mirrorUrl = Config.getRegistryMirrorConfig().getUrl();
+//
+//			String cmd = "dockerupdate.sh ";
+//			cmd += regList.getInscureString() + "  --registry-mirror " + mirrorUrl;
+//			runShell(cmd);
+//		}
 
 		return true;
 

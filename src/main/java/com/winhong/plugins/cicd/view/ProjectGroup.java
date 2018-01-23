@@ -90,7 +90,38 @@ public class ProjectGroup {
 			throws MalformedURLException, IOException {
 		return listAllGroup(null, start, maxLine);
 	}
+	//不分页，获取所有项目列表
+	public static String allGroup() throws MalformedURLException, IOException{
+		InnerConfig config = InnerConfig.defaultConfig();
+		File folder = new File(config.getDataDir() + projectGroupDir);
+		
+		File[] listOfFiles = folder.listFiles();
+		ArrayList<ProjectGroupJsonConfig> groups = new ArrayList<ProjectGroupJsonConfig>();
+		log.debug("folder path: " + folder.getAbsolutePath());
+		if (listOfFiles==null){
+			return Tools.getJson(new ProjectGroup().new projectGroupList());
+		}
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				String fileName = listOfFiles[i].getName();
+				log.debug("filename:" + fileName);
+				if (fileName.endsWith(".json")) {
+					
+					ProjectGroupJsonConfig u = (ProjectGroupJsonConfig) Tools
+							.objectFromJsonFile(
+									listOfFiles[i].getAbsolutePath(),
+									ProjectGroupJsonConfig.class);
 
+					log.debug("add group:" + u.getName());
+
+					groups.add(u);
+				}
+			}
+		}
+		return Tools.getJson(groups);
+	}
+	
+	//分页获取列表
 	public static String listAllGroup(String groupName, int start, int maxLine)
 			throws MalformedURLException, IOException {
 
@@ -101,7 +132,7 @@ public class ProjectGroup {
 		ArrayList<ProjectGroupJsonConfig> groups = new ArrayList<ProjectGroupJsonConfig>();
 		log.debug("groupName:" + groupName);
 
-		log.debug("groupName:" + folder.getAbsolutePath());
+		log.debug("folder path:" + folder.getAbsolutePath());
 		if (listOfFiles==null){
 			return Tools.getJson(new ProjectGroup().new projectGroupList());
 		}

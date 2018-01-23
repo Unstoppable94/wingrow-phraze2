@@ -8,7 +8,7 @@ public class Trigger {
 	
 	public final String typeId[]={"manual","commit","crontab","period"};
 	
-	private final String typeName[]={"手工触发","有提交就触发","Crontab定时","间隔固定时间（分钟）"};
+	private final String typeName[]={"手工触发","有提交就触发","crontab定时","间隔固定时间（分钟）"};
 	
 	/**
 	 * 触发类型，默认手工触发

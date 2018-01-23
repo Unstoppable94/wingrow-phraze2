@@ -19,7 +19,7 @@ public class Encryptor {
 		// XVFcEFYu4dm62P7+wFOChA==
 	private	static final String initVector = "RandomInitVector"; // 16 bytes IV
 		
-	public static String encrypt( String value) {
+	public static String encrypt(String value) {
 		try {
 			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
 			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");

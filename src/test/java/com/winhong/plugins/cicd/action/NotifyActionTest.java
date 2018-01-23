@@ -20,7 +20,7 @@ public class NotifyActionTest {
 		}
 	//邮箱TEST
 	@Test
-	public void testSendSmtpEmail_() throws Exception {
+	public void testSendSmtpEmail_1() throws Exception {
 		SMTPConfig smtpConfig = new SMTPConfig();
 		smtpConfig.setHost("smtp.winhong.com");
 		smtpConfig.setPort(25);
@@ -31,5 +31,9 @@ public class NotifyActionTest {
 		String content = "test mail";
 		NotifyAction.SendSmtpEmail(smtpConfig, to, subject, content);
 	}
-
+	@Test
+	public static void main(String args[]) throws Exception {
+		// TODO Auto-generated method stub
+		NotifyAction.checkProjectStatus();
+	}
 }

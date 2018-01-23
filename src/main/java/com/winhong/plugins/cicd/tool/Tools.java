@@ -67,7 +67,10 @@ public class Tools {
 
 		saveStringToFile(str, filename, true);
 	}
+	public static void saveStringToFile_decrypt(String str, String filename) throws IOException {
 
+		saveStringToFile(str, filename, false);
+	}
 	public static void saveStringToFile(String str, String filename, boolean encrypt) throws IOException {
 		File file = new File(filename);
 		if (!file.exists())

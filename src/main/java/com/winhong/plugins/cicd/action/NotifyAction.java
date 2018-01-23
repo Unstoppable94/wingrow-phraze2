@@ -212,14 +212,13 @@ public class NotifyAction {
 
 		HashMap<String, sendlogItem> sendlog = new HashMap<String, sendlogItem>();
 
-		Type type = new TypeToken<HashMap<String, sendlogItem>>() {
-		}.getType();
+		Type type = new TypeToken<HashMap<String, sendlogItem>>() {}.getType();
 
 		if (sendLogFile.exists()) {
 			InputStream fis = new FileInputStream(sendLogFile);
 			// create JsonReader object
 			JsonReader jsonReader = new JsonReader(new InputStreamReader(fis));
-
+			//System.out.println(Tools.readResource("WinGrow/config/notifyLog.json", true));
 			sendlog = gson.fromJson(jsonReader, type);
 		}
 		if (sendlog == null)
@@ -268,7 +267,6 @@ public class NotifyAction {
 						&& !project.getBaseInfo().getMailOnSuccess().equals("")) {
 					sendResult = SendNodifyEmail(smtpConfig, successTemplate, project.getBaseInfo().getMailOnSuccess(),
 							project.getBaseInfo(), job);
-
 				}
 			}
 
@@ -284,7 +282,7 @@ public class NotifyAction {
 
 		String res = gson.toJson(sendlog, type);
 
-		Tools.saveStringToFile(res, logFileName);
+		Tools.saveStringToFile_decrypt(res, logFileName);
 		log.debug("save check  result to " + logFileName);
 	}
 
@@ -359,7 +357,11 @@ public class NotifyAction {
 		public void setSendFlag(String sendFlag) {
 			this.sendFlag = sendFlag;
 		}
-
+		@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			return  "[projectId = " + projectId + ", buildId = " + buildId + ", sendFlag = " + sendFlag +", buildId = " + buildId +", sendResult = " + sendResult +"]";
+		}
 	}
 
 }

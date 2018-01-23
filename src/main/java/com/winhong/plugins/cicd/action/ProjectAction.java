@@ -257,7 +257,7 @@ public class ProjectAction {
 		//InnerConfig config = InnerConfig.defaultConfig();
 
 		File dir = getProjectDirName(projectId);
-		
+		//File dir = getProjectDirName("pro1516258836438");
 		String LatestJsonfilename = dir.getAbsolutePath()
 				+ Latestjsonfile;
 		//log.debug("filename:"+LatestJsonfilename);
@@ -278,12 +278,13 @@ public class ProjectAction {
 			throws IOException, InstantiationException, IllegalAccessException {
 
 		String filename=ProjectType.getConfigXml(project.getBaseInfo().getProjectType());
-		log.debug("config xml:"+filename);
+		log.debug("config xml:" + filename);
 		//configxml template saving without encrypt
 		String projectXml = Tools.readResource(filename,false);
 
 		ProjectBaseInfo baseinfo = project.getBaseInfo();
 		String triggerType = baseinfo.getTrigger();
+		log.debug("trigger type:" + triggerType);
 		if (triggerType != null
 				&& (triggerType.equalsIgnoreCase("period") || triggerType
 						.equalsIgnoreCase("crontab"))) {

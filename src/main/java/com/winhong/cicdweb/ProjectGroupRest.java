@@ -150,4 +150,22 @@ public class ProjectGroupRest {
  			return WebTools.Error(e);
 		}
 	}
+	
+	//流水线创建中项目组的列表展示
+	@GET
+	@Path("/all")
+	@Produces("application/json;charset=UTF-8")
+	@Consumes("application/json;charset=UTF-8")
+	public String allGroup(){
+		try {
+			//log.debug("firstResult:"+firstResult+"maxResult:"+maxResult);
+			//TODO group name
+			return Tools.ToUTF8(ProjectGroup.allGroup());
+			
+		} catch (Exception e) {
+ 			e.printStackTrace();
+			log.debug(e.getLocalizedMessage());
+ 			return WebTools.Error(e);
+		}
+ 	}
 }

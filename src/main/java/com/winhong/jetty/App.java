@@ -7,6 +7,8 @@ import java.net.InetSocketAddress;
 import java.nio.file.NoSuchFileException;
 import java.util.logging.Level;
 
+import javax.management.Notification;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -22,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import com.winhong.plugins.cicd.action.GroupAction;
+import com.winhong.plugins.cicd.action.NotifyAction;
+import com.winhong.plugins.cicd.action.SendEmailTimer;
 import com.winhong.plugins.cicd.action.UserAction;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
@@ -60,7 +64,7 @@ public class App {
 		config.register(UsePrivilegeFilter.class);
 
 		context.addServlet(jerseyServlet, "/webapi/*");
-
+		
 		try {
 
 			initDirs();
@@ -79,6 +83,7 @@ public class App {
 		}
 		try {
 			server.start();
+			new SendEmailTimer(10);
 			server.join();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -417,7 +422,7 @@ public class App {
 				defaultUser.setPassword(UserAction.defaultPassword);
 				UserAction.addUser(defaultUser);
 
-			}
-		 
+			} 
 	}
+	
 }
