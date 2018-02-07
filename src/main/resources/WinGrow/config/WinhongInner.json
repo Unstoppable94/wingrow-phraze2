@@ -26,15 +26,15 @@
     }
   ],
   "successTemplate":{  
-    "title":"$PROJECTNAME 第$NUMBER 构建成功 ",
-    "content":"$PROJECTNAME 第$NUMBER 构建成功"
+    "title":"$PROJECTNAME 第 $NUMBER 次构建成功 ",
+    "content":"$PROJECTNAME 第$NUMBER 次构建成功"
   },
   "failedTemplate":{  
-    "title":"$PROJECTNAME 第$NUMBER 构建失败 ",
-    "content":"$PROJECTNAME 第$NUMBER 构建失败,请尽快处理"
+    "title":"$PROJECTNAME 第$NUMBER 次构建失败 ",
+    "content":"$PROJECTNAME 第$NUMBER 次构建失败,请尽快处理"
   },
   "recoveryTemplate":{  
-    "title":"$PROJECTNAME 第$NUMBER 构建恢复成功 ",
-    "content":"$PROJECTNAME 第$NUMBER 构建成功"
+    "title":"$PROJECTNAME 第$NUMBER 次构建恢复成功 ",
+    "content":"$PROJECTNAME 第$NUMBER 次构建成功"
   }
 }

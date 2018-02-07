@@ -253,9 +253,9 @@ public class Misc {
 			RegistryMirrorConfig config = (RegistryMirrorConfig) Tools
 					.objectFromJsonString(json, RegistryMirrorConfig.class);
 			
-			//jenkins slave config
-			String response = ConfigServerAction.httpTest("daemon", json);
-			log.debug("jenkins slave mirror post: " + response);
+			//jenkins slave daemon config
+			//String response = ConfigServerAction.sendPost("daemon", json);
+			ConfigServerAction.configDaemonServer(json);
 			Config.saveMirrorConfig(config);
 			return json;
 
@@ -273,9 +273,9 @@ public class Misc {
 	public String PUTMirror(String json) {
 		try {
 			
-			//jenkins slave config
-			String response = ConfigServerAction.httpTest("daemon", json);
-			log.debug("jenkins slave mirror post: " + response);
+			//jenkins slave daemon config
+			//String response = ConfigServerAction.sendPost("daemon", json);
+			ConfigServerAction.configDaemonServer(json);
 			return saveMirror(json);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -327,8 +327,9 @@ public class Misc {
 				return WebTools.Error("ServerName 不能修改！");
 
 			}
-			//slave
-			ConfigServerAction.configRegistryServer(config);
+			//jenkins slave auth put config
+			//ConfigServerAction.configRegistryServer(config);
+			ConfigServerAction.configAuthServer(config);
 			Config.saveRegistry(config);
 			return json;
 
@@ -361,8 +362,9 @@ public class Misc {
 					return WebTools.Error("仓库配置已经存在！");
 				}
 			}
-			//slave
-			ConfigServerAction.configRegistryServer(config);
+			//jenkins slave auth post config
+			//ConfigServerAction.configRegistryServer(config);
+			ConfigServerAction.configAuthServer(config);
 			Config.saveRegistry(config);
 			return json;
 

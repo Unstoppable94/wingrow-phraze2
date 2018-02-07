@@ -67,6 +67,13 @@ public class Tools {
 
 		saveStringToFile(str, filename, true);
 	}
+	
+	/**
+	 * if not encrypting, use this method
+	 * @param str
+	 * @param filename
+	 * @throws IOException
+	 */
 	public static void saveStringToFile_decrypt(String str, String filename) throws IOException {
 
 		saveStringToFile(str, filename, false);

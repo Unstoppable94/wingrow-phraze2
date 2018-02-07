@@ -23,6 +23,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+import com.winhong.plugins.cicd.action.ConfigServerAction;
 import com.winhong.plugins.cicd.action.GroupAction;
 import com.winhong.plugins.cicd.action.NotifyAction;
 import com.winhong.plugins.cicd.action.SendEmailTimer;
@@ -64,7 +65,6 @@ public class App {
 		config.register(UsePrivilegeFilter.class);
 
 		context.addServlet(jerseyServlet, "/webapi/*");
-		
 		try {
 
 			initDirs();
@@ -83,7 +83,9 @@ public class App {
 		}
 		try {
 			server.start();
-			new SendEmailTimer(10);
+			
+			//邮箱
+			//new SendEmailTimer(20);
 			server.join();
 		} catch (Exception ex) {
 			ex.printStackTrace();

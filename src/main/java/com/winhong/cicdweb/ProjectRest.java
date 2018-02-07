@@ -13,6 +13,7 @@ import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.winhong.plugins.cicd.action.NotifyAction;
 import com.winhong.plugins.cicd.action.ProjectAction;
 import com.winhong.plugins.cicd.data.base.BaseProject;
 import com.winhong.plugins.cicd.system.ProjectType;
@@ -73,6 +74,8 @@ public class ProjectRest {
 
 			// MavenProject project=new MavenProject();
 			if (ProjectAction.triggerBuild(projectName)) {
+				//after build call send email
+				//NotifyAction.checkProjectStatus();
 				return "{\"message\":\"success\"}";
 			} else {
 				return WebTools.Error("unknow error");
