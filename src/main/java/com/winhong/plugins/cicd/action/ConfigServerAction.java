@@ -23,6 +23,7 @@ public class ConfigServerAction {
 			.getLogger(ConfigServerAction.class);
 	//配置请求的jenkins-slave服务url
 	private static String configServerUrl = null;
+	
 	//获取jenkins-slave服务下的容器列表的url,获取容器列表后再获取ip
 	private static String cotainerMetadata = "http://rancher-metadata/latest/services/jenkins-slave/containers/";
 	static{
@@ -68,6 +69,7 @@ public class ConfigServerAction {
 	   }
 		return result;
 	}
+	
 	/**
      * 向指定URL发送GET方法的请求
      * 
@@ -113,6 +115,35 @@ public class ConfigServerAction {
         }
         return result;
     }
+    /*
+     * http 发送delete请求
+     * 
+     */
+    public static void doDelete(String uri) {
+    	try {
+        	URL url = new URL(uri);
+        	HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+        	httpCon.setDoOutput(true);
+        	httpCon.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        	httpCon.setRequestMethod("DELETE");
+        	httpCon.connect();
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    }
+    
+    //删除配置的http/https secure
+    public static void deleteSecureAuth(String id) {
+		
+		List<String> ips = getJenkins_slave_ip();
+		int ipSize = ips.size();
+		
+		for(int i=0 ; i<ipSize ; i++){
+			String singleIp = ips.get(i);
+			String uri = "http://"+singleIp+":8090/docker/auths/"+id;
+			doDelete(uri);
+		}
+    }
     
     //向所有的jenkins slave发送数据
     //jenkins slave auth config
@@ -129,11 +160,14 @@ public class ConfigServerAction {
 		
 		for(int i=0 ; i<ipSize ; i++){
 			String singleIp = ips.get(i);
-			String uri = "http://"+singleIp+":8090/docker/auth";
+			String uri = "http://"+singleIp+":8090/docker/auths";
 			String response = sendPost(uri, data);
 			log.debug("jenkins slave data state " + uri +"-----" +response);
 		}
+		log.debug("auth config : " + data );
 	}
+	
+	
 	//jenkins slave daemon.json config
 	public static void configDaemonServer(String data) throws Exception{
 		List<String> ips = getJenkins_slave_ip();
@@ -144,6 +178,7 @@ public class ConfigServerAction {
 			String response = sendPost(uri, data);
 			log.debug("jenkins slave data state " + uri +"-----" +response);
 		}
+		log.debug("dameon.json config: " + data );
 	}
 	
 	//获取rancher中的所有jenkins-slave服务下的容器ip

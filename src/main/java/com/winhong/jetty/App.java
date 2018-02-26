@@ -363,6 +363,7 @@ public class App {
 //		 dockerMirror.setUrl("http://" + register.getServer());
 //		 Config.saveConfig(dockerMirror);
 //		 }
+		
 		RegistryList registries = new RegistryList();
 		Config.saveConfig(registries);
 		RegistryMirrorConfig dockerMirror = new RegistryMirrorConfig();

@@ -96,7 +96,7 @@ public class Config {
 
 		if (config.getClass().equals(SonarConfig.class)) {
 			log.debug("sonar.class=config");
-
+ 
 			JenkinsClient client = JenkinsClient.defaultClient();
 			SonarConfig c = (SonarConfig) config;
 			return client.createCredential("sonar", c.getUser(), c.getPassword(), "credential");
@@ -219,7 +219,7 @@ public class Config {
 		String FQClassName = c.getName();
 		int firstChar;
 		firstChar = FQClassName.lastIndexOf('.') + 1;
-		if (firstChar > 0) {
+		if (firstChar > 0) {  
 			FQClassName = FQClassName.substring(firstChar);
 		}
 		return FQClassName;

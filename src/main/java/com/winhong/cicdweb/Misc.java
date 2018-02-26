@@ -366,6 +366,14 @@ public class Misc {
 			//ConfigServerAction.configRegistryServer(config);
 			ConfigServerAction.configAuthServer(config);
 			Config.saveRegistry(config);
+			
+			//判断是否为安全仓库，配置daemon.json文件
+			RegistryMirrorConfig mirror = new RegistryMirrorConfig();
+			mirror.setUrl(config.getServer());
+			mirror.setScure(config.isSecure());
+			if( !config.isSecure()) {
+				saveMirror(Tools.getJson(mirror));
+			}
 			return json;
 
 		} catch (Exception e) {
@@ -382,6 +390,10 @@ public class Misc {
 	public String deleteRegistry(@PathParam("serverName") String serverName,
 			String json) {
 		try {
+			//循环删除jenkins-slave下所有的仓库配置
+			ConfigServerAction.deleteSecureAuth(serverName);
+			
+			//native
 			Config.deleteRegistry(serverName);
 			return "{}";
 		} catch (Exception e) {
