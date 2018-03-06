@@ -1,5 +1,6 @@
 package com.winhong.cicdweb;
 
+import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -56,21 +57,27 @@ public class Login {
 			User user = UserAction.Login(username, password);
 			if (user == null || user.getUsername() == null) {
 				log.info("login fail,username:" + username);
-				return WebTools.Error("用户不存在、或者密码错误或者过期");
+				//或者过期
+				return WebTools.Error("用户不存在、或者密码错误");
 			}
 
+			//String role = user.getRole();
+			
 			String role = user.getRole();
+			if(role == null){
+				role = User.operatorRole;
+			}
 			String[] roles = { role };
 			String jwtString = TokenUtil.getJWTString(username, roles);
 			Token token = new Token();
 			token.setAuthorization(jwtString);
 			token.setExpires(TokenUtil.getExpiryDate().getTime());
 			token.setRole(role);
-			if (user.getUserType().equals(User.LOCAL) && user.getPasswordExpired()>0) {
-				token.setMustChangePassword(true);
-			}
-			else
-				token.setMustChangePassword(false);
+//			if (user.getUserType().equals(User.LOCAL) && user.getPasswordExpired()>0) {
+//				token.setMustChangePassword(true);
+//			}
+//			else
+//				token.setMustChangePassword(false);
 			return Tools.getJson(token); 
 		} catch (java.io.FileNotFoundException e) {
 			return WebTools.Error("用户不存在、或者密码错误");

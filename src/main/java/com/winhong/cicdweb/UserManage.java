@@ -126,6 +126,11 @@ public class UserManage {
 			
 			User input=(User) Tools
 					.objectFromJsonString(json, User.class);
+			
+			if(input != null && input.getUsername().equals(UserAction.defaultAdmin) && input.getUserType().equals(User.LOCAL)) {
+				input.setUserType(User.LDAP);
+			}
+			
 			boolean pa=false;
 			if (LoginUser!=null && LoginUser.equals(username))
 					pa=true;

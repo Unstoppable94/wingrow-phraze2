@@ -200,7 +200,7 @@ public class Dashboard {
 			//maxNumber=MaxNumberOfList;
 			
 		ArrayList<RssBuild> failbuilds = JenkinsRss.getInfo(rss);
-		maxNumber = failbuilds.size();
+		//maxNumber = failbuilds.size();
 		ArrayList<PipelineRun> list = new ArrayList<PipelineRun>();
 		for (int i = 0; i < failbuilds.size(); i++) {
 			if (i == maxNumber) {

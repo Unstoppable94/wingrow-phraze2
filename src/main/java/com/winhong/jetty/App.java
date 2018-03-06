@@ -84,8 +84,8 @@ public class App {
 		try {
 			server.start();
 			
-			//邮箱
-			//new SendEmailTimer(20);
+			//邮箱(设置检查时间，单位为秒)
+			new SendEmailTimer(20);
 			server.join();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -115,12 +115,18 @@ public class App {
 			initJenkinsConfig();
 			// avoid reinit after restart
 			initRancherConfig();
-
+			initRegisterConfig();
 			initSmtpConfig();
 			initSonarConfig();
 			initOpenLDAPConfig();
 			// init password reset random
-			initRegisterConfig();
+			//initRegisterConfig();
+			try {
+				Thread.sleep(1000*30);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				log.error("start error, please try again");
+			}
 
 		}
 		RandomString.init(16);

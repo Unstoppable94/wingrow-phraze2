@@ -28,7 +28,7 @@ public class Compile extends Stage{
 	
 	private commonString dockercmd=new commonString("dockercmd","",2,50, "编译命令","编译命令，不输入使用image默认命令" );
 	
-	private commonString distDirMap=new commonString("distDirMap","",2,50, "输出目录mapping配置","输出结果目录配置，如果输出目录不在src目录下，请注意配置将，否则可能没有输出" );
+	private commonString distDirMap=new commonString("distDirMap","",2,50, "输出目录mapping配置","输出结果目录配置，如果输出目录不在src目录下，请注意配置，否则可能没有输出" );
 
 	private commonString image=new commonString("image","",3,200, "编译使用的image","编译使用的image，建议带上版本信息" );
 

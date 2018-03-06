@@ -9,6 +9,8 @@ import java.net.URLEncoder;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
+import javax.jws.soap.SOAPBinding.Use;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -240,35 +242,67 @@ public class UserAction {
 	}
 	
  	
- 	public static User Login(String username,String password) throws IOException {
- 		User user=null;
- 		try {
- 			user=getUserinfo(username);
- 		} catch (  NoSuchFileException e) {
- 			return null;
- 		}
- 		if (user.getUserType().endsWith(User.LOCAL)) {
- 			long expired=user.getPasswordExpired();
- 			long now=System.currentTimeMillis();
- 			if (expired>0 && expired<now) {
- 				log.info("Password Expired:"+username);
- 				return null;
- 			}
- 			if (!user.getPassword().equals(password)) 
- 				return null;
- 			
- 		}else {
+ 	@SuppressWarnings("null")
+	public static User Login(String username,String password) throws IOException {
+ 		User user = null;
+		User u = null ;
+		
+		if(username != null && username.equals(UserAction.defaultAdmin) && password.equals(UserAction.defaultPassword)){
+			user = getUserinfo(username);
+	 		if (user != null && user.getUserType() != null && user.getUserType().endsWith(User.LOCAL)) {
+	 			long expired=user.getPasswordExpired();
+	 			long now=System.currentTimeMillis();
+	 			if (expired>0 && expired<now) {
+	 				log.info("Password Expired:"+username);
+	 				return null;
+	 			}
+	 			if (!user.getPassword().equals(password)) 
+	 				return null;
+	 			return user;
+	 		}
+		}
+
+// 		if (user.getUserType().endsWith(User.LOCAL)) {
+// 			long expired=user.getPasswordExpired();
+// 			long now=System.currentTimeMillis();
+// 			if (expired>0 && expired<now) {
+// 				log.info("Password Expired:"+username);
+// 				return null;
+// 			}
+// 			if (!user.getPassword().equals(password)) 
+// 				return null;
+// 			
+// 		}else {
+ 		
  			OpenLDAPConfig ldapConfig;
 			try {
 				ldapConfig = Config.getOpenLDAPConfig();
 				OpenLDAP.Login(ldapConfig, username, password);
-				 
+				
+				//登陆成功后增加用户
+		 		try {
+		 			user=getUserinfo(username);
+		 		//如果文件未找到就在本地创建文件
+		 		} catch (  NoSuchFileException e) {
+		 			user = new User();
+					user.setRole(User.operatorRole);
+					user.setUsername(username);
+					user.setUserType(User.LDAP);
+					//user.setCreateTime(System.currentTimeMillis());
+					//判断是否添加用户
+					u = addUser(user);
+					log.debug("用户已添加" + u.getUsername());
+		 			//return null;
+		 		}
+
 			} catch (  Exception e) {
 				log.info("OpenLDAPConfig login fail"+e.getMessage());
 				 return null;
 			}
  			
- 		}
- 		return user;
+ 		//}
+ 		//return user;
+		
+		return user;
  	}
 }

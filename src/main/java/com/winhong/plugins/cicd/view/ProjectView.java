@@ -192,7 +192,8 @@ public class ProjectView {
 				j.setGroupName(group.getName());
 			} catch (Exception e) {
 				log.error("Group id " + j.groupId + "定义文件没有找到");
-				j.setGroupName(j.groupId);
+				//j.setGroupName(j.groupId);
+				j.setGroupName("default");
 				// throw e;
 			}
 
