@@ -247,7 +247,7 @@ public class UserAction {
  		User user = null;
 		User u = null ;
 		
-		if(username != null && username.equals(UserAction.defaultAdmin) && password.equals(UserAction.defaultPassword)){
+		if(username != null && username.equals(UserAction.defaultAdmin) ){
 			user = getUserinfo(username);
 	 		if (user != null && user.getUserType() != null && user.getUserType().endsWith(User.LOCAL)) {
 	 			long expired=user.getPasswordExpired();

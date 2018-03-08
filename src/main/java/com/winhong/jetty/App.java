@@ -50,7 +50,7 @@ import com.winhong.plugins.cicd.tool.Encryptor;
 
 public class App {
 	private static final Logger log = LoggerFactory.getLogger(App.class);
-
+	
 	public static void main(String[] args) {
 		InetSocketAddress bindAdress = new InetSocketAddress("0.0.0.0", 8100);
 		Server server = new Server(bindAdress);
@@ -63,7 +63,6 @@ public class App {
 		// close for dev
 		config.register(JWTSecurityFilter.class);
 		config.register(UsePrivilegeFilter.class);
-
 		context.addServlet(jerseyServlet, "/webapi/*");
 		try {
 
