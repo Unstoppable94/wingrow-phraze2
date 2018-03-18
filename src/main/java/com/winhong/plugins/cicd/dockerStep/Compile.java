@@ -18,19 +18,19 @@ public class Compile extends Stage{
  	
 	final static private String srcMap="srcMap";
 	
-	private commonString sourceDirMap=new commonString(srcMap,"/src",5, 200, "代码在容器内Mapping目录","代码目录在编译容器内的mapping设置");
+	private commonString sourceDirMap=new commonString(srcMap,"/src",5, 500, "代码在容器内Mapping目录","代码目录在编译容器内的mapping设置");
 	
  
-	private commonString dockeruser=new commonString("dockeruser","",2,50, "docker运行用户","编译docker运行时用户，不输入时候使用image默认用户" );
+	private commonString dockeruser=new commonString("dockeruser","",2,250, "docker运行用户","编译docker运行时用户，不输入时候使用image默认用户" );
 	
-	private commonString dockerworkdir=new commonString("dockerworkdir","/src",2,50, "docker运行目录","编译docker运行时目录，不输入时候使用image默认目录" );
+	private commonString dockerworkdir=new commonString("dockerworkdir","/src",2,500, "docker运行目录","编译docker运行时目录，不输入时候使用image默认目录" );
  
 	
-	private commonString dockercmd=new commonString("dockercmd","",2,50, "编译命令","编译命令，不输入使用image默认命令" );
+	private commonString dockercmd=new commonString("dockercmd","",2,500, "编译命令","编译命令，不输入使用image默认命令" );
 	
-	private commonString distDirMap=new commonString("distDirMap","",2,50, "输出目录mapping配置","输出结果目录配置，如果输出目录不在src目录下，请注意配置，否则可能没有输出" );
+	private commonString distDirMap=new commonString("distDirMap","",2,500, "输出目录mapping配置","输出结果目录配置，如果输出目录不在src目录下，请注意配置，否则可能没有输出" );
 
-	private commonString image=new commonString("image","",3,200, "编译使用的image","编译使用的image，建议带上版本信息" );
+	private commonString image=new commonString("image","",3,1000, "编译使用的image","编译使用的image，建议带上版本信息" );
 
 	/**
 	 * 生产一个新的findbugs对象

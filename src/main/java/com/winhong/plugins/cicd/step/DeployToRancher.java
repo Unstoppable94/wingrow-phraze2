@@ -23,15 +23,15 @@ public class DeployToRancher extends Stage {
 	
 	final private static String serviceId = "service";
 
-	private commonString service = new commonString(serviceId, "", 10, 50,
+	private commonString service = new commonString(serviceId, "", 10, 500,
 			"部署服务service", "部署的 Service  NAME,格式为stack/service ,service存在就升级，不存在就创建");
 
 	final private static String argId = "arg";
-	private commonString arg = new commonString(argId, "", 0, 250,
+	private commonString arg = new commonString(argId, "", 0, 500,
 			"启动参数", "服务启动参数如 -p 8080:8080，参数需要遵循docker的cli命令");
 
 	final private static String cmdId = "cmd";
-	private commonString cmd = new commonString(cmdId, "", 0, 250, "容器启动命令",
+	private commonString cmd = new commonString(cmdId, "", 0, 500, "容器启动命令",
 			"Docker容器启动命令,可以不输，不输入时使用容器的默认启动命令");
 
 	/**

@@ -150,7 +150,12 @@
 			<artifactId>jetty-server</artifactId>
 			<version>9.4.0.v20161208</version>
 		</dependency>
-
+		
+		<dependency>
+		    <groupId>com.winhong</groupId>
+		    <artifactId>uap-client-core</artifactId>
+		    <version>1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -161,7 +166,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.4.1</version>
 				<configuration>
-					<!-- get all project dependencies -->
+				<!-- get all project dependencies -->
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>

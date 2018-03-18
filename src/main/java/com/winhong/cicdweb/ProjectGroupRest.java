@@ -124,6 +124,8 @@ public class ProjectGroupRest {
 			if (pg.getId().equals(groupId) == false) {
 				throw new Exception("ID/name 不匹配");
 			}
+			String creatTime = pg.getId().substring(5);
+			pg.setCreatetime(Long.parseLong(creatTime));
 			GroupAction.modifyGroup(pg);
 			return Tools.ToUTF8(getProjectGroup(groupId));
 

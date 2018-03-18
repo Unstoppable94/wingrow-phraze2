@@ -26,7 +26,7 @@ public class CompileGoal extends Property{
 				null,
 				"",
 				5,
-				100,
+				500,
 				"Maven Goal",
 				"Maven 执行目标，默认为-DskipTests=true clean  package"
 				);
@@ -43,7 +43,7 @@ public class CompileGoal extends Property{
 				null,
 				"",
 				5,
-				100,
+				500,
 				"Maven Goal",
 				"Maven 执行目标，默认为-DskipTests=true clean  package"
 				);

@@ -358,8 +358,7 @@ public class ProjectGroup {
 									listOfFiles[i].getAbsolutePath(),
 									ProjectGroupJsonConfig.class);
 					if (groupName != null && !groupName.isEmpty())
-						if (u.getName().indexOf(
-								groupName) < 0) {
+						if (!u.getName().equals(groupName)) {
 							continue;
 						}
 					log.debug("add group:" + u.getName());

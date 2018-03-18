@@ -194,7 +194,8 @@ public class NotifyAction {
 
 		SMTPConfig smtpConfig = Config.getSMTPConfig();
 		if (smtpConfig.getHost() == null) {
-			throw new Exception("请先配置SMTP server信息！");
+			//throw new Exception("请先配置SMTP server信息！");
+			log.warn("请先配置SMTP server信息！");
 		}
 		EmailTemplate successTemplate = config.getSuccessTemplate();
 		EmailTemplate failedTemplate = config.getFailedTemplate();

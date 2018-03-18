@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import javax.management.Notification;
 
+import org.apache.http.protocol.HttpService;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -16,6 +17,7 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -28,6 +30,7 @@ import com.winhong.plugins.cicd.action.GroupAction;
 import com.winhong.plugins.cicd.action.NotifyAction;
 import com.winhong.plugins.cicd.action.SendEmailTimer;
 import com.winhong.plugins.cicd.action.UserAction;
+import com.winhong.plugins.cicd.cas.SsoConfig;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
 import com.winhong.plugins.cicd.filter.UsePrivilegeFilter;
@@ -46,7 +49,9 @@ import com.winhong.plugins.cicd.tool.RandomString;
 import com.winhong.plugins.cicd.tool.Tools;
 import com.winhong.plugins.cicd.user.User;
 import com.winhong.plugins.cicd.view.ProjectGroup;
+import com.winhong.uap.cas.client.authentication.AuthenticationFilter;
 import com.winhong.plugins.cicd.tool.Encryptor;
+import com.winhong.plugins.cicd.tool.JenkinsClient;
 
 public class App {
 	private static final Logger log = LoggerFactory.getLogger(App.class);
@@ -54,18 +59,19 @@ public class App {
 	public static void main(String[] args) {
 		InetSocketAddress bindAdress = new InetSocketAddress("0.0.0.0", 8100);
 		Server server = new Server(bindAdress);
-
+		
 		ResourceConfig config = new ResourceConfig();
 		config.packages("com.winhong.cicdweb");
 		ServletHolder jerseyServlet = new ServletHolder(new ServletContainer(config));
-
+		
 		ServletContextHandler context = new ServletContextHandler(server, "/");
 		// close for dev
 		config.register(JWTSecurityFilter.class);
 		config.register(UsePrivilegeFilter.class);
+		
+		//context.addFilter(new FilterHolder(AuthenticationFilter.class), "", null);
 		context.addServlet(jerseyServlet, "/webapi/*");
 		try {
-
 			initDirs();
 			initConfig();
 			// SET login token expire time
@@ -81,11 +87,14 @@ public class App {
 			return;
 		}
 		try {
+			SendEmailThread emailThread = new SendEmailThread();
+			emailThread.start();
 			server.start();
-			
 			//邮箱(设置检查时间，单位为秒)
-			new SendEmailTimer(20);
+			//new SendEmailTimer(20);
+			
 			server.join();
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error(ex.getMessage());
@@ -116,22 +125,32 @@ public class App {
 			initRancherConfig();
 			initRegisterConfig();
 			initSmtpConfig();
-			initSonarConfig();
+			
 			initOpenLDAPConfig();
-			// init password reset random
+			
+			
+//			boolean jenkinsStart;
+//			do{
+//				jenkinsStart = JenkinsClient.defaultClient().getCrumb();
+//			}while(!jenkinsStart);
+			
+			
+//			try {
+//				Thread.sleep(1000*60*3);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				log.error("start error, please try again");
+//			}
 			//initRegisterConfig();
-			try {
-				Thread.sleep(1000*30);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				log.error("start error, please try again");
-			}
+			// init password reset random
+			//
 
 		}
 		RandomString.init(16);
 		// flowing env should only use in testing
 	//initTestConfig();
 		createDefaultGroupAndUser();
+		initSonarConfig();
 	}
 
 	public static boolean isInited() {

@@ -14,8 +14,10 @@ public class SendEmailTimerTask extends TimerTask{
 	public void run() {
 		// TODO Auto-generated method stub
 		try {
-			NotifyAction.checkProjectStatus();
-			log.debug("send email -----");
+			while(true){
+				NotifyAction.checkProjectStatus();
+				log.debug("send email -----");
+			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

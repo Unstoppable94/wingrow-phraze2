@@ -79,7 +79,7 @@ public class ProjectType {
 				if(k == MultistageDocker){
 					String traditonaldes = "多stage docker构建需要Docker引擎的版本为17.05或更高版本，"
 							+ "使用多stage docker构建，您可以在Dockerfile中使用多个FROM语句。每个FROM指令可以使用不同的基础镜像，并且每个指令都开始新的构建阶段，"
-							+ "您可以选择性地将构建物从一个阶段复制到另一个阶段，在最终发布的镜像中只留下需要部署的代码包";
+							+ "您可以选择性地将构建物从一个阶段复制到另一个阶段，在最终发布的镜像中只留下需要部署的代码包。";
 					relist.add(new EnumList(k,types.get(k).getDisplayName(), traditonaldes));
 				}
 				ProjectTypeDefine type=types.get(k);

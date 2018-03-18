@@ -204,5 +204,9 @@ public class ProjectRest {
 			return WebTools.Error(e);
 		}
 	}
-
+	
+	//终止流水线
+	//http://192.168.101.80:8080/job/{projectId}/{buildNumber}/stop  post
+	
+	
 }

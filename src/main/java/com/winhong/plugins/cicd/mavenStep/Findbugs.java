@@ -24,12 +24,12 @@ public class Findbugs extends Stage {
 	
 	final static private String inFilterUrlId="inFilterUrl";
 	
-	private  commonString inFilterUrl=new commonString(inFilterUrlId,"", 0,255 ,"Include Filter","findbugs 规则文件,includefilter");
+	private  commonString inFilterUrl=new commonString(inFilterUrlId,"", 0,500 ,"Include Filter","findbugs 规则文件,includefilter");
 			//Url(inFilterUrlId,"Findbugs infilterUrl","findbugs 规则文件,includefilter");
 	
 	final static private String excludefilerUrlId="excludeFilterUrl";
 
-	private  commonString excludeFilterUrl=new commonString(excludefilerUrlId,"", 0,255 ,"Exclude Filter","findbugs 错误忽略文件,excludefilter");
+	private  commonString excludeFilterUrl=new commonString(excludefilerUrlId,"", 0,500 ,"Exclude Filter","findbugs 错误忽略文件,excludefilter");
 	private Skip skip=new Skip();
 	
 	//	public commonTextArea(String id,String value,int min,int max,String name,String description){

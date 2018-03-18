@@ -388,4 +388,10 @@ public class ProjectAction {
 		return (client.triggerBuild(projectName));
 		 
 	}
+	//触发终止
+	public static boolean triggerStop(String projectName) throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
+		JenkinsClient client = JenkinsClient.defaultClient();
+		return (client.triggerBuild(projectName));
+		 
+	}
 }
