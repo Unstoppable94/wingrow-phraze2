@@ -11,11 +11,16 @@ public class SendEmailThread extends Thread {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		super.run();
 		try {
 			while(true){
-				NotifyAction.checkProjectStatus();
-				log.debug("send email---------");
+				try {
+					NotifyAction.checkProjectStatus();
+				} catch (Exception e) {
+					// TODO: handle exception
+					log.debug("please config Email:" +e);
+				}
+				
+				//
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

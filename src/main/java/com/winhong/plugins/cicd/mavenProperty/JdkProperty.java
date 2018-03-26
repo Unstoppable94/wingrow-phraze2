@@ -30,7 +30,7 @@ public class JdkProperty extends Property{
 				true,
 				true,
 				true,
-				value,
+				"jdk1.8",
 				genJdkList(),
 				"",
 				1,

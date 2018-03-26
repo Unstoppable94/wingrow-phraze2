@@ -14,8 +14,9 @@
              <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符--> 
     	    <pattern> application=cicdcore  %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>   
         </encoder> 
-    </appender>         
-  <root level="DEBUG">   
+    </appender>       
+    <!-- LEVEAL DEBUG INFO-->
+  <root level="INFO">   
  <!--   <appender-ref ref="FILE" />    -->
       <appender-ref ref="STDOUT" />  
   </root>   

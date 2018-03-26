@@ -234,7 +234,8 @@ public class ProjectGroup {
 		@SuppressWarnings("unchecked")
 		JobListOfView v = (JobListOfView) Tools.objectFromJsonString(output, 
 				JobListOfView.class);
-
+		
+		
 		// Job job=(Job) tools.objectFromJsonUrl(url, Job.class);
 		// project.getBaseInfo().
 		ArrayList<JobView> list = new ArrayList<JobView>();
@@ -246,7 +247,17 @@ public class ProjectGroup {
 			JobView j = new JobView();
 
 			j.setId(job.getName());
-			j.setName(job.getDisplayName());
+			//solve utf-8
+			String displayName = job.getDisplayName();
+			try{
+				displayName =ProjectAction.getProject(job.getName()).getBaseInfo().getExraProperties();
+			}catch(Exception e){
+				displayName = job.getDisplayName();
+			}
+			
+			//j.setName(job.getDisplayName());
+			j.setName(displayName);
+			
 			j.setProjectUrl(jobDashboardUrl + job.getName());
 			
 			//j.setStatus(job.getColor());
@@ -256,7 +267,8 @@ public class ProjectGroup {
 				  pro = ProjectAction.getProject(job.getName());
 			}catch (NoSuchFileException e) { 
 				//file not exist 
-				log.warn("project file be removed:"+e.getLocalizedMessage());
+				//log.warn("project file be removed:"+e.getLocalizedMessage());
+				log.debug("project file be removed:"+e.getLocalizedMessage());
 				continue;
 			}
 			//set display name 

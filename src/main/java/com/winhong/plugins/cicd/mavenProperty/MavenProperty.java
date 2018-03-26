@@ -31,7 +31,7 @@ public class MavenProperty extends Property{
 				true,
 				true,
 				true,
-				value,
+				"maven-3.3.9",
 				genMavenList(),
 				"",
 				1,

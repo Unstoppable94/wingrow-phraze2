@@ -104,8 +104,13 @@ public class ProjectAction {
 	 */
 	private static boolean AddOrModifyProject(BaseProject project)
 			throws Exception {
+		
+		//save projectname
+		String proName = project.getBaseInfo().getName();
+		project.getBaseInfo().setExraProperties(proName);
 
 		//InnerConfig config = InnerConfig.defaultConfig();
+	
 
 		String id = project.getBaseInfo().getId();
 		File dir = getProjectDirName(id);

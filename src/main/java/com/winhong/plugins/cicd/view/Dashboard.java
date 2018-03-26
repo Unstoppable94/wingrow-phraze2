@@ -230,8 +230,8 @@ public class Dashboard {
 			run.setName(pro.getBaseInfo().getName());
 			list.add(run);
 			}catch(Exception e) {
-				log.warn("get url:"+url+" failed by :"+e.getLocalizedMessage());
-
+				//log.warn("get url:"+url+" failed by :"+e.getLocalizedMessage());
+				log.debug("get url:"+url+" failed by :"+e.getLocalizedMessage());
 			}
 		}
 

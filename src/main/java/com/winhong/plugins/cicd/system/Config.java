@@ -96,7 +96,7 @@ public class Config {
 
 		if (config.getClass().equals(SonarConfig.class)) {
 			log.debug("sonar.class=config");
- 
+			log.info("sonar.class=config");
 			JenkinsClient client = JenkinsClient.defaultClient();
 			SonarConfig c = (SonarConfig) config;
 			return client.createCredential("sonar", c.getUser(), c.getPassword(), "credential");

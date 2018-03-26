@@ -54,6 +54,7 @@ import com.winhong.plugins.cicd.tool.Encryptor;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 
 public class App {
+	
 	private static final Logger log = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String[] args) {
@@ -71,7 +72,10 @@ public class App {
 		
 		//context.addFilter(new FilterHolder(AuthenticationFilter.class), "", null);
 		context.addServlet(jerseyServlet, "/webapi/*");
+		
 		try {
+			initSonarConfig();
+
 			initDirs();
 			initConfig();
 			// SET login token expire time
@@ -89,10 +93,10 @@ public class App {
 		try {
 			SendEmailThread emailThread = new SendEmailThread();
 			emailThread.start();
+			
 			server.start();
 			//邮箱(设置检查时间，单位为秒)
 			//new SendEmailTimer(20);
-			
 			server.join();
 
 		} catch (Exception ex) {
@@ -120,19 +124,27 @@ public class App {
 			force = true;
 		boolean inited = isInited();
 		if (!inited || force) {
+
 			initJenkinsConfig();
 			// avoid reinit after restart
+			boolean jenkinsStart;
+
 			initRancherConfig();
 			initRegisterConfig();
 			initSmtpConfig();
 			
 			initOpenLDAPConfig();
+			do{
+				try{
+				jenkinsStart = JenkinsClient.defaultClient().getCrumb();
+				}catch(Exception e){
+					jenkinsStart = false;
+				}
+				log.info("jenkins stat :" + jenkinsStart);
+			}while(!jenkinsStart);
+			initSonarConfig();
 			
-			
-//			boolean jenkinsStart;
-//			do{
-//				jenkinsStart = JenkinsClient.defaultClient().getCrumb();
-//			}while(!jenkinsStart);
+
 			
 			
 //			try {
@@ -148,9 +160,13 @@ public class App {
 		}
 		RandomString.init(16);
 		// flowing env should only use in testing
-	//initTestConfig();
+	    //initTestConfig();
 		createDefaultGroupAndUser();
-		initSonarConfig();
+
+		
+		//本地测试需要打开
+		//initJenkinsConfig();
+		
 	}
 
 	public static boolean isInited() {
@@ -439,8 +455,8 @@ public class App {
 				GroupAction.createGroup(def);
 			}
 		 
+			//initSonarConfig();
 
-		 
 			if (!UserAction.userExist(UserAction.defaultAdmin)) {
 				User defaultUser = new User();
 				defaultUser.setUsername(UserAction.defaultAdmin);

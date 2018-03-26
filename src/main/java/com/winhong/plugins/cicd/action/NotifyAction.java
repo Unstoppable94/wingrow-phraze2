@@ -189,13 +189,13 @@ public class NotifyAction {
 	}
 
 	public static void checkProjectStatus() throws Exception {
-		log.debug("Start to check project status....");
+		//log.debug("Start to check project status....");
 		InnerConfig config = InnerConfig.defaultConfig();
 
 		SMTPConfig smtpConfig = Config.getSMTPConfig();
 		if (smtpConfig.getHost() == null) {
 			//throw new Exception("请先配置SMTP server信息！");
-			log.warn("请先配置SMTP server信息！");
+			log.debug("请先配置SMTP server信息！");
 		}
 		EmailTemplate successTemplate = config.getSuccessTemplate();
 		EmailTemplate failedTemplate = config.getFailedTemplate();
@@ -250,7 +250,8 @@ public class NotifyAction {
 			boolean sendResult = false;
 			// 没有发送过邮件
 			if (item.buildId < build.getNumber()) {
-
+				
+				log.info("send Email:-------");
 				if (status.equals(Tools.FAILED) && project.getBaseInfo().getMailOnfail() != null
 						&& !project.getBaseInfo().getMailOnfail().equals("")) {
 					sendResult = SendNodifyEmail(smtpConfig, failedTemplate, project.getBaseInfo().getMailOnfail(),

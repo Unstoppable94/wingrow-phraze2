@@ -87,6 +87,7 @@ public class UsePrivilegeFilter implements ContainerRequestFilter {
 				// pass through the filter.
 				return;
 			}
+
 			String authorizationHeader = ((ContainerRequest) requestContext).getHeaderString(JWTSecurityFilter.AuthHeader);
 			if (authorizationHeader == null) {
 				throw new WebApplicationException(Response.Status.UNAUTHORIZED);

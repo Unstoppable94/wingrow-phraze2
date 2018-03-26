@@ -99,7 +99,7 @@ public class JenkinsClient {
 					+ "/doDelete";
 			httpJobModify(new URL(deleteUrl), "", "");
 		} catch (Exception e) {
-
+			//return false;
 		}
 		// 没有设置用户
 		if (username == null) {
