@@ -156,6 +156,40 @@
 		    <artifactId>uap-client-core</artifactId>
 		    <version>1.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.winhong</groupId>
+		    <artifactId>uap-sdk-core</artifactId>
+		    <version>1.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.winhong</groupId>
+		    <artifactId>httpmime</artifactId>
+		    <version>4.1.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.winhong</groupId>
+		    <artifactId>httpcore</artifactId>
+		    <version>4.3.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.winhong</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.3.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.winhong</groupId>
+		    <artifactId>uap-sdk-httpclient</artifactId>
+		    <version>1.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp -->
+		<dependency>
+		    <groupId>org.eclipse.jetty</groupId>
+		    <artifactId>jetty-webapp</artifactId>
+		    <version>9.4.9.v20180320</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
+
+		
 	</dependencies>
 
 	<build>

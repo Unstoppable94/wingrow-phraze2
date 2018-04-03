@@ -46,7 +46,7 @@ public class JWTSecurityFilter implements ContainerRequestFilter {
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-
+		
 		String method = requestContext.getMethod().toLowerCase();
 		String path = ((ContainerRequest) requestContext).getPath(true);
 		logger.debug("path="+path);

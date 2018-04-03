@@ -13,6 +13,7 @@ public class CORSResponseFilter implements ContainerResponseFilter {
 public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
         throws IOException {
 
+	System.out.println(requestContext.getCookies());
     MultivaluedMap headers = responseContext.getHeaders();
 
     headers.add("Access-Control-Allow-Origin", "*");

@@ -93,12 +93,13 @@ public class Login {
 	@POST
 	@Path("logout")
 	@Produces("application/json;charset=utf-8")
-	public String logout(@Context HttpServletRequest req)
+	public String logout(@Context HttpServletRequest req, @Context HttpServletResponse res)
 			throws Exception {
 		try {
 			String key = req.getHeader(JWTSecurityFilter.AuthHeader);
 			log.debug("key="+key);
 			TokenUtil.removeToken(key);
+			//res.sendRedirect("https://192.168.208.12/uap/login");
 			return "{\"result\":\"ok\"}";
 
 		} catch (Exception e) {
