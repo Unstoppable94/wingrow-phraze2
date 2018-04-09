@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.winhong.plugins.cicd.action.CheckHeartBeatTimer;
 import com.winhong.plugins.cicd.action.GroupAction;
+import com.winhong.plugins.cicd.action.SendEmailTimer;
 import com.winhong.plugins.cicd.action.UserAction;
 import com.winhong.plugins.cicd.cas.CORSResponseFilter;
 import com.winhong.plugins.cicd.cas.RegisterUAPFilter;
@@ -101,7 +102,7 @@ public class App {
 			
 			server.start();
 			//邮箱(设置检查时间，单位为秒)
-			//new SendEmailTimer(20);
+			//new SendEmailTimer(1);
 			//心跳检测
 			new CheckHeartBeatTimer(60 * 3);
 			server.join();
