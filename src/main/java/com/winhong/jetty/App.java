@@ -103,7 +103,7 @@ public class App {
 			//邮箱(设置检查时间，单位为秒)
 			//new SendEmailTimer(20);
 			//心跳检测
-			//new CheckHeartBeatTimer(60 * 3);
+			new CheckHeartBeatTimer(60 * 3);
 			server.join();
 
 		} catch (Exception ex) {
