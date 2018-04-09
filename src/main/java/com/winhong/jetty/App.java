@@ -96,14 +96,14 @@ public class App {
 			return;
 		}
 		try {
-			SendEmailThread emailThread = new SendEmailThread();
+			//SendEmailThread emailThread = new SendEmailThread();
 			//emailThread.start();
 			
 			server.start();
 			//邮箱(设置检查时间，单位为秒)
 			//new SendEmailTimer(20);
 			//心跳检测
-			new CheckHeartBeatTimer(60 * 3);
+			//new CheckHeartBeatTimer(60 * 3);
 			server.join();
 
 		} catch (Exception ex) {
@@ -189,7 +189,7 @@ public class App {
 	}
 
 	public static void initDirs() throws IOException, InstantiationException, IllegalAccessException {
-		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects", "projectGroup", "logs" };
+		String[] subdirs = { "user", "deletedProjects", "deleteduser", "config", "projects", "projectGroup", "logs","ldapuser","localuser"};
 		String parent = InnerConfig.defaultConfig().getDataDir();
 		for (int i = 0; i < subdirs.length; i++) {
 			File dir = new File(parent + "/" + subdirs[i]);

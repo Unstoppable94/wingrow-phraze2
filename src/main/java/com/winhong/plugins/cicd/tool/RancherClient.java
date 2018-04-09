@@ -61,19 +61,31 @@ public class RancherClient {
 			throws MalformedURLException, IOException, InstantiationException, IllegalAccessException {
 		JsonParser parser = new JsonParser();
 		RancherConfig rancherConfig = Config.getRancherConfig();
+		if(rancherConfig == null || rancherConfig.getServerUrl() == null){
+			rancherConfig.setServerUrl("http://192.168.101.94:8088");
+			rancherConfig.setAccessKey("C64B72C96F53A5CECC88");
+			rancherConfig.setSecureKey("Atfx4n9LH8enn5fyhCuiCGFKonzYkv7bhsnh951w");
+		}
+
 		String envUrl = rancherConfig.getServerUrl() + "/v2-beta/projects?all=true&limit=-1";
 
 		String toExtract = httpSimpleGet(new URL(envUrl));
 		JsonObject obj = parser.parse(toExtract).getAsJsonObject();
 		JsonArray data = obj.get("data").getAsJsonArray();
-
 		ArrayList<RancherEnvironment> envs = new ArrayList<RancherEnvironment>();
 
 		// return gson.fromJson(json, cla);
 		for (int i = 0; i < data.size(); i++) {
 			JsonObject ele = data.get(i).getAsJsonObject();
+			String envDescription = null;
+			try {
+				envDescription = ele.get("description").getAsString();
+			} catch (Exception e) {
+				// TODO: handle exception
+				envDescription = null;
+				}
 
-			RancherEnvironment env = new RancherEnvironment(ele.get("id").getAsString(), ele.get("name").getAsString());
+			RancherEnvironment env = new RancherEnvironment(ele.get("id").getAsString(), ele.get("name").getAsString(), envDescription);
 			envs.add(env);
 
 		}
@@ -88,10 +100,11 @@ public class RancherClient {
 
 		String authStr = rancherConfig.getAccessKey() + ":" + rancherConfig.getSecureKey();
 		String encoding = DatatypeConverter.printBase64Binary(authStr.getBytes("utf-8"));
-
+//		String encoding = Base64.getEncoder().encodeToString(
+//                (rancherConfig.getAccessKey() + ":" + rancherConfig.getSecureKey()).getBytes());
 		HttpURLConnection connection = (HttpURLConnection) serverUrl.openConnection();
 		// String userPassword = "username" + ":" + "password";
-
+		
 		connection.setRequestProperty("Authorization", "Basic " + encoding);
 		connection.setRequestProperty("Accept", "application/json");
 		connection.setRequestProperty("Content-Type", "application/json");

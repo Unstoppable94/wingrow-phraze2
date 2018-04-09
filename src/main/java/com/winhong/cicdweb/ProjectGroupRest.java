@@ -3,6 +3,8 @@ package com.winhong.cicdweb;
 import java.io.IOException;
 import java.util.Calendar;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +40,24 @@ public class ProjectGroupRest {
 	@Produces("application/json;charset=UTF-8")
 	@Consumes("application/json;charset=UTF-8")
 	public String listAllGroup(@QueryParam("firstResult")int firstResult,
-			@QueryParam("maxResult")int maxResult,@QueryParam("name")String name){
+			@QueryParam("maxResult")int maxResult,@QueryParam("name")String name, @Context HttpServletRequest req){
 		try {
+			Cookie[] cookies = req.getCookies();
+			if(cookies != null){
+				String account = "";
+				String accountType = "";
+				for(int i=0; i<cookies.length; i++){
+					Cookie c = cookies[i];
+					if(c.getName().equalsIgnoreCase("account")){
+						account = c.getValue();
+						System.out.println("account cookie:++++:" + account);
+					}
+					if(c.getName().equalsIgnoreCase("accountType")){
+						accountType = c.getValue();
+						System.out.println("accountType cookie:++++:" + accountType);
+					}
+				}
+			}
 			log.debug("firstResult:"+firstResult+"maxResult:"+maxResult);
 			//TODO group name
 			if (name==null ||name.equals(""))

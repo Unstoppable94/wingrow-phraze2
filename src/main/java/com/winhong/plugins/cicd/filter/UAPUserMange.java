@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,9 +18,8 @@ import com.winhong.uap.sdk.model.User;
 
 public class UAPUserMange {
 	
-	/*private static RestClientV1 rest = UapUtils.getRestClientV1();
-	private static UserService userService = rest.locals().users();*/
-	
+	private static final int LOCAL_USER = 0;
+	private static final int LDAP_USER = 1;
 	//获取本系统id
 	//获取UAP登录的账户名称
 	public static String getUsername(HttpServletRequest req){
@@ -42,33 +42,59 @@ public class UAPUserMange {
 	}
 	
 	//获取UAP用户在应用系统的相关权限
-	public static void getUser(String userName, HttpServletResponse res){
+	public static void getUser(String userName, HttpServletRequest req ,HttpServletResponse res){
 		//
 		String accountType = userName.substring(0, 1);
 		String account = userName.substring(2);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("id", account);
+		//系统id会写入配置文件
 		params.put("systemId", "102");
-		if(Integer.parseInt(accountType) == 0){
+		if(Integer.parseInt(accountType) == LOCAL_USER){
 			Paginate<User> page = UapUtils.getRestClientV1().locals().users().getUsers(params);
 			List<? extends User> users = page.getData();
 			if(users != null && users.size() > 0){
+				//如果获取到对应系统的账户，查看根据roleNames进行权限的下一步操作
+				
 				System.out.println("ok"+users.get(0).getRoleNames());
+				if(req.getCookies() != null){
+					Cookie[] cookies = req.getCookies();
+					for(int i=0; i<cookies.length; i++){
+						Cookie c = cookies[i];
+						if(c.getName().equalsIgnoreCase("account")){
+
+						}
+						if(c.getName().equalsIgnoreCase("accountType")){
+							accountType = c.getValue();
+							System.out.println("accountType cookie:++++:" + accountType);
+						}
+					}
+				}
+
+				res.addCookie(new Cookie("account", account));
+				res.addCookie(new Cookie("accountType", accountType));
 			}else{
-		        if(account.equals("admin")) {
-	        	try {
+				try {
 					res.sendRedirect("/error.html");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	        }
-
-			}
 		}else{
 			List<? extends User> users = UapUtils.getRestClientV1().ldaps().ldapUsers().getLdapUsers(params);
 			if(users != null && users.size() > 0){
+				
+				res.addCookie(new Cookie("account", account));
+				res.addCookie(new Cookie("accountType", accountType));
 				System.out.println("ok"+users.get(0).getRoleNames());
+			}else{
+				try {
+					res.sendRedirect("/error.html");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		//System.out.println(roleId);

@@ -9,11 +9,18 @@ public class RancherEnvironment {
 	
 	@Expose 
 	private String name;
-
+	
+	@Expose String description;
 	public RancherEnvironment(String aid, String aName) {
 		super();
 		id=aid;
 		name=aName;
+ 	}
+	public RancherEnvironment(String aid, String aName, String description) {
+		super();
+		id=aid;
+		name=aName;
+		this.description = description;
  	}
 
 	public String getId() {
@@ -31,6 +38,11 @@ public class RancherEnvironment {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDescription() {
+		return description;
+	}
 	
 }

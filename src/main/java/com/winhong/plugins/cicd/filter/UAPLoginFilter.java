@@ -50,7 +50,7 @@ public class UAPLoginFilter implements Filter {
 		System.out.println("uri==========="+req.getRequestURI());
 		
 		//
-		UAPUserMange.getUser(UAPUserMange.getUsername(req), res);        
+		UAPUserMange.getUser(UAPUserMange.getUsername(req), req, res);        
 //        if(account.equals("admin")) {
 //        	res.sendRedirect("/error.html");
 //        }
