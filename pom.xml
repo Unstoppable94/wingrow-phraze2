@@ -173,13 +173,13 @@
 		</dependency>
 		<dependency>
 		    <groupId>com.winhong</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>4.3.6</version>
+		    <artifactId>uap-sdk-httpclient</artifactId>
+		    <version>1.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.winhong</groupId>
-		    <artifactId>uap-sdk-httpclient</artifactId>
-		    <version>1.0</version>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.3.6</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp -->
 		<dependency>

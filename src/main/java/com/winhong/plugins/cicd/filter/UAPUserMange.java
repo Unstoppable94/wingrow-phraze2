@@ -57,20 +57,6 @@ public class UAPUserMange {
 				//如果获取到对应系统的账户，查看根据roleNames进行权限的下一步操作
 				
 				System.out.println("ok"+users.get(0).getRoleNames());
-				if(req.getCookies() != null){
-					Cookie[] cookies = req.getCookies();
-					for(int i=0; i<cookies.length; i++){
-						Cookie c = cookies[i];
-						if(c.getName().equalsIgnoreCase("account")){
-
-						}
-						if(c.getName().equalsIgnoreCase("accountType")){
-							accountType = c.getValue();
-							System.out.println("accountType cookie:++++:" + accountType);
-						}
-					}
-				}
-
 				res.addCookie(new Cookie("account", account));
 				res.addCookie(new Cookie("accountType", accountType));
 			}else{
