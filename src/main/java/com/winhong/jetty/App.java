@@ -5,10 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.NoSuchFileException;
+<<<<<<< HEAD
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
 
+=======
+
+>>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -16,8 +20,11 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
+<<<<<<< HEAD
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
+=======
+>>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -25,6 +32,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+<<<<<<< HEAD
 import com.winhong.plugins.cicd.action.CheckHeartBeatTimer;
 import com.winhong.plugins.cicd.action.GroupAction;
 import com.winhong.plugins.cicd.action.SendEmailTimer;
@@ -33,6 +41,13 @@ import com.winhong.plugins.cicd.cas.CORSResponseFilter;
 import com.winhong.plugins.cicd.cas.RegisterUAPFilter;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
 import com.winhong.plugins.cicd.filter.UAPLoginFilter;
+=======
+import com.winhong.plugins.cicd.action.GroupAction;
+import com.winhong.plugins.cicd.action.UserAction;
+import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
+import com.winhong.plugins.cicd.filter.CORSResponseFilter;
+import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
+>>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 import com.winhong.plugins.cicd.filter.UsePrivilegeFilter;
 import com.winhong.plugins.cicd.jwt.TokenUtil;
 import com.winhong.plugins.cicd.openldap.OpenLDAPConfig;
@@ -49,11 +64,14 @@ import com.winhong.plugins.cicd.tool.Encryptor;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
 import com.winhong.plugins.cicd.tool.RandomString;
 import com.winhong.plugins.cicd.user.User;
+<<<<<<< HEAD
 import com.winhong.uap.cas.client.authentication.AuthenticationFilter;
 import com.winhong.uap.cas.client.session.SingleSignOutFilter;
 import com.winhong.uap.cas.client.util.AssertionThreadLocalFilter;
 import com.winhong.uap.cas.client.util.HttpServletRequestWrapperFilter;
 import com.winhong.uap.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
+=======
+>>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 
 public class App {
 	
@@ -71,8 +89,14 @@ public class App {
         
 
 		// close for dev
+<<<<<<< HEAD
 		//config.register(JWTSecurityFilter.class);
 		//config.register(CORSResponseFilter.class);
+=======
+		config.register(JWTSecurityFilter.class);
+		config.register(UsePrivilegeFilter.class);
+		config.register(CORSResponseFilter.class);
+>>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 		context.addServlet(jerseyServlet, "/webapi/*");
 		//config.register(UsePrivilegeFilter.class);
 		context.setSessionHandler(new SessionHandler());
@@ -82,6 +106,11 @@ public class App {
 		        
 		
 		try {
+<<<<<<< HEAD
+=======
+			//initSonarConfig();
+
+>>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 			initDirs();
 			initConfig();
 			// SET login token expire time
@@ -97,7 +126,11 @@ public class App {
 			return;
 		}
 		try {
+<<<<<<< HEAD
 			//SendEmailThread emailThread = new SendEmailThread();
+=======
+			SendEmailThread emailThread = new SendEmailThread();
+>>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 			//emailThread.start();
 			
 			server.start();

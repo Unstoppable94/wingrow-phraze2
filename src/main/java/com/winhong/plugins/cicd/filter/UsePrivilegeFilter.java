@@ -83,8 +83,9 @@ public class UsePrivilegeFilter implements ContainerRequestFilter {
 					|| path.equalsIgnoreCase("SelfInfo")  ){
  				return;
 			}
-			if ("GET".equalsIgnoreCase(method) && "download".equals(path) ) {
+			if ("GET".equalsIgnoreCase(method) && path.contains("download") ) {
 				// pass through the filter.
+				System.out.println("user");
 				return;
 			}
 
