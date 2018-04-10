@@ -32,6 +32,26 @@ public class DownService {
 	private static final Logger log = LoggerFactory.getLogger(DownService.class);
 
 	private static final int BUFFER_SIZE = 4096;
+	
+	@GET
+	@Path("/region")
+	@Produces("application/json;charset=utf-8")
+	public String getRegion() {
+		try {
+			String WINGROW_REGION = System.getenv("WINGROW_REGION");
+			if(WINGROW_REGION == null || WINGROW_REGION.trim().length() == 0){
+				return "{\"region\":\""+ "福州"+"\"}";
+			}
+			String region = "{\"region\":\""+ WINGROW_REGION+"\"}";
+			log.debug(region);
+			return region;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.debug(e.getLocalizedMessage());
+			return WebTools.Error(e);
+		}
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM) // 返回方式为流

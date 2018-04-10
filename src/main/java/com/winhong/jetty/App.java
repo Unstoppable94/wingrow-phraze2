@@ -5,11 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.NoSuchFileException;
-import java.util.logging.Level;
 
-import javax.management.Notification;
-
-import org.apache.http.protocol.HttpService;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -17,21 +13,17 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
-import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.winhong.plugins.cicd.action.ConfigServerAction;
 import com.winhong.plugins.cicd.action.GroupAction;
-import com.winhong.plugins.cicd.action.NotifyAction;
-import com.winhong.plugins.cicd.action.SendEmailTimer;
 import com.winhong.plugins.cicd.action.UserAction;
-import com.winhong.plugins.cicd.cas.SsoConfig;
 import com.winhong.plugins.cicd.data.base.ProjectGroupJsonConfig;
+import com.winhong.plugins.cicd.filter.CORSResponseFilter;
 import com.winhong.plugins.cicd.filter.JWTSecurityFilter;
 import com.winhong.plugins.cicd.filter.UsePrivilegeFilter;
 import com.winhong.plugins.cicd.jwt.TokenUtil;
@@ -45,13 +37,10 @@ import com.winhong.plugins.cicd.system.RegistryList;
 import com.winhong.plugins.cicd.system.RegistryMirrorConfig;
 import com.winhong.plugins.cicd.system.SMTPConfig;
 import com.winhong.plugins.cicd.system.SonarConfig;
-import com.winhong.plugins.cicd.tool.RandomString;
-import com.winhong.plugins.cicd.tool.Tools;
-import com.winhong.plugins.cicd.user.User;
-import com.winhong.plugins.cicd.view.ProjectGroup;
-import com.winhong.uap.cas.client.authentication.AuthenticationFilter;
 import com.winhong.plugins.cicd.tool.Encryptor;
 import com.winhong.plugins.cicd.tool.JenkinsClient;
+import com.winhong.plugins.cicd.tool.RandomString;
+import com.winhong.plugins.cicd.user.User;
 
 public class App {
 	
@@ -69,12 +58,11 @@ public class App {
 		// close for dev
 		config.register(JWTSecurityFilter.class);
 		config.register(UsePrivilegeFilter.class);
-		
-		//context.addFilter(new FilterHolder(AuthenticationFilter.class), "", null);
+		config.register(CORSResponseFilter.class);
 		context.addServlet(jerseyServlet, "/webapi/*");
 		
 		try {
-			initSonarConfig();
+			//initSonarConfig();
 
 			initDirs();
 			initConfig();
@@ -92,7 +80,7 @@ public class App {
 		}
 		try {
 			SendEmailThread emailThread = new SendEmailThread();
-			emailThread.start();
+			//emailThread.start();
 			
 			server.start();
 			//邮箱(设置检查时间，单位为秒)
