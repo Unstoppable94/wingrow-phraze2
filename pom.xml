@@ -151,7 +151,7 @@
 			<version>9.4.0.v20161208</version>
 		</dependency>
 		
-<<<<<<< HEAD
+
 		<dependency>
 		    <groupId>com.winhong</groupId>
 		    <artifactId>uap-client-core</artifactId>
@@ -191,9 +191,7 @@
 		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
 
 		
-=======
 
->>>>>>> 998ab14ed04442923fa4c554fa7032c20541071e
 	</dependencies>
 
 	<build>
